@@ -2,6 +2,7 @@
 buildscript {
     repositories {
         google()
+
         jcenter()
     }
     dependencies {
@@ -15,6 +16,9 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven{
+            url 'https://esri.bintray.com/arcgis'
+        }
         jcenter()
     }
 }
