@@ -9,12 +9,14 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
+    public ArcGISMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MapView map = findViewById(R.id.map);
-        map.setMap(ArcGISMap.createFromInternal(null));
+        mMap = new ArcGISMap();
+        map.setMap(mMap);
     }
 }
