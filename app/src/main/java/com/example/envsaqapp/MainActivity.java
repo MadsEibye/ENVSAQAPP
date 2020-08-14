@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MapView map = findViewById(R.id.map);
-        mMap = new ArcGISMap();
-        map.setMap(mMap);
+        //MapView map = findViewById(R.id.map);
+        //mMap = new ArcGISMap();
+        //map.setMap(mMap);
     }
 }
