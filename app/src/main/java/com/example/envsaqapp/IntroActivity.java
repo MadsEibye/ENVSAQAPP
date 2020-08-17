@@ -25,8 +25,7 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
-        textView = (TextView) findViewById(R.id.TextView);
-       /* new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i = new Intent(IntroActivity.this, MainActivity.class);
@@ -35,21 +34,15 @@ public class IntroActivity extends AppCompatActivity {
                 finish();
             }
         }, TIME_OUT);
-*/
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (progressBar.getProgress() < 100) {
                     mLoading++;
                     progressBar.setProgress(mLoading);
-
+                    android.os.SystemClock.sleep(50);
                 }
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView.setText("Loading Complete");
-                    }
-                });
             }
         }).start();
     }
