@@ -10,6 +10,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,13 +32,16 @@ import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.security.Permission;
 import java.security.Permissions;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -47,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements
     protected Context context;
     String lat;
     String provider;
-    protected String latitude, longitude;
     protected boolean gps_enabled, network_enabled;
     public Location UserLocation;
     public double Latitude = 55.6386;
@@ -59,8 +63,9 @@ public class MainActivity extends AppCompatActivity implements
     boolean updateon = false;
     LocationRequest locationRequest;
     FusedLocationProviderClient fusedLocationProviderClient;
-    public static final int DEFAULT_UPDATE_INTERVAL = 30;
+    public static final int DEFAULT_UPDATE_INTERVAL = 1;
     public static final int FAST_UPDATE_INTERVAL = 5;
+    LocationCallback locationCallBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MapView mapView = findViewById(R.id.MainMapView);
-        map = new ArcGISMap(Basemap.Type.STREETS, Latitude, Longitude, 14);
+        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 14);
         mapView.setMap(map);
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
         mapView.getGraphicsOverlays().add(graphicsOverlay);
@@ -121,7 +126,26 @@ public class MainActivity extends AppCompatActivity implements
             locationRequest.setPriority()
         }*/
 
+        //startLocationUpdate();
+
+        //updateGPS();
+
+        locationCallBack = new LocationCallback() {
+
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                updateUIValues(locationResult.getLastLocation());
+            }
+        };
+    } // end of onCreate
+
+    private void startLocationUpdate() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
         updateGPS();
+        }
 
     }
 
@@ -133,6 +157,12 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onSuccess(Location location) {
                 Log.d("USERLOCATION", " " + location.getLongitude());
+                    Log.d("USERLOCATION", " " + location.getLatitude());
+                    Latitude = location.getLatitude();
+                    Longitude = location.getLongitude();
+                    //updateMarker();
+                    //updateUIValues(location);
+
                 }
             });
         }
@@ -140,6 +170,20 @@ public class MainActivity extends AppCompatActivity implements
 
         }
     }
+
+    private void updateUIValues(Location location) {
+        try {
+
+            GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+        mapView.getGraphicsOverlays().add(graphicsOverlay);
+        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
+                12);
+        }
+        catch (Exception e) {
+
+        }
+    }
+
     public void findLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -148,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements
             //getLocation();
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
+            //updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(this, "You need too grant acess to your location", Toast.LENGTH_LONG).show();
@@ -162,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-                findLocation();
+                updateGPS();
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
