@@ -4,28 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/loadingscreen_foreground"
+    android:background="@mipmap/loadingscreenmork"
     tools:context=".IntroActivity">
-
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="centerCrop"
-            />
-
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/aulogo_foreground"
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true"
+        android:foregroundGravity="center"
+        />
     <ProgressBar
-            android:layout_centerInParent="true"
-            android:id="@+id/progressbar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="200dp"
-            android:visibility="visible"
-            android:indeterminate="true"
-            android:padding="10dp"
-            android:progress="25"
-            android:indeterminateTint="@color/AUBLUE"
-            android:layout_height="200dp" />
-
-
-
+        android:layout_centerInParent="true"
+        android:id="@+id/progressbar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="200dp"
+        android:visibility="visible"
+        android:indeterminate="true"
+        android:padding="10dp"
+        android:progress="25"
+        android:indeterminateTint="@color/Lightblue"
+        android:layout_height="200dp" />
+    <TextView
+        android:layout_below="@+id/progressbar"
+        android:id="@+id/AirLiteText"
+        android:text="AirLITE"
+        android:textSize="60dp"
+        android:textColor="@color/Lightblue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="60dp"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

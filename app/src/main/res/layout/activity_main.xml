@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-
+    <com.esri.arcgisruntime.mapping.view.MapView
+        android:id="@+id/MainMapView"
+        mapoptions.ZoomLevel="80"
+        mapoptions.MapType="streets"
+        mapoptions.center="34.056215, -117.195668"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>
