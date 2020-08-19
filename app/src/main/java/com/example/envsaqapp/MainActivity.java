@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     public double Longitude = 12.0893;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
+    private Point point;
     SimpleMarkerSymbol symbol;
     GraphicsOverlay graphicsOverlay;
     boolean updateon = false;
@@ -78,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-
             }
 
             @Override
@@ -96,48 +96,45 @@ public class MainActivity extends AppCompatActivity implements
         };
 
         findLocation();
-
+/*
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
         locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);
 
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        /*if (){
+        if (){
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
         }
         else {
             locationRequest.setPriority()
-        }*/
+        }
 
-        //startLocationUpdate();
-
-        //updateGPS();
-        /*
         locationCallBack = new LocationCallback() {
-
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-
                 updateUIValues();
             }
-        };*/
+        };
+       */
     } // end of onCreate
 
     private void LoadMap(double Latitude, double Longitude) {
 
         mapView = findViewById(R.id.MainMapView);
-        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 14);
+        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 2);
         mapView.setMap(map);
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
         mapView.getGraphicsOverlays().add(graphicsOverlay);
 
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
-        Point graphicPoint = new Point(100 , -32, SpatialReferences.getWebMercator());
-        Graphic graphic = new Graphic(graphicPoint, symbol);
+        point = new Point(Longitude,Latitude , SpatialReferences.getWebMercator());
+        double pointX = point.getX();
+        double pointY = point.getY();
+        Point pointXY = new Point(pointX,pointY,SpatialReferences.getWgs84());
+        Graphic graphic = new Graphic(pointXY, symbol);
         graphicsOverlay.getGraphics().add(graphic);
     }
 
@@ -159,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
                     Latitude = location.getLatitude();
                     Longitude = location.getLongitude();
+
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
 
