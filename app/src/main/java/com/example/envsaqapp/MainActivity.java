@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //startLocationUpdate();
 
-        //updateGPS();
+        updateGPS();
 
         locationCallBack = new LocationCallback() {
 
@@ -191,9 +191,12 @@ public class MainActivity extends AppCompatActivity implements
     public void findLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            //Latitude = location.getLatitude();
+            //Longitude = location.getLongitude();
+            //getLocation();
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
-            updateGPS();
+            //updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(this, "You need too grant acess to your location", Toast.LENGTH_LONG).show();
