@@ -77,12 +77,13 @@ public class MainActivity extends AppCompatActivity implements
         mapView.setMap(map);
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
         mapView.getGraphicsOverlays().add(graphicsOverlay);
+        /*
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
         Point graphicPoint = new Point(Latitude, Longitude, SpatialReferences.getWebMercator());
         Graphic graphic = new Graphic(graphicPoint, symbol);
         graphicsOverlay.getGraphics().add(graphic);
-
+*/
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -112,9 +113,9 @@ public class MainActivity extends AppCompatActivity implements
         };
         findLocation();
 
-        locationRequest  = new LocationRequest();
-        locationRequest.setInterval(1000* DEFAULT_UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(1000* FAST_UPDATE_INTERVAL);
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);
 
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //startLocationUpdate();
 
-        //updateGPS();
+        updateGPS();
 
         locationCallBack = new LocationCallback() {
 
@@ -143,30 +144,31 @@ public class MainActivity extends AppCompatActivity implements
 
     private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
-        updateGPS();
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
+            updateGPS();
         }
 
     }
 
-    private void updateGPS(){
+    private void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                Log.d("USERLOCATION", " " + location.getLongitude());
+                    Log.d("USERLOCATION", " " + location.getLongitude());
                     Log.d("USERLOCATION", " " + location.getLatitude());
                     Latitude = location.getLatitude();
                     Longitude = location.getLongitude();
+                    Log.d("USERLOCATION", " " + Latitude);
+                    Log.d("USERLOCATION", " " + Longitude);
                     //updateMarker();
                     //updateUIValues(location);
 
                 }
             });
-        }
-        else {
+        } else {
 
         }
     }
@@ -175,11 +177,13 @@ public class MainActivity extends AppCompatActivity implements
         try {
 
             GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlay);
-        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
-                12);
-        }
-        catch (Exception e) {
+            mapView.getGraphicsOverlays().add(graphicsOverlay);
+            SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
+                    12);
+            Point graphicPoint = new Point(location.getLatitude(), location.getLongitude(), SpatialReferences.getWebMercator());
+            Graphic graphic = new Graphic(graphicPoint, symbol);
+            graphicsOverlay.getGraphics().add(graphic);
+        } catch (Exception e) {
 
         }
     }
@@ -213,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
-
 
 
 }
