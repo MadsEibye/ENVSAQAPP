@@ -29,7 +29,11 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.security.Permission;
 import java.security.Permissions;
@@ -52,6 +56,11 @@ public class MainActivity extends AppCompatActivity implements
     private boolean permissionDenied = false;
     SimpleMarkerSymbol symbol;
     GraphicsOverlay graphicsOverlay;
+    boolean updateon = false;
+    LocationRequest locationRequest;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    public static final int DEFAULT_UPDATE_INTERVAL = 30;
+    public static final int FAST_UPDATE_INTERVAL = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements
                 UserLocation = location;
                 //Latitude = location.getLatitude();
                 //Longitude = location.getLongitude();
-                Log.d("USERLOCATION", "" + location.getLatitude());
-                Log.d("USERLOCATION", "" + location.getLongitude());
+                //Log.d("USERLOCATION", "" + location.getLatitude());
+                //Log.d("USERLOCATION", "" + location.getLongitude());
             }
 
             @Override
@@ -88,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements
             public void onProviderEnabled(String provider) {
                 Latitude = UserLocation.getLatitude();
                 Longitude = UserLocation.getLongitude();
-                Log.d("USERLOCATION", "" + Latitude);
-                Log.d("USERLOCATION", "" + Longitude);
+                //Log.d("USERLOCATION", "" + Latitude);
+                //Log.d("USERLOCATION", "" + Longitude);
             }
 
             @Override
@@ -98,12 +107,41 @@ public class MainActivity extends AppCompatActivity implements
         };
         findLocation();
 
+        locationRequest  = new LocationRequest();
+        locationRequest.setInterval(1000* DEFAULT_UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(1000* FAST_UPDATE_INTERVAL);
+
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        /*if (){
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        }
+        else {
+            locationRequest.setPriority()
+        }*/
+
+        updateGPS();
 
     }
 
+    private void updateGPS(){
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                Log.d("USERLOCATION", " " + location.getLongitude());
+                }
+            });
+        }
+        else {
+
+        }
+    }
     public void findLocation() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             //Latitude = location.getLatitude();
             //Longitude = location.getLongitude();
@@ -130,5 +168,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
+
+
 
 }
