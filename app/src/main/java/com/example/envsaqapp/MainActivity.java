@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     public double Longitude = 12.0893;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
+    private Point point;
     SimpleMarkerSymbol symbol;
     GraphicsOverlay graphicsOverlay;
     boolean updateon = false;
@@ -72,27 +73,12 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        MapView mapView = findViewById(R.id.MainMapView);
-        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 14);
-        mapView.setMap(map);
-        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlay);
-        /*
-        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
-                12);
-        Point graphicPoint = new Point(Latitude, Longitude, SpatialReferences.getWebMercator());
-        Graphic graphic = new Graphic(graphicPoint, symbol);
-        graphicsOverlay.getGraphics().add(graphic);
-*/
+
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                UserLocation = location;
-                //Latitude = location.getLatitude();
-                //Longitude = location.getLongitude();
-                //Log.d("USERLOCATION", "" + location.getLatitude());
-                //Log.d("USERLOCATION", "" + location.getLongitude());
             }
 
             @Override
@@ -101,53 +87,62 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public void onProviderEnabled(String provider) {
-                Latitude = UserLocation.getLatitude();
-                Longitude = UserLocation.getLongitude();
-                //Log.d("USERLOCATION", "" + Latitude);
-                //Log.d("USERLOCATION", "" + Longitude);
+
             }
 
             @Override
             public void onProviderDisabled(String provider) {
             }
         };
-        findLocation();
 
+        findLocation();
+/*
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
         locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);
 
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        /*if (){
+        if (){
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
         }
         else {
             locationRequest.setPriority()
-        }*/
-
-        //startLocationUpdate();
-
-        updateGPS();
+        }
 
         locationCallBack = new LocationCallback() {
-
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-
-                updateUIValues(locationResult.getLastLocation());
+                updateUIValues();
             }
         };
+       */
     } // end of onCreate
+
+    private void LoadMap(double Latitude, double Longitude) {
+
+        mapView = findViewById(R.id.MainMapView);
+        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 2);
+        mapView.setMap(map);
+        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+        mapView.getGraphicsOverlays().add(graphicsOverlay);
+
+        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
+                12);
+        point = new Point(Longitude,Latitude , SpatialReferences.getWebMercator());
+        double pointX = point.getX();
+        double pointY = point.getY();
+        Point pointXY = new Point(pointX,pointY,SpatialReferences.getWgs84());
+        Graphic graphic = new Graphic(pointXY, symbol);
+        graphicsOverlay.getGraphics().add(graphic);
+    }
 
     private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
             updateGPS();
         }
-
     }
 
     private void updateGPS() {
@@ -157,46 +152,37 @@ public class MainActivity extends AppCompatActivity implements
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Log.d("USERLOCATION", " " + location.getLongitude());
-                    Log.d("USERLOCATION", " " + location.getLatitude());
+                    Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
+                    Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
                     Latitude = location.getLatitude();
                     Longitude = location.getLongitude();
-                    Log.d("USERLOCATION", " " + Latitude);
-                    Log.d("USERLOCATION", " " + Longitude);
-                    //updateMarker();
-                    //updateUIValues(location);
 
+                    Log.d("USERLOCATION", " Old Latitude " + Latitude);
+                    Log.d("USERLOCATION", " Old Longitude " + Longitude);
+
+                    //updateUIValues();
+                    LoadMap(Latitude, Longitude);
                 }
             });
         } else {
 
         }
     }
+/*
+    private void updateUIValues() {
 
-    private void updateUIValues(Location location) {
-        try {
-
-            GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-            mapView.getGraphicsOverlays().add(graphicsOverlay);
-            SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
-                    12);
-            Point graphicPoint = new Point(location.getLatitude(), location.getLongitude(), SpatialReferences.getWebMercator());
-            Graphic graphic = new Graphic(graphicPoint, symbol);
-            graphicsOverlay.getGraphics().add(graphic);
-        } catch (Exception e) {
-
-        }
+        Point graphicPoint = new Point(Latitude, Longitude, SpatialReferences.getWebMercator());
+        Graphic graphic = new Graphic(graphicPoint, symbol);
+        graphicsOverlay.getGraphics().add(graphic);
+        Log.d("TEST", "Skulle være plottet");
     }
-
+*/
     public void findLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            //Latitude = location.getLatitude();
-            //Longitude = location.getLongitude();
-            //getLocation();
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
-            //updateGPS();
+            updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(this, "You need too grant acess to your location", Toast.LENGTH_LONG).show();
