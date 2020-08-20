@@ -8,6 +8,7 @@ import androidx.core.content.PermissionChecker;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -16,7 +17,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -43,6 +48,8 @@ import java.security.Permission;
 import java.security.Permissions;
 import java.util.List;
 
+import static android.net.sip.SipErrorCode.TIME_OUT;
+
 public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
     public ArcGISMap map;
@@ -67,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements
     public static final int DEFAULT_UPDATE_INTERVAL = 1;
     public static final int FAST_UPDATE_INTERVAL = 5;
     LocationCallback locationCallBack;
+    double pointX;
+    double pointY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
         point = new Point(Longitude,Latitude , SpatialReferences.getWebMercator());
-        double pointX = point.getX();
-        double pointY = point.getY();
+        pointX = point.getX();
+        pointY = point.getY();
         Point pointXY = new Point(pointX,pointY,SpatialReferences.getWgs84());
         Graphic graphic = new Graphic(pointXY, symbol);
         graphicsOverlay.getGraphics().add(graphic);
@@ -144,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements
             updateGPS();
         }
     }
-
+            private Location userLocation;
     private void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -161,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
 
+                    userLocation = location;
                     //updateUIValues();
                     LoadMap(Latitude, Longitude);
                 }
@@ -206,5 +216,94 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.example_menu, menu);
+        return true;
+    }
 
+    public void ChangeActivity(Integer ID){
+        if (ID == item1ID){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, ForureningHer.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+
+            }
+        else if (ID == item2ID){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+        else if (ID == item3ID){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+        else if (ID == item4ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Info.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+    }
+
+    private Integer item1ID;
+    private Integer item2ID;
+    private Integer item3ID;
+    private Integer item4ID;
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item1:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item1ID = item.getItemId();
+                ChangeActivity(item1ID);
+                return true;
+            case R.id.item2:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item2ID = item.getItemId();
+                ChangeActivity(item2ID);
+                return true;
+            case R.id.item3:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item3ID = item.getItemId();
+                ChangeActivity(item3ID);
+                return true;
+            case R.id.item4:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item4ID = item.getItemId();
+                ChangeActivity(item4ID);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }
