@@ -5,4 +5,9 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="AUBLUE">#c5e1fa</color>
     <color name="Lightblue">#c2e2ff</color>
+    <color name="Black">#000000</color>
+    <color name="White">#ffffff</color>
+    <color name="BackGroundGrey">#b2b7b8</color>
+
+
 </resources>

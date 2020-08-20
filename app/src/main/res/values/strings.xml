@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">ENVSAQAPP</string>
+    <string name="app_name">AirLITE</string>
+    <string name="LinkToLPDV">
+        <a href="http://lpdv.spatialsuite.dk/spatialmap">Luften På Din Vej!</a>
+    </string>
+    <string name="LinkToWiki">
+        <a href="https://da.wikipedia.org/wiki/Partikelforurening">Wikipedia</a>
+    </string>
+
 </resources>
