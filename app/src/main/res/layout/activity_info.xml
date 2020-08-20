@@ -3,49 +3,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/White"
+    android:background="@color/Black"
+
+    android:padding="10dp"
     android:layout_height="match_parent"
     tools:context=".Info">
 
+
+<LinearLayout
+    android:layout_marginTop="20dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
     <TextView
 
+        android:textAlignment="center"
+        android:text="Her finder du diverse links til websites med relevant information omkring luftforurening"
+        android:fontFamily="sans-serif-black"
+        android:textSize="18sp"
+        android:textColor="@color/White"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginBottom="20dp"/>
+
+    <TextView
         android:id="@+id/infoTextView1"
         android:text="Find information om luftforurening i Danmark"
-        android:textColor="@color/Black"
-        android:textSize="19sp"
+        android:textColor="@color/White"
+        android:textSize="18sp"
         android:fontFamily="sans-serif-black"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:id="@+id/infoTextViewLink1"
         android:layout_below="@+id/infoTextView1"
-        android:textColor="@color/Black"
+        android:textColor="@color/White"
         android:linksClickable="true"
         android:text="@string/LinkToLPDV"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="30dp"/>
 
     <TextView
-        android:layout_below="@id/infoTextViewLink1"
+
         android:id="@+id/infoTextView2"
-        android:text="Find information om partikeltyper"
-        android:textColor="@color/Black"
-        android:textSize="19sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/infoTextViewLink1"
         android:fontFamily="sans-serif-black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:text="Find information om partikeltyper"
+        android:textColor="@color/White"
+        android:textSize="18sp" />
 
     <TextView
+
         android:id="@+id/infoTextViewLink2"
         android:layout_below="@+id/infoTextView2"
-        android:textColor="@color/Black"
-        android:textSize="18sp"
+        android:textColor="@color/White"
+        android:textSize="17sp"
         android:linksClickable="true"
         android:text="@string/LinkToWiki"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/infoTextView3"
+        android:text="Find information om Aarhus Universitet"
+        android:textColor="@color/White"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <TextView
+        android:id="@+id/infoTextViewLink3"
+        android:textColor="@color/White"
+        android:textSize="17sp"
+        android:linksClickable="true"
+        android:text="@string/LinkToAu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       />
+
+
+
+
+</LinearLayout>
 </RelativeLayout>

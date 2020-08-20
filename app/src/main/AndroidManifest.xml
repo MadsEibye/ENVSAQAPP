@@ -18,10 +18,10 @@
         android:roundIcon="@mipmap/loadingscreen_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ForureningsUdsigt"></activity>
-        <activity android:name=".Info" />
-        <activity android:name=".ForureningHer" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ForureningsUdsigt" android:theme="@style/AppTheme"/>
+        <activity android:name=".Info" android:theme="@style/AppTheme"/>
+        <activity android:name=".ForureningHer" android:theme="@style/AppTheme" />
+        <activity android:name=".MainActivity" android:theme="@style/AppTheme"/>
         <activity
             android:name=".IntroActivity"
             android:theme="@style/AppTheme.NoActionBar">

@@ -2,9 +2,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverflow</item>
         <item name="colorPrimary">@color/Lightblue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionBarStyle">@style/CustomActionBar</item>
+        <item name="android:popupMenuStyle">@style/CustomOverFlowBack</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -12,6 +15,27 @@
         <item name="colorPrimary">@color/Lightblue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="CustomOverFlowBack" parent="android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@color/Lightblue</item>
+    </style>
+    
+    <style name="CustomActionBar" parent="android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/Lightblue</item>
+        <item name="android:titleTextStyle">@style/CustomTextColor</item>
+    </style>
+
+    <style name="CustomTextColor" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <item name="android:textColor">@color/White</item>
+        
+    </style>
+    
+    <!-- Style to replace actionbar overflow icon. set item 'android:actionOverflowButtonStyle' in AppTheme -->
+    <style name="MyActionButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_burgermenu</item>
+        <item name="android:background">?android:attr/actionBarItemBackground</item>
+        <item name="android:contentDescription">"Lala"</item>
     </style>
 
 </resources>

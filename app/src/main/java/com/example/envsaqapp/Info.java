@@ -20,13 +20,24 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class Info extends AppCompatActivity {
 
     TextView textViewLink1;
+    TextView textViewLink2;
+    TextView textViewLink3;
+    TextView textViewLink4;
+    TextView textViewLink5;
+    TextView textViewLink6;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         textViewLink1 = findViewById(R.id.infoTextViewLink1);
+        textViewLink2 = findViewById(R.id.infoTextViewLink2);
+        textViewLink3 = findViewById(R.id.infoTextViewLink3);
         textViewLink1.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewLink2.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewLink3.setMovementMethod(LinkMovementMethod.getInstance());
+
 
     }
 

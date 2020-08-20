@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">AirLITE</string>
     <string name="LinkToLPDV">
-        <a href="http://lpdv.spatialsuite.dk/spatialmap">Luften På Din Vej!</a>
+        <a href="http://lpdv.spatialsuite.dk/spatialmap">Luften På Din Vej</a>
     </string>
     <string name="LinkToWiki">
         <a href="https://da.wikipedia.org/wiki/Partikelforurening">Wikipedia</a>
+    </string>
+    <string name="LinkToAu">
+        <a href="https://envs.au.dk/">Aarhus Universitet - Environmental Science</a>
     </string>
 
 </resources>

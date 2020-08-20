@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="AUBLUE">#c5e1fa</color>
-    <color name="Lightblue">#c2e2ff</color>
-    <color name="Black">#000000</color>
+    <color name="Lightblue">#bad9f5</color>
+    <color name="LightblueDarker">#bad9f5</color>
+    <color name="LightblueOG">#c2e2ff</color>
+
+    <color name="Black">#3a4147</color>
     <color name="White">#ffffff</color>
     <color name="BackGroundGrey">#b2b7b8</color>
 
