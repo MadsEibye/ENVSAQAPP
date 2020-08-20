@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements
     String provider;
     protected boolean gps_enabled, network_enabled;
     public Location UserLocation;
-    public double Latitude = 55.6386;
-    public double Longitude = 12.0893;
+    public double Latitude = 57.72093;
+    public double Longitude = 10.58394;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
     private Point point;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
     private void LoadMap(double Latitude, double Longitude) {
 
         mapView = findViewById(R.id.MainMapView);
-        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 2);
+        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 15);
         mapView.setMap(map);
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
         mapView.getGraphicsOverlays().add(graphicsOverlay);
@@ -148,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements
     private void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -178,7 +179,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 */
     public void findLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(this, "You need too grant acess to your location", Toast.LENGTH_LONG).show();
             }
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
