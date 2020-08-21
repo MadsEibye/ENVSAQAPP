@@ -1,7 +1,9 @@
 package com.example.envsaqapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,24 +14,29 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class ForureningsUdsigt extends AppCompatActivity {
+public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forurenings_udsigt);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setNavigationViewListener();
+        mDrawerLayout = findViewById(R.id.ForUdsigtDrawerLayout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
+        mDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.example_menu, menu);
-        return true;
-    }
 
     public void ChangeActivity(Integer ID){
         if (ID == item1ID){
@@ -87,6 +94,16 @@ public class ForureningsUdsigt extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+        }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
@@ -111,6 +128,10 @@ public class ForureningsUdsigt extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
+    private void setNavigationViewListener() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.ForUdsigtNav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 }

@@ -1,7 +1,9 @@
 package com.example.envsaqapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +16,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 
-public class Info extends AppCompatActivity {
+public class Info extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView textViewLink1;
     TextView textViewLink2;
@@ -25,6 +29,8 @@ public class Info extends AppCompatActivity {
     TextView textViewLink4;
     TextView textViewLink5;
     TextView textViewLink6;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +43,16 @@ public class Info extends AppCompatActivity {
         textViewLink1.setMovementMethod(LinkMovementMethod.getInstance());
         textViewLink2.setMovementMethod(LinkMovementMethod.getInstance());
         textViewLink3.setMovementMethod(LinkMovementMethod.getInstance());
+        mDrawerLayout = findViewById(R.id.InfoDrawerLayout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-
+        mDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.InfoNav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.example_menu, menu);
-        return true;
-    }
 
     public void ChangeActivity(Integer ID){
         if (ID == item1ID){
@@ -104,6 +110,15 @@ public class Info extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();

@@ -1,7 +1,9 @@
 package com.example.envsaqapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +15,18 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class ForureningHer extends AppCompatActivity {
+public class ForureningHer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static double userX;
     private static double userY;
     private TextView userLocationText;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forurening_her);
@@ -27,18 +34,17 @@ public class ForureningHer extends AppCompatActivity {
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-
         userLocationText = findViewById(R.id.ForureningHerTextView);
         userLocationText.setText("X " + userX + " " + "Y "  + userY);
+        mDrawerLayout = findViewById(R.id.ForHerDrawerLayout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        setNavigationViewListener();
+        mDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.example_menu, menu);
-        return true;
-    }
 
     public void ChangeActivity(Integer ID){
         if (ID == item1ID){
@@ -96,6 +102,17 @@ public class ForureningHer extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+        }
+
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
@@ -120,6 +137,10 @@ public class ForureningHer extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
+    private void setNavigationViewListener() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.ForHerNav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 }

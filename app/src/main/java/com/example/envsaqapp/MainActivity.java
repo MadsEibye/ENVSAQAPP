@@ -1,10 +1,13 @@
 package com.example.envsaqapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +47,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 
 import java.security.Permission;
 import java.security.Permissions;
@@ -50,32 +55,23 @@ import java.util.List;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class MainActivity extends AppCompatActivity implements
-        ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public ArcGISMap map;
     private MapView mapView;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
-    protected Context context;
-    String lat;
-    String provider;
-    protected boolean gps_enabled, network_enabled;
-    public Location UserLocation;
     public double Latitude = 57.72093;
     public double Longitude = 10.58394;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
     private Point point;
-    SimpleMarkerSymbol symbol;
-    GraphicsOverlay graphicsOverlay;
-    boolean updateon = false;
     LocationRequest locationRequest;
     FusedLocationProviderClient fusedLocationProviderClient;
-    public static final int DEFAULT_UPDATE_INTERVAL = 1;
-    public static final int FAST_UPDATE_INTERVAL = 5;
     LocationCallback locationCallBack;
     double pointX;
     double pointY;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mDrawerLayout = findViewById(R.id.DrawerLayout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        mDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onProviderDisabled(String provider) {
             }
         };
+        setNavigationViewListener();
 
         findLocation();
 /*
@@ -139,10 +142,10 @@ public class MainActivity extends AppCompatActivity implements
 
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
-        point = new Point(Longitude,Latitude , SpatialReferences.getWebMercator());
+        point = new Point(Longitude, Latitude, SpatialReferences.getWebMercator());
         pointX = point.getX();
         pointY = point.getY();
-        Point pointXY = new Point(pointX,pointY,SpatialReferences.getWgs84());
+        Point pointXY = new Point(pointX, pointY, SpatialReferences.getWgs84());
         Graphic graphic = new Graphic(pointXY, symbol);
         graphicsOverlay.getGraphics().add(graphic);
     }
@@ -153,7 +156,9 @@ public class MainActivity extends AppCompatActivity implements
             updateGPS();
         }
     }
-            private Location userLocation;
+
+    private Location userLocation;
+
     private void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -179,15 +184,16 @@ public class MainActivity extends AppCompatActivity implements
 
         }
     }
-/*
-    private void updateUIValues() {
 
-        Point graphicPoint = new Point(Latitude, Longitude, SpatialReferences.getWebMercator());
-        Graphic graphic = new Graphic(graphicPoint, symbol);
-        graphicsOverlay.getGraphics().add(graphic);
-        Log.d("TEST", "Skulle være plottet");
-    }
-*/
+    /*
+        private void updateUIValues() {
+
+            Point graphicPoint = new Point(Latitude, Longitude, SpatialReferences.getWebMercator());
+            Graphic graphic = new Graphic(graphicPoint, symbol);
+            graphicsOverlay.getGraphics().add(graphic);
+            Log.d("TEST", "Skulle være plottet");
+        }
+    */
     public void findLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -216,15 +222,8 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.example_menu, menu);
-        return true;
-    }
-
-    public void ChangeActivity(Integer ID){
-        if (ID == item1ID){
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -232,41 +231,38 @@ public class MainActivity extends AppCompatActivity implements
                     i.putExtra("userX", pointY);
                     i.putExtra("userY", pointX);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-            }
-        else if (ID == item2ID){
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item3ID){
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item4ID) {
+        } else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, Info.class);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -278,8 +274,49 @@ public class MainActivity extends AppCompatActivity implements
     private Integer item3ID;
     private Integer item4ID;
 
+   /* @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+
+            switch (item.getItemId()) {
+                case R.id.item1:
+                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                    item1ID = item.getItemId();
+                    ChangeActivity(item1ID);
+                    return true;
+                case R.id.item2:
+                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                    item2ID = item.getItemId();
+                    ChangeActivity(item2ID);
+                    return true;
+                case R.id.item3:
+                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                    item3ID = item.getItemId();
+                    ChangeActivity(item3ID);
+                    return true;
+                case R.id.item4:
+                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                    item4ID = item.getItemId();
+                    ChangeActivity(item4ID);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+
+*/
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+
+            }
+
+                return super.onOptionsItemSelected(item);
+        }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
@@ -306,4 +343,12 @@ public class MainActivity extends AppCompatActivity implements
         }
 
     }
+
+    private void setNavigationViewListener() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.MainNav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 }
+
+
+

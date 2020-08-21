@@ -10,4 +10,7 @@
         <a href="https://envs.au.dk/">Aarhus Universitet - Environmental Science</a>
     </string>
 
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
+
 </resources>
