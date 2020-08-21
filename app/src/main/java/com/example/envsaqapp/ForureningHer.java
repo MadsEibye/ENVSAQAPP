@@ -52,6 +52,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningHer.this, ForureningHer.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -64,6 +66,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningHer.this, MainActivity.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -75,6 +79,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningHer.this, ForureningsUdsigt.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -86,6 +92,34 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningHer.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+        else if (ID == item5ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(ForureningHer.this, GroenRute.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+        else if (ID == item6ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(ForureningHer.this, Notifikationer.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -99,6 +133,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     private Integer item2ID;
     private Integer item3ID;
     private Integer item4ID;
+    private Integer item5ID;
+    private Integer item6ID;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -133,6 +169,16 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
+                return true;
+            case R.id.item5:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item5ID = item.getItemId();
+                //ChangeActivity(item5ID);
+                return true;
+            case R.id.item6:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item6ID = item.getItemId();
+                //ChangeActivity(item6ID);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

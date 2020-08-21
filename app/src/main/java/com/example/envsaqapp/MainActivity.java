@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
@@ -14,21 +11,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Point;
@@ -37,21 +27,13 @@ import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
-import java.security.Permission;
-import java.security.Permissions;
-import java.util.List;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -63,11 +45,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public double Latitude = 57.72093;
     public double Longitude = 10.58394;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private boolean permissionDenied = false;
     private Point point;
-    LocationRequest locationRequest;
     FusedLocationProviderClient fusedLocationProviderClient;
-    LocationCallback locationCallBack;
     double pointX;
     double pointY;
     private DrawerLayout mDrawerLayout;
@@ -108,28 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setNavigationViewListener();
 
         findLocation();
-/*
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);
 
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (){
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        }
-        else {
-            locationRequest.setPriority()
-        }
-
-        locationCallBack = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                updateUIValues();
-            }
-        };
-       */
     } // end of onCreate
 
     private void LoadMap(double Latitude, double Longitude) {
@@ -150,15 +108,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         graphicsOverlay.getGraphics().add(graphic);
     }
 
-    private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
-            updateGPS();
-        }
-    }
-
-    private Location userLocation;
-
     private void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -171,12 +120,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
                     Latitude = location.getLatitude();
                     Longitude = location.getLongitude();
-
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
-
-                    userLocation = location;
-                    //updateUIValues();
                     LoadMap(Latitude, Longitude);
                 }
             });
@@ -185,15 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
-        private void updateUIValues() {
-
-            Point graphicPoint = new Point(Latitude, Longitude, SpatialReferences.getWebMercator());
-            Graphic graphic = new Graphic(graphicPoint, symbol);
-            graphicsOverlay.getGraphics().add(graphic);
-            Log.d("TEST", "Skulle være plottet");
-        }
-    */
     public void findLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -241,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, MainActivity.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -251,6 +189,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -261,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, Info.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -271,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, GroenRute.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -281,6 +225,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, Notifikationer.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -296,78 +242,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item5ID;
     private Integer item6ID;
 
-   /* @Override
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
 
-            switch (item.getItemId()) {
-                case R.id.item1:
-                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
-                    item1ID = item.getItemId();
-                    ChangeActivity(item1ID);
-                    return true;
-                case R.id.item2:
-                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
-                    item2ID = item.getItemId();
-                    ChangeActivity(item2ID);
-                    return true;
-                case R.id.item3:
-                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
-                    item3ID = item.getItemId();
-                    ChangeActivity(item3ID);
-                    return true;
-                case R.id.item4:
-                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
-                    item4ID = item.getItemId();
-                    ChangeActivity(item4ID);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
         }
 
-*/
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)){
-
-            }
-
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
             case R.id.item2:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
             case R.id.item3:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;
             case R.id.item4:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
                 return true;
             case R.id.item5:
                 item5ID = item.getItemId();
-                Toast.makeText(this,"Not implemented yet",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 //ChangeActivity(item5ID);
                 return true;
             case R.id.item6:
                 item6ID = item.getItemId();
-                Toast.makeText(this,"Not implemented yet",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 //ChangeActivity(item6ID);
 
             default:

@@ -19,7 +19,8 @@ import com.google.android.material.navigation.NavigationView;
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static double userX;
+    private static double userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -35,6 +36,10 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
 
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        userX = intent.getDoubleExtra("userX", userX);
+        userY = intent.getDoubleExtra("userY", userY);
     }
 
 
@@ -44,6 +49,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningsUdsigt.this, ForureningHer.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -56,6 +63,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningsUdsigt.this, MainActivity.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -67,6 +76,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningsUdsigt.this, ForureningsUdsigt.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -78,6 +89,34 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 @Override
                 public void run() {
                     Intent i = new Intent(ForureningsUdsigt.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+        else if (ID == item5ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(ForureningsUdsigt.this, GroenRute.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
+        else if (ID == item6ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(ForureningsUdsigt.this, Notifikationer.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
@@ -91,6 +130,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer item2ID;
     private Integer item3ID;
     private Integer item4ID;
+    private Integer item5ID;
+    private Integer item6ID;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -124,6 +165,16 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
+                return true;
+            case R.id.item5:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item5ID = item.getItemId();
+                //ChangeActivity(item5ID);
+                return true;
+            case R.id.item6:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item6ID = item.getItemId();
+                //ChangeActivity(item6ID);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
