@@ -5,8 +5,6 @@
     android:id="@+id/InfoDrawerLayout"
     android:layout_width="match_parent"
     android:background="@color/Black"
-
-    android:padding="10dp"
     android:layout_height="match_parent"
     tools:context=".Info">
 
@@ -96,9 +94,10 @@
 </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/InfoNav_view"
-        android:layout_width="wrap_content"
+        android:layout_width="230dp"
         android:layout_height="match_parent"
         app:menu="@menu/example_menu"
         android:layout_gravity="start"
+        android:background="@color/Lightblue"
         />
 </androidx.drawerlayout.widget.DrawerLayout>

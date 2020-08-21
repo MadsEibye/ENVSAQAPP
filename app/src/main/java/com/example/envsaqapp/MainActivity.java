@@ -266,6 +266,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     finish();
                 }
             }, TIME_OUT);
+        } else if (ID == item5ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, GroenRute.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item6ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Notifikationer.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
         }
     }
 
@@ -273,6 +293,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item2ID;
     private Integer item3ID;
     private Integer item4ID;
+    private Integer item5ID;
+    private Integer item6ID;
 
    /* @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -338,6 +360,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
                 return true;
+            case R.id.item5:
+                item5ID = item.getItemId();
+                Toast.makeText(this,"Not implemented yet",Toast.LENGTH_LONG).show();
+                //ChangeActivity(item5ID);
+                return true;
+            case R.id.item6:
+                item6ID = item.getItemId();
+                Toast.makeText(this,"Not implemented yet",Toast.LENGTH_LONG).show();
+                //ChangeActivity(item6ID);
+
             default:
                 return super.onOptionsItemSelected(item);
         }

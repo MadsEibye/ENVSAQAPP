@@ -23,7 +23,8 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/MainNav_view"
-        android:layout_width="wrap_content"
+        android:background="@color/Lightblue"
+        android:layout_width="230dp"
         android:layout_height="match_parent"
         app:menu="@menu/example_menu"
         android:layout_gravity="start"
