@@ -9,27 +9,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class GroenRute extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Forureningskala extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     private static double userX;
     private static double userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groen_rute);
-
+        setContentView(R.layout.activity_forureningskala);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-
-        mDrawerLayout = findViewById(R.id.GroenDrawerLayout);
+        mDrawerLayout = findViewById(R.id.SkalaDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setNavigationViewListener();
@@ -37,13 +40,12 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
-
     public void ChangeActivity(Integer ID){
         if (ID == item1ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, ForureningHer.class);
+                    Intent i = new Intent(Forureningskala.this, ForureningHer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -57,7 +59,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, MainActivity.class);
+                    Intent i = new Intent(Forureningskala.this, MainActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -70,7 +72,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(Forureningskala.this, ForureningsUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -83,7 +85,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, Info.class);
+                    Intent i = new Intent(Forureningskala.this, Info.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -96,7 +98,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, GroenRute.class);
+                    Intent i = new Intent(Forureningskala.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -109,23 +111,11 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, Notifikationer.class);
+                    Intent i = new Intent(Forureningskala.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                    finish();
-                }
-            }, TIME_OUT);
-        } else if (ID == item7ID) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(GroenRute.this, Forureningskala.class);
-                    i.putExtra("userX", userX);
-                    i.putExtra("userY", userY);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -149,6 +139,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     @Override
@@ -195,7 +186,8 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.GroenNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.SkalaNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 }

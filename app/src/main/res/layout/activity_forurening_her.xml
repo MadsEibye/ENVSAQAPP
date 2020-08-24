@@ -22,5 +22,6 @@
         app:menu="@menu/example_menu"
         android:layout_gravity="start"
         android:background="@color/Lightblue"
+
         />
 </androidx.drawerlayout.widget.DrawerLayout>

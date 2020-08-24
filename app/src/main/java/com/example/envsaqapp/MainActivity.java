@@ -10,6 +10,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     double pointY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setNavigationViewListener();
 
         findLocation();
+
+        navigationView = (NavigationView) findViewById(R.id.MainNav_view);
 
     } // end of onCreate
 
@@ -233,6 +237,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }, TIME_OUT);
         }
+        else if (ID == item7ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Forureningskala.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
     }
 
     private Integer item1ID;
@@ -241,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item4ID;
     private Integer item5ID;
     private Integer item6ID;
+    private Integer item7ID;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -272,14 +290,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.item5:
                 item5ID = item.getItemId();
-                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
-                //ChangeActivity(item5ID);
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
+                ChangeActivity(item5ID);
                 return true;
             case R.id.item6:
                 item6ID = item.getItemId();
-                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
-                //ChangeActivity(item6ID);
-
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
+                ChangeActivity(item6ID);
+            case R.id.item7:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item7ID = item.getItemId();
+                ChangeActivity(item7ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -287,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.MainNav_view);
+        navigationView = (NavigationView) findViewById(R.id.MainNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 }

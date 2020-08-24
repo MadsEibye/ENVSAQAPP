@@ -28,9 +28,15 @@ android:icon="@drawable/ic_home"
      android:title="Notifikationer"
      app:showAsAction="never"/>
 
+ <item android:id="@+id/item7"
+     android:icon="@drawable/ic_chart"
+     android:title="Forureningskala"
+     app:showAsAction="never"/>
+
  <item android:id="@+id/item4"
      android:icon="@drawable/ic_info"
      android:title="Info"
      app:showAsAction="never"/>
+
 
 </menu>

@@ -122,6 +122,18 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     finish();
                 }
             }, TIME_OUT);
+        } else if (ID == item7ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(ForureningsUdsigt.this, Forureningskala.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
         }
     }
 
@@ -132,6 +144,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer item4ID;
     private Integer item5ID;
     private Integer item6ID;
+    private Integer item7ID;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -169,12 +182,17 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             case R.id.item5:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item5ID = item.getItemId();
-                //ChangeActivity(item5ID);
+                ChangeActivity(item5ID);
                 return true;
             case R.id.item6:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item6ID = item.getItemId();
-                //ChangeActivity(item6ID);
+                ChangeActivity(item6ID);
+                return true;
+            case R.id.item7:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item7ID = item.getItemId();
+                ChangeActivity(item7ID);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

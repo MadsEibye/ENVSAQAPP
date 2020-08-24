@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/SkalaDrawerLayout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/AUBLUE"
+    android:background="@color/Lightblue"
     android:layout_height="match_parent"
-    tools:context=".GroenRute"
-    android:id="@+id/GroenDrawerLayout">
+    tools:context=".Forureningskala">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
+        <ImageView
+            android:id="@+id/SkalaImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/air_chart_foreground"
+            />
 
     </LinearLayout>
 
+
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/GroenNav_view"
+        android:id="@+id/SkalaNav_view"
         android:background="@color/Lightblue"
         android:layout_width="230dp"
         android:layout_height="match_parent"
@@ -25,4 +33,4 @@
         android:layout_gravity="start"
         />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>

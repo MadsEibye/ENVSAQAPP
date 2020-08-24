@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/loadingscreen_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GroenRute"></activity>
+        <activity android:name=".Forureningskala"></activity>
+        <activity android:name=".GroenRute" />
         <activity android:name=".Notifikationer" />
         <activity
             android:name=".ForureningsUdsigt"
