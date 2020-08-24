@@ -5,23 +5,25 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -39,6 +41,8 @@ import com.google.android.material.navigation.NavigationView;
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    //region Instance Fields
     public ArcGISMap map;
     private MapView mapView;
     protected LocationManager locationManager;
@@ -53,7 +57,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
+    private Integer item1ID;
+    private Integer item2ID;
+    private Integer item3ID;
+    private Integer item4ID;
+    private Integer item5ID;
+    private Integer item6ID;
+    private Integer item7ID;
+    //endregion Instance Fields
 
+    //region Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +105,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.MainNav_view);
 
-    } // end of onCreate
+        notifikationskanal();
+
+    }//End of OnCreate
+
+
 
     private void LoadMap(double Latitude, double Longitude) {
 
@@ -204,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(MainActivity.this, Info.class);
+                    Intent i = new Intent(MainActivity.this, GroenRute.class);
                     i.putExtra("userX", pointY);
                     i.putExtra("userY", pointX);
                     startActivity(i);
@@ -216,18 +233,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(MainActivity.this, GroenRute.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
-                }
-            }, TIME_OUT);
-        } else if (ID == item6ID) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
                     Intent i = new Intent(MainActivity.this, Notifikationer.class);
                     i.putExtra("userX", pointY);
                     i.putExtra("userY", pointX);
@@ -236,8 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item7ID) {
+        } else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -250,15 +254,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }, TIME_OUT);
         }
+        else if (ID == item7ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Info.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }
     }
-
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -272,32 +281,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item1:
+            case R.id.ForHerItem1:
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.item2:
+            case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-            case R.id.item3:
+            case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;
-            case R.id.item4:
+            case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
                 return true;
-            case R.id.item5:
+            case R.id.NotiItem5:
                 item5ID = item.getItemId();
                 //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 ChangeActivity(item5ID);
                 return true;
-            case R.id.item6:
+            case R.id.SkalaItem6:
                 item6ID = item.getItemId();
                 //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 ChangeActivity(item6ID);
-            case R.id.item7:
+                return true;
+            case R.id.infoItem7:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
@@ -312,6 +322,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.MainNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    private void notifikationskanal(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1);{
+            CharSequence name = "min paamindelses kanal";
+            String description = "kanal til luftforurenings app";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("ny notifikation", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    //endregion Methods
 }
 
 

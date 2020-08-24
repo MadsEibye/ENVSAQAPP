@@ -7,12 +7,15 @@ import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 public class IntroActivity extends AppCompatActivity {
+    //region Instance Fields
     private static int TIME_OUT = 5000;
     private ProgressBar progressBar;
     private int mLoading = 0;
-    private Handler mHandler = new Handler();
-    private TextView textView;
+    //endregion Instance Fields
+
+    //region Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,4 +42,6 @@ public class IntroActivity extends AppCompatActivity {
             }
         }).start();
     }
+    //endregion Methods
+
 };

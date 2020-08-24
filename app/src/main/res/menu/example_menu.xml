@@ -2,38 +2,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
- <item android:id="@+id/item1"
+ <item android:id="@+id/ForHerItem1"
 android:icon="@drawable/ic_home"
      android:title="Forurening her!"
      app:showAsAction="never"/>
 
- <item android:id="@+id/item2"
+ <item android:id="@+id/KortItem2"
      android:icon="@drawable/ic_map"
      android:title="Kort"
      app:showAsAction="never"/>
 
- <item android:id="@+id/item3"
+ <item android:id="@+id/UdsigtItem3"
      android:icon="@drawable/ic_sologsky"
      android:title="Forureningsudsigt"
      app:showAsAction="never"
      />
 
- <item android:id="@+id/item5"
+ <item android:id="@+id/GroenItem4"
      android:icon="@drawable/ic_pedal_bike"
      android:title="Grøn Rute"
      app:showAsAction="never"/>
 
- <item android:id="@+id/item6"
+ <item android:id="@+id/NotiItem5"
      android:icon="@drawable/ic_notifications"
      android:title="Notifikationer"
      app:showAsAction="never"/>
 
- <item android:id="@+id/item7"
+ <item android:id="@+id/SkalaItem6"
      android:icon="@drawable/ic_chart"
      android:title="Forureningskala"
      app:showAsAction="never"/>
 
- <item android:id="@+id/item4"
+ <item android:id="@+id/infoItem7"
      android:icon="@drawable/ic_info"
      android:title="Info"
      app:showAsAction="never"/>

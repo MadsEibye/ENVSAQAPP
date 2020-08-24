@@ -20,13 +20,24 @@ import com.google.android.material.navigation.NavigationView;
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class ForureningHer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    //region Instance Fields
     private static double userX;
     private static double userY;
     private TextView userLocationText;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    @Override
+    private Integer item1ID;
+    private Integer item2ID;
+    private Integer item3ID;
+    private Integer item4ID;
+    private Integer item5ID;
+    private Integer item6ID;
+    private Integer item7ID;
+    //endregion Instance Fields
 
+    //region Methods
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forurening_her);
@@ -91,7 +102,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, Info.class);
+                    Intent i = new Intent(ForureningHer.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -104,7 +115,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, GroenRute.class);
+                    Intent i = new Intent(ForureningHer.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -117,7 +128,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, Notifikationer.class);
+                    Intent i = new Intent(ForureningHer.this, Forureningskala.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -129,7 +140,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, Forureningskala.class);
+                    Intent i = new Intent(ForureningHer.this, Info.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -140,14 +151,6 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         }
     }
 
-
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -163,37 +166,33 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item1:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.ForHerItem1:
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.item2:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-            case R.id.item3:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;
-            case R.id.item4:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
                 return true;
-            case R.id.item5:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.NotiItem5:
                 item5ID = item.getItemId();
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 ChangeActivity(item5ID);
                 return true;
-            case R.id.item6:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.SkalaItem6:
                 item6ID = item.getItemId();
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 ChangeActivity(item6ID);
                 return true;
-            case R.id.item7:
+            case R.id.infoItem7:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
@@ -201,10 +200,12 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             default:
                 return super.onOptionsItemSelected(item);
         }
+
     }
 
     private void setNavigationViewListener() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.ForHerNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    //endregion Methods
 }

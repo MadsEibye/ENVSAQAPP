@@ -5,26 +5,44 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class Notifikationer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    //region Instance Fields
     private static double userX;
     private static double userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private Button button;
+    private Integer item1ID;
+    private Integer item2ID;
+    private Integer item3ID;
+    private Integer item4ID;
+    private Integer item5ID;
+    private Integer item6ID;
+    private Integer item7ID;
+    //endregion Instance Fields
 
+    //region Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifikationer);
-
+        button = findViewById(R.id.notiButton);
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
@@ -35,10 +53,25 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
         setNavigationViewListener();
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(this, "notifikationen virker", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(Notifikationer.this, PaamindelseNoti.class);
+                PendingIntent pendingintent = PendingIntent.getBroadcast(Notifikationer.this, 0, i, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                long currenttime = System.currentTimeMillis();
+                long timeout = 1000 * 10;
+                alarmManager.set(AlarmManager.RTC_WAKEUP, currenttime + timeout, pendingintent);
+            }
+        });
+
+
     }
 
-    public void ChangeActivity(Integer ID){
-        if (ID == item1ID){
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -46,13 +79,12 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item2ID){
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -60,12 +92,11 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item3ID){
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -73,25 +104,11 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item4ID) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(Notifikationer.this, Info.class);
-                    i.putExtra("userX", userX);
-                    i.putExtra("userY", userY);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                    finish();
-                }
-            }, TIME_OUT);
-        }
-        else if (ID == item5ID) {
+        } else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -99,12 +116,11 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item6ID) {
+        } else if (ID == item5ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -112,11 +128,11 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        } else if (ID == item7ID) {
+        } else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -128,63 +144,60 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                     finish();
                 }
             }, TIME_OUT);
+        } else if (ID == item7ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Notifikationer.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
         }
     }
 
-
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)){
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
 
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item1:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.ForHerItem1:
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.item2:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-            case R.id.item3:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;
-            case R.id.item4:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
                 return true;
-            case R.id.item5:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.NotiItem5:
                 item5ID = item.getItemId();
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 ChangeActivity(item5ID);
                 return true;
-            case R.id.item6:
-                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+            case R.id.SkalaItem6:
                 item6ID = item.getItemId();
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
                 ChangeActivity(item6ID);
                 return true;
-            case R.id.item7:
+            case R.id.infoItem7:
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
@@ -192,10 +205,12 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
             default:
                 return super.onOptionsItemSelected(item);
         }
+
     }
 
     private void setNavigationViewListener() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.NotiNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    //endregion Methods
 }
