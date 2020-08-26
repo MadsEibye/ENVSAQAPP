@@ -1,12 +1,11 @@
 package com.example.envsaqapp;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ContentLoadingProgressBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
 
 public class IntroActivity extends AppCompatActivity {
     //region Instance Fields
@@ -16,6 +15,10 @@ public class IntroActivity extends AppCompatActivity {
     //endregion Instance Fields
 
     //region Methods
+    //Start of Comments onCreate
+    /*
+    This method shows the intro screen for five seconds and then change activity to MainActivity.
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

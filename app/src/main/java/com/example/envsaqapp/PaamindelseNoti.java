@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
-import android.net.Uri;
-import android.provider.Settings;
+
+
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -14,7 +14,10 @@ public class PaamindelseNoti extends BroadcastReceiver {
 
     public Integer NotiID = 0;
 
-
+    //Start of Comments notifikationskanal()
+    /*
+    This method onReceive() receives a context and an intent and then it sets icon, title, text, sound and priority.
+    */
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "ny notifikation")
