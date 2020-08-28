@@ -35,6 +35,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private double userXsearch;
+    private double userYsearch;
     //endregion Instance Fields
 
     //region Methods
@@ -69,6 +71,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         sqlQuerys.connect();
+
 
     }
 

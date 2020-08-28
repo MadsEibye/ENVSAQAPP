@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -131,11 +132,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
-        point = new Point(Longitude, Latitude, SpatialReferences.getWebMercator());
-        pointX = point.getX();
-        pointY = point.getY();
-        Point pointXY = new Point(pointX, pointY, SpatialReferences.getWgs84());
-        Graphic graphic = new Graphic(pointXY, symbol);
+        point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
+        Log.d("POINTS", "" + Longitude + Latitude);
+        Log.d("POINTS", "" + pointX + pointY);
+        Graphic graphic = new Graphic(point, symbol);
         graphicsOverlay.getGraphics().add(graphic);
     }
 

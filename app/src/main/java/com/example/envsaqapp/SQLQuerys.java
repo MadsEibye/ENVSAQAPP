@@ -1,5 +1,6 @@
 package com.example.envsaqapp;
 
+import android.location.Location;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
@@ -111,6 +112,15 @@ public class SQLQuerys {
             }
 
             return conn;
+        }
+
+
+        private String dbName = "lpdv2k12_kbh_no2_gade";
+        public void getDataFromLocation(double latitude, double longitude){
+
+            String query = "SELECT no2_street, street_nam" +
+                    "FROM " + dbName + "WHERE lat <= " + latitude + "and lat >= " + latitude + "and long <= "
+                    + longitude + "and long >= " + longitude;
         }
 
     }
