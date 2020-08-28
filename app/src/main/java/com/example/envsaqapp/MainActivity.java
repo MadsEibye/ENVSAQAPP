@@ -133,8 +133,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
         point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
-        Log.d("POINTS", "" + Longitude + Latitude);
-        Log.d("POINTS", "" + pointX + pointY);
         Graphic graphic = new Graphic(point, symbol);
         graphicsOverlay.getGraphics().add(graphic);
     }
