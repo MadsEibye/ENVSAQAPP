@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SQLQuerys {
-    public String SQL = "SQL";
+    /*public String SQL = "SQL";
 
     // Connect to (remote) PostgreSQL Server at RIST8016
     //private final String url = "jdbc:postgresql://[http://rist8016.uni.au.dk::5555]:5433/appdev_jk";
@@ -32,6 +32,7 @@ public class SQLQuerys {
      *
      * @return a Connection object
      */
+    /*
     public Connection connect() {
         Connection conn = null;
         try {
@@ -75,6 +76,42 @@ public class SQLQuerys {
         } finally {
             if (stmt != null) { stmt.close(); }
         }
+    }*/
+
+    /**
+     * @author postgresqltutorial.com
+     */
+
+        // Connect to (remote) PostgreSQL Server at RIST8016
+        //private final String url = "jdbc:postgresql://[http://rist8016.uni.au.dk::5555]:5433/appdev_jk";
+        // Connect to local PostgreSQL server
+        private final String url = "jdbc:postgresql://10.0.2.2/postgres";
+        private final String user = "postgres";
+        // Remote database password
+        //private final String password = "jkatpg11";
+        // Local database password
+        private final String password = "admin";
+
+
+        /**
+         * Connect to the PostgreSQL database
+         *
+         * @return a Connection object
+         */
+        public Connection connect() {
+            Connection conn = null;
+            try {
+                conn = DriverManager.getConnection(url, user, password);
+                System.out.println("Connected to the PostgreSQL server successfully.");
+                Log.d("SQLTEST", "Connection to database successfully established.");
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                Log.d("SQLTEST", "Connection to database unsuccessfully established.");
+                Log.d("SQLTEST", e.getMessage());
+            }
+
+            return conn;
+        }
+
     }
 
-}
