@@ -364,6 +364,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setNavigationViewListener() {
         navigationView = (NavigationView) findViewById(R.id.MainNav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     //Start of Comments notifikationskanal()
