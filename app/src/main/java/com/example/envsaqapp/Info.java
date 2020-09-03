@@ -237,7 +237,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.ForHerNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.InfoNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
     //endregion Methods

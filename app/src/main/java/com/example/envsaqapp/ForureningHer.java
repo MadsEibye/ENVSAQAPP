@@ -70,7 +70,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         SQLQuerys sqlQuerys = new SQLQuerys();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        sqlQuerys.connect();
+        //sqlQuerys.connect();
 
 
     }
