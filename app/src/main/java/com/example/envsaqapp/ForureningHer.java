@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+
+import Models.Data;
+import REST.ApiUtils;
+import REST.DataService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -70,6 +78,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         SQLQuerys sqlQuerys = new SQLQuerys();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        searchForLocation();
         //sqlQuerys.connect();
 
 
@@ -244,6 +253,36 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     private void setNavigationViewListener() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.ForHerNav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void searchForLocation(){
+        DataService dataService = ApiUtils.getTrackService();
+        Call<Data> queueSong = dataService.SearchForLocation("select=id&lat=eq.55.6576197384&long=eq.12.5579398109");
+        queueSong.enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                if (response.isSuccessful()) {
+                    Log.d("QUERY", " " + response.code());
+                    Log.d("QUERY", response.message());
+                    Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL", Toast.LENGTH_LONG).show();
+                    //Log.d("TESTING", SongsInQueue.toString());
+                    finish();
+
+
+                } else {
+                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
+                    Toast.makeText(ForureningHer.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
+                    Log.d("Queue", message);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+                Toast.makeText(ForureningHer.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                Log.d("Queue", t.toString());
+            }
+        });
     }
 
     //endregion Methods
