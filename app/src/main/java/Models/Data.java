@@ -7,7 +7,7 @@ public class Data {
     @SerializedName("href")
     @Expose
     private String href;
-    @SerializedName("id")
+    @SerializedName("gid")
     @Expose
     private String id;
     @SerializedName("name")

@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -19,9 +17,13 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import Models.Data;
 import REST.ApiUtils;
 import REST.DataService;
+import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,7 +70,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
         userLocationText = findViewById(R.id.ForureningHerTextView);
-        userLocationText.setText("X " + userX + " " + "Y "  + userY);
+        userLocationText.setText("X " + userX + " " + "Y " + userY);
         mDrawerLayout = findViewById(R.id.ForHerDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -93,8 +95,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     activity that was pressed in the navigationbar.
     overridePendingTransition is just the animation that is run when you change the activity, and in this case its a fade_in fade_out. And the finish() method is just closing down the last activity
     */
-    public void ChangeActivity(Integer ID){
-        if (ID == item1ID){
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -102,13 +104,12 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item2ID){
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -116,12 +117,11 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item3ID){
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -129,12 +129,11 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item4ID) {
+        } else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -142,12 +141,11 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item5ID) {
+        } else if (ID == item5ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -155,12 +153,11 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item6ID) {
+        } else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -168,7 +165,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -193,12 +190,12 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)){
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
 
         }
 
         return super.onOptionsItemSelected(item);
-        }
+    }
 
     //Start of Comments onNavigationItemSelected
     /*
@@ -255,18 +252,20 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void searchForLocation(){
+
+    private void searchForLocation() {
+        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=id&lat=eq.55.6576197384&long=eq.12.5579398109");
         DataService dataService = ApiUtils.getTrackService();
-        Call<Data> queueSong = dataService.SearchForLocation("select=id&lat=eq.55.6576197384&long=eq.12.5579398109");
-        queueSong.enqueue(new Callback<Data>() {
+        Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
+        queueSong.request().toString().replace("%3d", "=");
+        queueSong.enqueue(new Callback<ArrayList<Data>>() {
             @Override
-            public void onResponse(Call<Data> call, Response<Data> response) {
+            public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
                 if (response.isSuccessful()) {
                     Log.d("QUERY", " " + response.code());
                     Log.d("QUERY", response.message());
-                    Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().get(0).getId(), Toast.LENGTH_LONG).show();
                     //Log.d("TESTING", SongsInQueue.toString());
-                    finish();
 
 
                 } else {
@@ -278,12 +277,24 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             }
 
             @Override
-            public void onFailure(Call<Data> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
                 Toast.makeText(ForureningHer.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
                 Log.d("Queue", t.toString());
             }
         });
     }
 
+    /*
+    private void searchForLocation() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(chain -> {
+            Request request = chain.request();
+            String string = request.url().toString();
+            string = string.replace("%26", "=");
+            Request newRequest = new Request.Builder()
+                    .url(string)
+                    .build();
+            return chain.proceed(newRequest);
+        });*/
     //endregion Methods
 }
