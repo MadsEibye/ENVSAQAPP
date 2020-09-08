@@ -270,10 +270,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     Log.d("QUERY", response.body().toString());
                     Log.d("QUERY", url.toString());
                     Data responseObject1 = response.body().get(0);
-                    Data responseObject2 = response.body().get(1);
                     Toast.makeText(ForureningHer.this,responseObject1.getStreet_nam(),Toast.LENGTH_LONG).show();
                     Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                    Log.d("RESPONSEOBJECTS", responseObject2.toString());
                     //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
                     //Log.d("TESTING", SongsInQueue.toString());
 

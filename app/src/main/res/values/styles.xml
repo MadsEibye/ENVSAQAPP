@@ -5,6 +5,9 @@
         <item name="colorPrimary">@color/Lightblue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/White</item>
+        <item name="android:editTextColor">@color/White</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
