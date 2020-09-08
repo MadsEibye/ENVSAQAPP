@@ -3,6 +3,7 @@ package com.example.envsaqapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import android.Manifest;
@@ -22,7 +23,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
@@ -48,13 +52,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapView mapView;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
-    public double Latitude = 57.72093;
-    public double Longitude = 10.58394;
+    public float Latitude;
+    public float Longitude;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Point point;
     FusedLocationProviderClient fusedLocationProviderClient;
-    double pointX;
-    double pointY;
+    public float pointX;
+    public float pointY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private SearchView searchView;
     //endregion Instance Fields
 
     //region Methods
@@ -90,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        searchView = findViewById(R.id.MainsearchView);
+        searchView.bringToFront();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -117,12 +123,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }//End of OnCreate
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideKeyboardFrom(MainActivity.this, searchView);
+    }
+
     //Start of Comments LoadMap()
     /*
     This method takes two arguments Latitude and Longitude, the method uses a mapview and a graphicsoverlay to set a map and show it then we plot a point
     at the device location on the map.
     */
-    private void LoadMap(double Latitude, double Longitude) {
+    private void LoadMap(float Latitude, float Longitude) {
 
         mapView = findViewById(R.id.MainMapView);
         map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 15);
@@ -133,8 +145,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
         point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
+        pointX = Latitude;
+        pointY = Longitude;
         Graphic graphic = new Graphic(point, symbol);
         graphicsOverlay.getGraphics().add(graphic);
+    }
+
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void hideKeyboard(View view){
+        hideKeyboardFrom(MainActivity.this, searchView);
     }
 
     //Start of Comments updateGPS()
@@ -152,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onSuccess(Location location) {
                     Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
                     Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
-                    Latitude = location.getLatitude();
-                    Longitude = location.getLongitude();
+                    Latitude = (float) location.getLatitude();
+                    Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
                     LoadMap(Latitude, Longitude);

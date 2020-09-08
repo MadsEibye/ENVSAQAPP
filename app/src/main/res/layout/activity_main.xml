@@ -8,9 +8,29 @@
     tools:context=".MainActivity"
     android:id="@+id/DrawerLayout">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/MainsearchView"
+            app:iconifiedByDefault="false"
+            android:background="@color/BlackOpacity"
+            android:clickable="true"
+            android:layout_centerHorizontal="true"
+            app:queryHint="Søg her efter adresse"
+            android:inputType="textPostalAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/MainMapView"
         mapoptions.ZoomLevel="80"
@@ -18,8 +38,8 @@
         mapoptions.center="34.056215, -117.195668"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/MainNav_view"

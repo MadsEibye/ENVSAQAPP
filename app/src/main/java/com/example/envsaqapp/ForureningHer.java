@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import Models.Data;
@@ -33,8 +35,8 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class ForureningHer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    private static double userX;
-    private static double userY;
+    private static float userX;
+    private static float userY;
     private TextView userLocationText;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -67,8 +69,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_forurening_her);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Intent intent = getIntent();
-        userX = intent.getDoubleExtra("userX", userX);
-        userY = intent.getDoubleExtra("userY", userY);
+        userX = intent.getFloatExtra("userX", userX);
+        userY = intent.getFloatExtra("userY", userY);
         userLocationText = findViewById(R.id.ForureningHerTextView);
         userLocationText.setText("X " + userX + " " + "Y " + userY);
         mDrawerLayout = findViewById(R.id.ForHerDrawerLayout);
@@ -255,8 +257,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
 
     private void searchForLocation() {
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=gid,lat,long,street_nam,house_num,no2_street" +
-                "&st_dwithin(geom,st_setsrid(st_makepoint(12.5655,55.6759),4326),10)&order=id" +
-                "&st_distance(geom,st_setsrid(st_makepoint(12.5655,55.6759),4326))&limit=1");
+                "&st_dwithin(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326),10)" +
+                "&st_distance(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326))&limit=2");
         DataService dataService = ApiUtils.getTrackService();
         Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
         queueSong.request().toString().replace("%3d", "=");
@@ -266,8 +268,12 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 if (response.isSuccessful()) {
                     Log.d("QUERY", " " + response.code());
                     Log.d("QUERY", response.body().toString());
-                    Data responseObject = response.body().get(0);
-                    Toast.makeText(ForureningHer.this,responseObject.getStreet_nam(),Toast.LENGTH_LONG).show();
+                    Log.d("QUERY", url.toString());
+                    Data responseObject1 = response.body().get(0);
+                    Data responseObject2 = response.body().get(1);
+                    Toast.makeText(ForureningHer.this,responseObject1.getStreet_nam(),Toast.LENGTH_LONG).show();
+                    Log.d("RESPONSEOBJECTS", responseObject1.toString());
+                    Log.d("RESPONSEOBJECTS", responseObject2.toString());
                     //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
                     //Log.d("TESTING", SongsInQueue.toString());
 
