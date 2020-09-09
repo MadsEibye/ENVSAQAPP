@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.WithHint;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import android.Manifest;
@@ -27,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
@@ -42,6 +44,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
+
+import java.lang.reflect.Field;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item6ID;
     private Integer item7ID;
     private SearchView searchView;
+    private SearchView ssearchView;
     //endregion Instance Fields
 
     //region Methods
@@ -97,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         searchView = findViewById(R.id.MainsearchView);
         searchView.bringToFront();
+        searchView.setIconified(false);
+        searchView.clearFocus();
+        setCloseSearchIcon(searchView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -121,7 +129,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setNavigationViewListener();
         notifikationskanal();
 
+
     }//End of OnCreate
+
+    private void setCloseSearchIcon(SearchView searchView) {
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mCloseButton");
+            searchField.setAccessible(true);
+            ImageView closeBtn = (ImageView) searchField.get(searchView);
+            closeBtn.setImageResource(R.drawable.ic_clear_icon_white);
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -406,6 +429,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+
     //endregion Methods
 }
 

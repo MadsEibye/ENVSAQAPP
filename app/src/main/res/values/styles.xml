@@ -5,7 +5,21 @@
         <item name="colorPrimary">@color/Lightblue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/White</item>
+        <item name="android:editTextColor">@color/White</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
     </style>
+
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchHintIcon">@drawable/ic_search_icon_white_25</item>
+        <item name="searchIcon">@drawable/ic_search_icon_white_25</item>
+    </style>
+
+    <style name="MySearchViewClearButtonStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchHintIcon">@drawable/ic_map</item>
+        <item name="searchIcon">@drawable/ic_map</item>
+    </style>
+
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
