@@ -47,7 +47,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
 
-=======
 import java.lang.reflect.Field;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -143,9 +142,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setNavigationViewListener();
         notifikationskanal();
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
 
+        {
+            @Override
+            public boolean onQueryTextSubmit (String query){
+                // do something on text submit
+                SearchForAddress();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange (String newText){
+                // do something when text changes
+                return false;
+            }
+        });
     }//End of OnCreate
-
     private void setCloseSearchIcon(SearchView searchView) {
         try {
             Field searchField = SearchView.class.getDeclaredField("mCloseButton");
@@ -159,22 +172,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
     }
-    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            // do something on text submit
-            SearchForAddress();
-            return false;
-        }
 
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            // do something when text changes
-            return false;
-        }
-    });
 
-}//End of OnCreate
 
     @Override
     protected void onStart() {
@@ -270,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                            @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
                 updateGPS();
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
@@ -332,9 +330,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent i = new Intent(MainActivity.this, GroenRute.class);
                     i.putExtra("userX", pointY);
                     i.putExtra("userY", pointX);
-                    startActivity(i);
+                    //startActivity(i);
+                    Toast.makeText(MainActivity.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
+                    //finish();
                 }
             }, TIME_OUT);
         } else if (ID == item5ID) {
@@ -489,11 +488,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             float searchY = responseObject1.getLongitude();
                             LoadMap(searchX, searchY);
                             searchView.clearFocus();
-                            Toast.makeText(MainActivity.this, responseObject1.getStreet_nam(), Toast.LENGTH_LONG).show();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                            //Log.d("RESPONSEOBJECTS", responseObject2.toString());
-                            //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
-                            //Log.d("TESTING", SongsInQueue.toString());
                         } else {
                             Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
                         }
@@ -512,8 +507,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("Queue", t.toString());
                 }
             });
-    }
-        else{
+        } else {
             Toast.makeText(MainActivity.this, "Husk at indtaste et husnummer", Toast.LENGTH_LONG).show();
         }
     }

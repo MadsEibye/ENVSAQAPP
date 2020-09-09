@@ -15,6 +15,29 @@ public class Data {
     public Data() {
     }
 
+    @SerializedName("pm2_5")
+    @Expose
+    private BigDecimal PM2_5;
+
+    public BigDecimal getPM2_5() {
+        return PM2_5;
+    }
+
+    public void setPM2_5(BigDecimal PM2_5) {
+        this.PM2_5 = PM2_5;
+    }
+
+    public BigDecimal getPM10() {
+        return PM10;
+    }
+
+    public void setPM10(BigDecimal PM10) {
+        this.PM10 = PM10;
+    }
+
+    @SerializedName("pm10")
+    @Expose
+    private BigDecimal PM10;
     @SerializedName("object_id")
     @Expose
     private BigInteger object_id;
@@ -31,10 +54,12 @@ public class Data {
     @Expose
     private BigInteger y_utm;
 
-    public Data(Integer gid, BigInteger object_id, float longitude, float latitude,
-                BigInteger x_utm, BigInteger y_utm, String x_y_utm, String street_nam, String house_num,
-                String kommune, BigDecimal no2_street, BigInteger idnr, Geometry geom) {
+    public Data(Integer gid, BigDecimal PM2_5, BigDecimal PM10, BigInteger object_id, float longitude,
+                float latitude, BigInteger x_utm, BigInteger y_utm, String x_y_utm, String street_nam,
+                String house_num, String kommune, BigDecimal no2_street, BigInteger idnr, Geometry geom) {
         this.gid = gid;
+        this.PM2_5 = PM2_5;
+        this.PM10 = PM10;
         this.object_id = object_id;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -179,6 +204,8 @@ public class Data {
     public String toString() {
         return "Data{" +
                 "gid=" + gid +
+                ", PM2_5=" + PM2_5 +
+                ", PM10=" + PM10 +
                 ", object_id=" + object_id +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
@@ -193,7 +220,8 @@ public class Data {
                 ", geom=" + geom +
                 '}';
     }
-/*
+
+    /*
     @Override
     public String toString() {
 

@@ -129,9 +129,10 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                     Intent i = new Intent(Info.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
-                    startActivity(i);
+                    //startActivity(i);
+                    Toast.makeText(Info.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                    finish();
+                    //finish();
                 }
             }, TIME_OUT);
 

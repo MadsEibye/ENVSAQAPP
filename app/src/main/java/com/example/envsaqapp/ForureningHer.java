@@ -37,7 +37,10 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     //region Instance Fields
     private static float userX;
     private static float userY;
-    private TextView userLocationText;
+    private TextView forureningHerTextViewAddress;
+    private TextView forureningHerTextViewNo2;
+    private TextView forureningHerTextViewPM10;
+    private TextView forureningHerTextViewPM25;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Integer item1ID;
@@ -47,8 +50,6 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
-    private double userXsearch;
-    private double userYsearch;
     //endregion Instance Fields
 
     //region Methods
@@ -71,19 +72,15 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         Intent intent = getIntent();
         userX = intent.getFloatExtra("userX", userX);
         userY = intent.getFloatExtra("userY", userY);
-        userLocationText = findViewById(R.id.ForureningHerTextView);
-        userLocationText.setText("X " + userX + " " + "Y " + userY);
         mDrawerLayout = findViewById(R.id.ForHerDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setNavigationViewListener();
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        SQLQuerys sqlQuerys = new SQLQuerys();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         searchForLocation();
-        //sqlQuerys.connect();
 
 
     }
@@ -142,9 +139,10 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     Intent i = new Intent(ForureningHer.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
-                    startActivity(i);
+                    //startActivity(i);
+                    Toast.makeText(ForureningHer.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
+                    //finish();
                 }
             }, TIME_OUT);
         } else if (ID == item5ID) {
@@ -255,6 +253,11 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     }
 
 
+    private int gid;
+    private String address;
+    private BigDecimal no2;
+    private BigDecimal pm2_5;
+    private BigDecimal pm10;
 
     private void searchForLocation() {
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=gid,lat,long,street_nam,house_num,no2_street" +
@@ -270,8 +273,12 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     Log.d("QUERY", response.body().toString());
                     Log.d("QUERY", url.toString());
                     Data responseObject1 = response.body().get(0);
-                    Toast.makeText(ForureningHer.this,responseObject1.getStreet_nam(),Toast.LENGTH_LONG).show();
+                    address = responseObject1.getStreet_nam() + " " + responseObject1.getHouse_num();
+                    no2 = responseObject1.getNo2_street();
+                    pm2_5 = responseObject1.getPM2_5();
+                    pm10 = responseObject1.getPM10();
                     Log.d("RESPONSEOBJECTS", responseObject1.toString());
+                    PopulateTextView();
                     //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
                     //Log.d("TESTING", SongsInQueue.toString());
 
@@ -290,6 +297,17 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 Log.d("Queue", t.toString());
             }
         });
+    }
+    private void PopulateTextView(){
+        forureningHerTextViewAddress = findViewById(R.id.ForureningHerTextViewAddress);
+        forureningHerTextViewAddress.setText(address);
+        forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
+        forureningHerTextViewNo2.setText("" + no2);
+        forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
+        forureningHerTextViewPM10.setText("" + pm10);
+        forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
+        forureningHerTextViewPM25.setText("" + pm2_5);
+
     }
 
     /*

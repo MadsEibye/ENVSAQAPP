@@ -5,15 +5,190 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ForureningHer">
+    tools:context=".ForureningHer"
+    android:background="@color/Black">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_centerInParent="true"
-        android:id="@+id/ForureningHerTextView"
-        android:text="Forurening her!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Forurening nær dig"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/White"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="sans-serif-black"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="20dp">
+            <TextView
+            android:layout_centerInParent="true"
+            android:text="Den nærmeste adresse for din lokation:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="4"
+            android:textColor="@color/White"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="sans-serif-black"
+            android:textSize="15sp" />
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:id="@+id/ForureningHerTextViewAddress"
+                android:text="Forurening her!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="end"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="NO2 koncentration:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:id="@+id/ForureningHerTextViewNo2"
+                android:text="Forurening her!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="end"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="PM2.5 koncentration:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:id="@+id/ForureningHerTextViewPM2.5"
+                android:text="Forurening her!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="end"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="PM10 koncentration:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:id="@+id/ForureningHerTextViewPM10"
+                android:text="Forurening her!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="end"
+                android:layout_weight="4"
+                android:textColor="@color/White"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="sans-serif-black"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:text="Her kan der stå information om NO2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="4"
+            android:textColor="@color/White"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="sans-serif-black"
+            android:textSize="15sp"
+            android:layout_marginTop="100dp"/>
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:text="Her kan der stå information om PM2.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="4"
+            android:textColor="@color/White"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="sans-serif-black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:text="Her kan der stå information om PM10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="4"
+            android:textColor="@color/White"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="sans-serif-black"
+            android:textSize="15sp" />
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/ForHerNav_view"

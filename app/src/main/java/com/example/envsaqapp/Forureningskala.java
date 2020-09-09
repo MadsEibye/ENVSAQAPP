@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -113,9 +114,10 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
                     Intent i = new Intent(Forureningskala.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
-                    startActivity(i);
+                    //startActivity(i);
+                    Toast.makeText(Forureningskala.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
+                    //finish();
                 }
             }, TIME_OUT);
         } else if (ID == item5ID) {

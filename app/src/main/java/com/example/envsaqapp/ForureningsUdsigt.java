@@ -119,9 +119,10 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     Intent i = new Intent(ForureningsUdsigt.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
-                    startActivity(i);
+                    //startActivity(i);
+                    Toast.makeText(ForureningsUdsigt.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                    finish();
+                    //finish();
                 }
             }, TIME_OUT);
         }
