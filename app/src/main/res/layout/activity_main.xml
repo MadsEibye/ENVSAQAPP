@@ -19,7 +19,7 @@
             android:clickable="true"
             android:layout_centerHorizontal="true"
             app:queryHint="Søg her efter adresse"
-            android:inputType="textPostalAddress"
+            android:inputType="textCapSentences"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

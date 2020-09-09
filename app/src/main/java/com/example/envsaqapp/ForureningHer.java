@@ -255,13 +255,13 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     }
 
 
+
     private void searchForLocation() {
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=gid,lat,long,street_nam,house_num,no2_street" +
                 "&st_dwithin(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326),10)" +
-                "&st_distance(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326))&limit=2");
+                "&st_distance(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326))&limit=1");
         DataService dataService = ApiUtils.getTrackService();
         Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
-        queueSong.request().toString().replace("%3d", "=");
         queueSong.enqueue(new Callback<ArrayList<Data>>() {
             @Override
             public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
@@ -270,10 +270,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                     Log.d("QUERY", response.body().toString());
                     Log.d("QUERY", url.toString());
                     Data responseObject1 = response.body().get(0);
-                    Data responseObject2 = response.body().get(1);
                     Toast.makeText(ForureningHer.this,responseObject1.getStreet_nam(),Toast.LENGTH_LONG).show();
                     Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                    Log.d("RESPONSEOBJECTS", responseObject2.toString());
                     //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
                     //Log.d("TESTING", SongsInQueue.toString());
 

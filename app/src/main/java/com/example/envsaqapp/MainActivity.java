@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.WithHint;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -30,6 +31,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -45,7 +47,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
 
+=======
 import java.lang.reflect.Field;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
+import Models.Data;
+import REST.ApiUtils;
+import REST.DataService;
+import okhttp3.HttpUrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -74,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item6ID;
     private Integer item7ID;
     private SearchView searchView;
-    private SearchView ssearchView;
+    HttpUrl url;
     //endregion Instance Fields
 
     //region Methods
@@ -145,6 +159,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
     }
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            // do something on text submit
+            SearchForAddress();
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            // do something when text changes
+            return false;
+        }
+    });
+
+}//End of OnCreate
 
     @Override
     protected void onStart() {
@@ -180,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public void hideKeyboard(View view){
+    public void hideKeyboard(View view) {
         hideKeyboardFrom(MainActivity.this, searchView);
     }
 
@@ -247,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
     //Start of Comments ChangeActivity()
     /*
     ChangeActivity() is the handler for the navigationbar. So when you press an item in the navigationbar, ChangeActivity is run, with the ID you
@@ -330,8 +361,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item7ID) {
+        } else if (ID == item7ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -345,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }, TIME_OUT);
         }
     }
+
     //Start of Comments onOptionsItemSelected
     /*
     This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
@@ -357,6 +388,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return super.onOptionsItemSelected(item);
     }
+
     //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
@@ -401,6 +433,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
@@ -417,8 +450,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     It check if the build version is bigger or equal to ECLAIR_0_1, then it create a new notification channel
     with id, name and importance and instanciate it.
     */
-    private void notifikationskanal(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1);{
+    private void notifikationskanal() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) ;
+        {
             CharSequence name = "min paamindelses kanal";
             String description = "kanal til luftforurenings app";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -431,8 +465,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    private void SearchForAddress() {
+        String[] InputArray = searchView.getQuery().toString().split(" ");
+        if (InputArray.length >= 2) {
+            String streetName = InputArray[0];
+            String houseNumber = InputArray[1];
+            url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=id,lat,long,street_nam,house_num,no2_street" +
+                    "&street_nam=eq." + streetName + "&house_num=eq." + houseNumber);
+
+            DataService dataService = ApiUtils.getTrackService();
+            Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
+            queueSong.request().toString().replace("%3d", "=");
+            queueSong.enqueue(new Callback<ArrayList<Data>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
+                    if (response.isSuccessful()) {
+                        Log.d("ADRESSSEARCH", " " + response.code());
+                        Log.d("ADRESSSEARCH", response.body().toString());
+                        Log.d("ADRESSSEARCH", url.toString());
+                        if (response.body().size() >= 1) {
+                            Data responseObject1 = response.body().get(0);
+                            float searchX = responseObject1.getLatitude();
+                            float searchY = responseObject1.getLongitude();
+                            LoadMap(searchX, searchY);
+                            searchView.clearFocus();
+                            Toast.makeText(MainActivity.this, responseObject1.getStreet_nam(), Toast.LENGTH_LONG).show();
+                            Log.d("RESPONSEOBJECTS", responseObject1.toString());
+                            //Log.d("RESPONSEOBJECTS", responseObject2.toString());
+                            //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
+                            //Log.d("TESTING", SongsInQueue.toString());
+                        } else {
+                            Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
+                        Toast.makeText(MainActivity.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
+                        Log.d("Queue", message);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
+                    Toast.makeText(MainActivity.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                    Log.d("Queue", t.toString());
+                }
+            });
+    }
+        else{
+            Toast.makeText(MainActivity.this, "Husk at indtaste et husnummer", Toast.LENGTH_LONG).show();
+        }
+    }
     //endregion Methods
 }
-
-
-
