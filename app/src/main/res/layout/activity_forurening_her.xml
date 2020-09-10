@@ -153,8 +153,9 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/ForureningHerTextViewNo2Info"
             android:layout_centerInParent="true"
-            android:text="Her kan der stå information om NO2"
+            android:text="Kvælstofdioxid (NO2) er en kemisk forbindelse af kvælstof og ilt. Ved stuetemperatur og Jordens atmosfæriske tryk er stoffet en brun eller orange og dødeligt giftig gasart med en karakteristisk, stikkende lugt."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -162,32 +163,37 @@
             android:textColor="@color/White"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:fontFamily="sans-serif-black"
-            android:textSize="15sp"
-            android:layout_marginTop="100dp"/>
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_marginTop="30dp"/>
 
         <TextView
+            android:id="@+id/ForureningHerTextViewPM2_5Info"
             android:layout_centerInParent="true"
-            android:text="Her kan der stå information om PM2.5"
+            android:text="PM2.5 refererer til diametere på partiklerne. 2.5 betyder en diameter på 2.5 mikrometer. Disse partikler dannes ved afbrænding af brændstof og kemiske reaktioner fra atmosfæren."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:textAlignment="center"
             android:layout_weight="4"
             android:textColor="@color/White"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:fontFamily="sans-serif-black"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/ForureningHerTextViewPM10Info"
             android:layout_centerInParent="true"
-            android:text="Her kan der stå information om PM10"
+            android:text="PM10 partikler er små nok til at trænge ind i hals og lunger. Høj koncentration af PM10 kan resultere i hoste, løbende næse og kløen i øjnene."
             android:layout_width="match_parent"
+            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_weight="4"
             android:textColor="@color/White"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:fontFamily="sans-serif-black"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

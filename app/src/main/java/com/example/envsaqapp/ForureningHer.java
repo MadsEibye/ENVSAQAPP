@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -253,16 +254,13 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     }
 
 
-    private int gid;
     private String address;
-    private BigDecimal no2;
-    private BigDecimal pm2_5;
-    private BigDecimal pm10;
+    private double no2;
+    private double pm2_5;
+    private double pm10;
 
     private void searchForLocation() {
-        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=gid,lat,long,street_nam,house_num,no2_street" +
-                "&st_dwithin(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326),10)" +
-                "&st_distance(geom,st_setsrid(st_makepoint("+ userX +"," + userY +"),4326))&limit=1");
+        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long="+ userX +"&y_lat="+ userY);
         DataService dataService = ApiUtils.getTrackService();
         Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
         queueSong.enqueue(new Callback<ArrayList<Data>>() {
@@ -298,29 +296,74 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             }
         });
     }
-    private void PopulateTextView(){
+
+    private void PopulateTextView() {
         forureningHerTextViewAddress = findViewById(R.id.ForureningHerTextViewAddress);
         forureningHerTextViewAddress.setText(address);
-        forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
-        forureningHerTextViewNo2.setText("" + no2);
-        forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
-        forureningHerTextViewPM10.setText("" + pm10);
-        forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
-        forureningHerTextViewPM25.setText("" + pm2_5);
 
+        if (no2 >= 15) {
+            forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
+            forureningHerTextViewNo2.setText("" + no2);
+            forureningHerTextViewNo2.setTextColor(Color.RED);
+
+        }
+        if (no2 < 15 && no2 >= 10) {
+            forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
+            forureningHerTextViewNo2.setText("" + no2);
+            forureningHerTextViewNo2.setTextColor(Color.YELLOW);
+
+        }
+        if (no2 < 10) {
+            forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
+            forureningHerTextViewNo2.setText("" + no2);
+            forureningHerTextViewNo2.setTextColor(Color.GREEN);
+
+        }
+
+
+        if (pm2_5 >= 16) {
+            forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
+            forureningHerTextViewPM25.setText("" + pm2_5);
+            forureningHerTextViewPM25.setTextColor(Color.RED);
+
+        }
+        if (pm2_5 < 16 && pm2_5 >= 10) {
+            forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
+            forureningHerTextViewPM25.setText("" + pm2_5);
+            forureningHerTextViewPM25.setTextColor(Color.YELLOW);
+
+        }
+        if (pm2_5 < 10) {
+            forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
+            forureningHerTextViewPM25.setText("" + pm2_5);
+            forureningHerTextViewPM25.setTextColor(Color.GREEN);
+
+        }
+
+
+        if (pm10 >= 17) {
+            forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
+            forureningHerTextViewPM10.setText("" + pm10);
+            forureningHerTextViewPM10.setTextColor(Color.RED);
+
+        }
+
+        if (pm10 < 17 && pm10 >= 15.5) {
+            forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
+            forureningHerTextViewPM10.setText("" + pm10);
+            forureningHerTextViewPM10.setTextColor(Color.YELLOW);
+
+        }
+
+        if (pm10 < 16) {
+            forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
+            forureningHerTextViewPM10.setText("" + pm10);
+            forureningHerTextViewPM10.setTextColor(Color.GREEN);
+
+        }
     }
-
-    /*
-    private void searchForLocation() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(chain -> {
-            Request request = chain.request();
-            String string = request.url().toString();
-            string = string.replace("%26", "=");
-            Request newRequest = new Request.Builder()
-                    .url(string)
-                    .build();
-            return chain.proceed(newRequest);
-        });*/
-    //endregion Methods
+//endregion Methods
 }
+
+
+

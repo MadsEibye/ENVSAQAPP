@@ -4,40 +4,18 @@ import com.esri.arcgisruntime.geometry.Geometry;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Data {
     @SerializedName("gid")
     @Expose
     private Integer gid;
-
-    public Data() {
-    }
-
-    @SerializedName("pm2_5")
+    @SerializedName("pm25_street")
     @Expose
-    private BigDecimal PM2_5;
-
-    public BigDecimal getPM2_5() {
-        return PM2_5;
-    }
-
-    public void setPM2_5(BigDecimal PM2_5) {
-        this.PM2_5 = PM2_5;
-    }
-
-    public BigDecimal getPM10() {
-        return PM10;
-    }
-
-    public void setPM10(BigDecimal PM10) {
-        this.PM10 = PM10;
-    }
-
-    @SerializedName("pm10")
+    private double PM2_5;
+    @SerializedName("pm10_street")
     @Expose
-    private BigDecimal PM10;
+    private double PM10;
     @SerializedName("object_id")
     @Expose
     private BigInteger object_id;
@@ -53,10 +31,44 @@ public class Data {
     @SerializedName("y_utm")
     @Expose
     private BigInteger y_utm;
+    @SerializedName("x_y_utm")
+    @Expose
+    private String x_y_utm;
+    @SerializedName("street_nam")
+    @Expose
+    private String street_nam;
+    @SerializedName("house_num")
+    @Expose
+    private String house_num;
+    @SerializedName("kommune")
+    @Expose
+    private String kommune;
+    @SerializedName("no2_street")
+    @Expose
+    private double no2_street;
+    @SerializedName("idnr")
+    @Expose
+    private BigInteger idnr;
+    @SerializedName("geom")
+    @Expose
+    private Geometry geom;
+    @SerializedName("pt_id")
+    @Expose
+    private Integer pt_id;
+    @SerializedName("address")
+    @Expose
+    private String address;
+    @SerializedName("address_underscore")
+    @Expose
+    private String address_underscore;
 
-    public Data(Integer gid, BigDecimal PM2_5, BigDecimal PM10, BigInteger object_id, float longitude,
-                float latitude, BigInteger x_utm, BigInteger y_utm, String x_y_utm, String street_nam,
-                String house_num, String kommune, BigDecimal no2_street, BigInteger idnr, Geometry geom) {
+    public Data() {
+    }
+
+
+    public Data(Integer gid, double PM2_5, double PM10, BigInteger object_id, float longitude, float latitude, BigInteger x_utm,
+                BigInteger y_utm, String x_y_utm, String street_nam, String house_num, String kommune, double no2_street, BigInteger idnr,
+                Geometry geom, Integer pt_id, String address, String address_underscore) {
         this.gid = gid;
         this.PM2_5 = PM2_5;
         this.PM10 = PM10;
@@ -72,29 +84,50 @@ public class Data {
         this.no2_street = no2_street;
         this.idnr = idnr;
         this.geom = geom;
+        this.pt_id = pt_id;
+        this.address = address;
+        this.address_underscore = address_underscore;
     }
 
-    @SerializedName("x_y_utm")
-    @Expose
-    private String x_y_utm;
-    @SerializedName("street_nam")
-    @Expose
-    private String street_nam;
-    @SerializedName("house_num")
-    @Expose
-    private String house_num;
-    @SerializedName("kommune")
-    @Expose
-    private String kommune;
-    @SerializedName("no2_street")
-    @Expose
-    private BigDecimal no2_street;
-    @SerializedName("idnr")
-    @Expose
-    private BigInteger idnr;
-    @SerializedName("geom")
-    @Expose
-    private Geometry geom;
+    public Integer getPt_id() {
+        return pt_id;
+    }
+
+    public void setPt_id(Integer pt_id) {
+        this.pt_id = pt_id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress_underscore() {
+        return address_underscore;
+    }
+
+    public void setAddress_underscore(String address_underscore) {
+        this.address_underscore = address_underscore;
+    }
+
+    public double getPM2_5() {
+        return PM2_5;
+    }
+
+    public void setPM2_5(double PM2_5) {
+        this.PM2_5 = PM2_5;
+    }
+
+    public double getPM10() {
+        return PM10;
+    }
+
+    public void setPM10(double PM10) {
+        this.PM10 = PM10;
+    }
 
     public Integer getGid() {
         return gid;
@@ -176,11 +209,11 @@ public class Data {
         this.kommune = kommune;
     }
 
-    public BigDecimal getNo2_street() {
+    public double getNo2_street() {
         return no2_street;
     }
 
-    public void setNo2_street(BigDecimal no2_street) {
+    public void setNo2_street(double no2_street) {
         this.no2_street = no2_street;
     }
 
@@ -218,6 +251,9 @@ public class Data {
                 ", no2_street=" + no2_street +
                 ", idnr=" + idnr +
                 ", geom=" + geom +
+                ", pt_id=" + pt_id +
+                ", address='" + address + '\'' +
+                ", address_underscore='" + address_underscore + '\'' +
                 '}';
     }
 

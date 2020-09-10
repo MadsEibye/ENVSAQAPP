@@ -4,15 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.WithHint;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,18 +21,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -45,13 +37,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
-
-
 import java.lang.reflect.Field;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-
 import Models.Data;
 import REST.ApiUtils;
 import REST.DataService;
@@ -59,7 +46,6 @@ import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -73,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public float Longitude;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Point point;
-    FusedLocationProviderClient fusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     public float pointX;
     public float pointY;
     private DrawerLayout mDrawerLayout;
@@ -87,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item6ID;
     private Integer item7ID;
     private SearchView searchView;
-    HttpUrl url;
+    private HttpUrl url;
+    private SimpleMarkerSymbol symbol;
     //endregion Instance Fields
 
     //region Methods
@@ -159,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }//End of OnCreate
+
     private void setCloseSearchIcon(SearchView searchView) {
         try {
             Field searchField = SearchView.class.getDeclaredField("mCloseButton");
@@ -174,11 +162,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        hideKeyboardFrom(MainActivity.this, searchView);
+    private void PlotNewDot(float Latitude, float Longitude){
+        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED,
+                12);
+        point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
+        Graphic newgraphic = new Graphic(point, symbol);
+        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+        mapView.getGraphicsOverlays().add(graphicsOverlay);
+        if (mapView.getGraphicsOverlays().size() >= 2) {
+            //graphicsOverlay.clearSelection();
+            //mapView.getGraphicsOverlays().remove(mapView.getGraphicsOverlays().size() -1);
+            graphicsOverlay.getGraphics().add(newgraphic);
+            //mapView.getGraphicsOverlays().add(graphicsOverlay);
+            LoadMap(Latitude, Longitude);
+        }
+        else {
+            graphicsOverlay.getGraphics().add(newgraphic);
+            LoadMap(Latitude, Longitude);
+        }
     }
 
     //Start of Comments LoadMap()
@@ -186,31 +187,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     This method takes two arguments Latitude and Longitude, the method uses a mapview and a graphicsoverlay to set a map and show it then we plot a point
     at the device location on the map.
     */
-    private void LoadMap(float Latitude, float Longitude) {
+    private void PlotUserLocation(float Latitude, float Longitude){
+        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
+                12);
+        point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
+        Graphic graphic = new Graphic(point, symbol);
+        pointX = Latitude;
+        pointY = Longitude;
+        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+        mapView.getGraphicsOverlays().add(graphicsOverlay);
+        graphicsOverlay.getGraphics().add(graphic);
+        LoadMap(Latitude,Longitude);
 
+    }
+
+    private void LoadMap(float Latitude, float Longitude) {
         mapView = findViewById(R.id.MainMapView);
         map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 15);
         mapView.setMap(map);
-        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlay);
-
-        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
-                12);
-        point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
-        pointX = Latitude;
-        pointY = Longitude;
-        Graphic graphic = new Graphic(point, symbol);
-        graphicsOverlay.getGraphics().add(graphic);
-    }
-
-
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(MainActivity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    public void hideKeyboard(View view) {
-        hideKeyboardFrom(MainActivity.this, searchView);
+        mapView.getBackgroundGrid().setColor(Color.argb(100,186,217,245));
+        mapView.getBackgroundGrid().setGridLineColor(Color.argb(0,186,217,245));
     }
 
     //Start of Comments updateGPS()
@@ -223,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
@@ -232,7 +228,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
-                    LoadMap(Latitude, Longitude);
+                    LoadMap(Latitude,Longitude);
+                    PlotUserLocation(Latitude,Longitude);
                 }
             });
         } else {
@@ -463,13 +460,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     private void SearchForAddress() {
         String[] InputArray = searchView.getQuery().toString().split(" ");
         if (InputArray.length >= 2) {
             String streetName = InputArray[0];
             String houseNumber = InputArray[1];
-            url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=id,lat,long,street_nam,house_num,no2_street" +
+            url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=pt_id,lat,long,street_nam,house_num,no2_street" +
                     "&street_nam=eq." + streetName + "&house_num=eq." + houseNumber);
 
             DataService dataService = ApiUtils.getTrackService();
@@ -486,7 +482,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Data responseObject1 = response.body().get(0);
                             float searchX = responseObject1.getLatitude();
                             float searchY = responseObject1.getLongitude();
-                            LoadMap(searchX, searchY);
+                            PlotNewDot(searchX,searchY);
+                            //LoadMap(searchX, searchY);
                             searchView.clearFocus();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
                         } else {
