@@ -161,6 +161,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+// Start of Comments PlotNewDot()
+    /*
+    This method plots a dot for the address typed in the seachbar. It also uses the SimpleMarkerSymbol and GraphicOverlay to display it.
+    The dot in this method is set to color red, so you can see the difference between the user location, and the searched location.
+    When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
+     */
 
     private void PlotNewDot(float Latitude, float Longitude){
         symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED,
@@ -182,11 +188,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    //Start of Comments LoadMap()
+    //Start of Comments PlotUserLocation()
     /*
-    This method takes two arguments Latitude and Longitude, the method uses a mapview and a graphicsoverlay to set a map and show it then we plot a point
-    at the device location on the map.
+     The method takes the latitude and longitude of the user location, and then adds a SimpleMarkerSymbol displaying a blue dot.
+     It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
     */
+
     private void PlotUserLocation(float Latitude, float Longitude){
         symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
                 12);
@@ -200,6 +207,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LoadMap(Latitude,Longitude);
 
     }
+    //Start of Comments LoadMap()
+    /*
+    This method takes two arguments Latitude and Longitude, the method uses a mapview and a graphicsoverlay to set a map and show it then we plot a point
+    at the device location on the map.
+    */
 
     private void LoadMap(float Latitude, float Longitude) {
         mapView = findViewById(R.id.MainMapView);
@@ -460,6 +472,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Start of comments SearchForAddress()
+    /*
+    This method is connected to the searchbar of the app. This is the logic for when you search for a specific address in the database.
+    It has an URL, that holds the table of the database, and then pt_id, lat, long, street_nam, house_num and no2_street as parameters.
+    It connects to the table in the database, to see if the chosen address exists in the table, and then returns the position of the address using
+    latitude and longitude to place a marker on the map.
+    It also contains some error handling, thats checks if the user has spelled correctly or is simply searching for an address that does not exists in the database.
+    If it does not exists, it shows a Toast.makeText("") to the user that displays a message.
+    */
     private void SearchForAddress() {
         String[] InputArray = searchView.getQuery().toString().split(" ");
         if (InputArray.length >= 2) {

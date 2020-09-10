@@ -253,7 +253,13 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+// Start of comments searchForLocation()
+    /*
+    This is the method that gets the nearest location, and then shows the address and house number.It then gets the values of NO2, PM10 and PM2.5 and displays it.
+    It searches for the nearest address next to the already given location, and then gives the user that location.
+    The error handling in this method checks if the request is valid, and if it is not, it gives an error message "REQUEST NOT SUCCESFUL".
 
+    */
     private String address;
     private double no2;
     private double pm2_5;
@@ -297,17 +303,22 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         });
     }
 
+    // Start of comments PopulateTextView()
+    /*
+    In this method we added some logic for the text colour. It is some simple if-statements, that checks the value of NO2, PM10 and PM2.5, and displays either
+    red, green or yellow regarding to the value.
+     */
     private void PopulateTextView() {
         forureningHerTextViewAddress = findViewById(R.id.ForureningHerTextViewAddress);
         forureningHerTextViewAddress.setText(address);
 
-        if (no2 >= 15) {
+        if (no2 >= 30) {
             forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
             forureningHerTextViewNo2.setText("" + no2);
             forureningHerTextViewNo2.setTextColor(Color.RED);
 
         }
-        if (no2 < 15 && no2 >= 10) {
+        if (no2 < 30 && no2 >= 10) {
             forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
             forureningHerTextViewNo2.setText("" + no2);
             forureningHerTextViewNo2.setTextColor(Color.YELLOW);
@@ -321,19 +332,19 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         }
 
 
-        if (pm2_5 >= 16) {
+        if (pm2_5 >= 26) {
             forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
             forureningHerTextViewPM25.setText("" + pm2_5);
             forureningHerTextViewPM25.setTextColor(Color.RED);
 
         }
-        if (pm2_5 < 16 && pm2_5 >= 10) {
+        if (pm2_5 < 26 && pm2_5 >= 18) {
             forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
             forureningHerTextViewPM25.setText("" + pm2_5);
             forureningHerTextViewPM25.setTextColor(Color.YELLOW);
 
         }
-        if (pm2_5 < 10) {
+        if (pm2_5 < 18) {
             forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
             forureningHerTextViewPM25.setText("" + pm2_5);
             forureningHerTextViewPM25.setTextColor(Color.GREEN);
@@ -341,21 +352,21 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         }
 
 
-        if (pm10 >= 17) {
+        if (pm10 >= 57) {
             forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
             forureningHerTextViewPM10.setText("" + pm10);
             forureningHerTextViewPM10.setTextColor(Color.RED);
 
         }
 
-        if (pm10 < 17 && pm10 >= 15.5) {
+        if (pm10 < 47 && pm10 >= 45.5) {
             forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
             forureningHerTextViewPM10.setText("" + pm10);
             forureningHerTextViewPM10.setTextColor(Color.YELLOW);
 
         }
 
-        if (pm10 < 16) {
+        if (pm10 < 36) {
             forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
             forureningHerTextViewPM10.setText("" + pm10);
             forureningHerTextViewPM10.setTextColor(Color.GREEN);
