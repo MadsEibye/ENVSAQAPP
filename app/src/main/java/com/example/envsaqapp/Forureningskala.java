@@ -185,7 +185,7 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;
+                return true; /*
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
@@ -193,7 +193,7 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
-                return true;
+                return true;*/
             case R.id.NotiItem5:
                 item5ID = item.getItemId();
                 //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
