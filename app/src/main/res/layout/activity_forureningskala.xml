@@ -8,19 +8,198 @@
     android:layout_height="match_parent"
     tools:context=".Forureningskala">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:textColor="@color/White"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forureningsskala"
+            android:textSize="30dp"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:padding="30dp"/>
 
 
-        <ImageView
-            android:id="@+id/SkalaImage"
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:padding="1dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/air_chart_foreground"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <TextView
+                android:background="@color/BackGroundGrey"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="Luftforunrenings \n index"
+                android:layout_width="150dp"
+                android:layout_height="55dp"/>
+
+            <TextView
+                android:background="@color/Green"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="God"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:background="@color/Yellow"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="Middel"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@color/Red"
+                android:text="Dårlig"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:background="@color/BackGroundGrey"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="Kvælstof-dioxid\n (NO2)"
+                android:layout_height="55dp"
+                android:layout_width="150dp"/>
+
+            <TextView
+                android:gravity="center"
+                android:background="@color/Green"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="0-15"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:background="@color/Yellow"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="15-30"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@color/Red"
+                android:text="30+"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:background="@color/BackGroundGrey"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:text="PM2.5 partikler"
+                android:layout_height="55dp"
+                android:layout_width="150dp"/>
+
+            <TextView
+                android:gravity="center"
+                android:background="@color/Green"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="0-15"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:background="@color/Yellow"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="15-30"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@color/Red"
+                android:text="30+"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:background="@color/BackGroundGrey"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:text="PM10 partikler"
+                android:layout_height="55dp"
+                android:layout_width="150dp"/>
+
+            <TextView
+                android:gravity="center"
+                android:background="@color/Green"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="0-15"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:background="@color/Yellow"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="15-30"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@color/Red"
+                android:text="30+"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
     </LinearLayout>
 
 
