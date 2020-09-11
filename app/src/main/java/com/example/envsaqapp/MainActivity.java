@@ -174,16 +174,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
         Graphic newgraphic = new Graphic(point, symbol);
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlay);
+        //mapView.getGraphicsOverlays().add(graphicsOverlay);
         if (mapView.getGraphicsOverlays().size() >= 2) {
-            //graphicsOverlay.clearSelection();
-            //mapView.getGraphicsOverlays().remove(mapView.getGraphicsOverlays().size() -1);
+            mapView.getGraphicsOverlays().remove(mapView.getGraphicsOverlays().size() -1);
             graphicsOverlay.getGraphics().add(newgraphic);
-            //mapView.getGraphicsOverlays().add(graphicsOverlay);
+            mapView.getGraphicsOverlays().add(graphicsOverlay);
+            Toast.makeText(MainActivity.this,"Graphics deleted and added",Toast.LENGTH_LONG).show();
             LoadMap(Latitude, Longitude);
         }
         else {
             graphicsOverlay.getGraphics().add(newgraphic);
+            mapView.getGraphicsOverlays().add(graphicsOverlay);
+            Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
             LoadMap(Latitude, Longitude);
         }
     }
@@ -201,9 +203,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Graphic graphic = new Graphic(point, symbol);
         pointX = Latitude;
         pointY = Longitude;
-        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlay);
-        graphicsOverlay.getGraphics().add(graphic);
+        GraphicsOverlay graphicsOverlayUser = new GraphicsOverlay();
+        mapView.getGraphicsOverlays().add(graphicsOverlayUser);
+        graphicsOverlayUser.getGraphics().add(graphic);
         LoadMap(Latitude,Longitude);
 
     }
