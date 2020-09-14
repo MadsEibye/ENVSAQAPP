@@ -18,6 +18,15 @@
         android:roundIcon="@mipmap/loadingscreen_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".NotificationService"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="your.app.domain.NotificationService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
         <activity android:name=".Forureningskala"></activity>
         <activity android:name=".GroenRute" />
         <activity android:name=".Notifikationer" />

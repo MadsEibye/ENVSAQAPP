@@ -69,16 +69,19 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View view) {
                 //Toast.makeText(this, "notifikationen virker", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Notifikationer.this, PaamindelseNoti.class);
-                PendingIntent pendingintent = PendingIntent.getBroadcast(Notifikationer.this, 0, i, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                long currenttime = System.currentTimeMillis();
-                long timeout = 1000 * 10;
-                alarmManager.set(AlarmManager.RTC_WAKEUP, currenttime + timeout, pendingintent);
+                SendNotifikation();
             }
         });
 
 
+    } //end of onCreate()
+    public void SendNotifikation() {
+        Intent i = new Intent(Notifikationer.this, PaamindelseNoti.class);
+        PendingIntent pendingintent = PendingIntent.getBroadcast(Notifikationer.this, 0, i, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long currenttime = System.currentTimeMillis();
+        long timeout = 1000 * 0;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, currenttime + timeout, pendingintent);
     }
     //Start of Comments ChangeActivity()
     /*

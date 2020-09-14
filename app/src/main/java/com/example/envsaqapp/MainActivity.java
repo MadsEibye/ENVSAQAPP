@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     This method checks if it has permission to use the device location and if it has permission, then it executes onSuccess which set latitude and longitude.
     It then calls the method LoadMap().
     */
-    private void updateGPS() {
+    public void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
@@ -530,6 +530,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             Toast.makeText(MainActivity.this, "Husk at indtaste et husnummer", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        startService(new Intent(this, NotificationService.class));
+        super.onDestroy();
     }
     //endregion Methods
 }
