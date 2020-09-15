@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint){
         //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
+        Log.d("GList", mapView.getOverlays().toString());
         if (mapView.getOverlays().size() >= 2) {
             /*
             mapView.getOverlays().remove(mapView.getGraphicsOverlays().size() -1);
@@ -191,17 +192,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapView.getGraphicsOverlays().add(graphicsOverlay);
             Toast.makeText(MainActivity.this,"Graphics deleted and added",Toast.LENGTH_LONG).show();
             LoadMap(Latitude, Longitude);*/
-            mapView.getOverlays().remove(oldGeopoint);
+            //mapView.getOverlays().remove(oldGeopoint);
+            mapView.getOverlays().clear();
+            //mapView.getOverlays().get(mapView.getOverlays().size()-1);
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             mapView.getOverlays().add(startMarker);
+            updateGPS();
+            mapController.setCenter(geoPoint);
+            //Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
         }
         else {
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             mapView.getOverlays().add(startMarker);
+            //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
         LoadMap(geoPoint);
     }
@@ -214,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapController = (MapController) mapView.getController();
         mapController.setZoom(13);
         mapController.setCenter(gPt);
-        addMarkerUserLocation(gPt);
+        //addMarkerUserLocation(gPt);
     }
 
     //Start of Comments addMarkerUserLocation()
@@ -228,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         marker.setPosition(center);
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         marker.setDefaultIcon();
-        mapView.getOverlays().clear();
+        //mapView.getOverlays().clear();
         mapView.getOverlays().add(marker);
         mapView.invalidate();
         marker.setTitle("Din lokation");
@@ -254,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
                     UsergeoPoint = new GeoPoint(Latitude,Longitude);
+                    addMarkerUserLocation(UsergeoPoint);
                     LoadMap(UsergeoPoint);
                 }
             });
