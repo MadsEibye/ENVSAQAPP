@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     The dot in this method is set to color red, so you can see the difference between the user location, and the searched location.
     When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
      */
-    private void PlotNewDot(GeoPoint geoPoint){
+    private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint){
         //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
         if (mapView.getOverlays().size() >= 2) {
@@ -191,20 +191,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapView.getGraphicsOverlays().add(graphicsOverlay);
             Toast.makeText(MainActivity.this,"Graphics deleted and added",Toast.LENGTH_LONG).show();
             LoadMap(Latitude, Longitude);*/
-            mapView.getOverlays().remove(mapView.getOverlays().size()-1);
+            mapView.getOverlays().remove(oldGeopoint);
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             mapView.getOverlays().add(startMarker);
-            LoadMap(geoPoint);
         }
         else {
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             mapView.getOverlays().add(startMarker);
-            LoadMap(geoPoint);
         }
+        LoadMap(geoPoint);
     }
 
     private void LoadMap(GeoPoint gPt) {
@@ -234,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.invalidate();
         marker.setTitle("Din lokation");
     }
-
+    GeoPoint UsergeoPoint;
     //Start of Comments updateGPS()
     /*
     This method checks if it has permission to use the device location and if it has permission, then it executes onSuccess which set latitude and longitude.
@@ -254,8 +253,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
-                    GeoPoint geoPoint = new GeoPoint(Latitude,Longitude);
-                    LoadMap(geoPoint);
+                    UsergeoPoint = new GeoPoint(Latitude,Longitude);
+                    LoadMap(UsergeoPoint);
                 }
             });
         } else {
@@ -518,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             float searchX = responseObject1.getLatitude();
                             float searchY = responseObject1.getLongitude();
                             GeoPoint searchgPt = new GeoPoint(searchX,searchY);
-                            PlotNewDot(searchgPt);
+                            PlotNewDot(searchgPt,UsergeoPoint);
                             LoadMap(searchgPt);
                             searchView.clearFocus();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
