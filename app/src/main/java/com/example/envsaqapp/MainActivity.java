@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
             mapView.getOverlays().add(startMarker);
             updateGPS();
             mapController.setCenter(geoPoint);
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
             mapView.getOverlays().add(startMarker);
             //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
@@ -234,7 +236,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Marker marker = new Marker(mapView);
         marker.setPosition(center);
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        marker.setDefaultIcon();
+        //marker.setDefaultIcon();
+        marker.setIcon(getResources().getDrawable(R.drawable.ic_icon_person_pin_circle_blackgray_36dp));
         //mapView.getOverlays().clear();
         mapView.getOverlays().add(marker);
         mapView.invalidate();
