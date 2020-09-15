@@ -19,8 +19,12 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,12 +35,20 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import Models.Data;
@@ -47,12 +59,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import static android.net.sip.SipErrorCode.TIME_OUT;
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    public ArcGISMap map;
     private MapView mapView;
+    private MapController mapController;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     public float Latitude;
@@ -104,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.bringToFront();
         searchView.setIconified(false);
         searchView.clearFocus();
+        mapView = findViewById(R.id.MainMapView);
         setCloseSearchIcon(searchView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -167,60 +181,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     The dot in this method is set to color red, so you can see the difference between the user location, and the searched location.
     When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
      */
-
-    private void PlotNewDot(float Latitude, float Longitude){
-        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED,
-                12);
-        point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
-        Graphic newgraphic = new Graphic(point, symbol);
-        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+    private void PlotNewDot(GeoPoint geoPoint){
+        //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
-        if (mapView.getGraphicsOverlays().size() >= 2) {
-            mapView.getGraphicsOverlays().remove(mapView.getGraphicsOverlays().size() -1);
+        if (mapView.getOverlays().size() >= 2) {
+            /*
+            mapView.getOverlays().remove(mapView.getGraphicsOverlays().size() -1);
             graphicsOverlay.getGraphics().add(newgraphic);
             mapView.getGraphicsOverlays().add(graphicsOverlay);
             Toast.makeText(MainActivity.this,"Graphics deleted and added",Toast.LENGTH_LONG).show();
-            LoadMap(Latitude, Longitude);
+            LoadMap(Latitude, Longitude);*/
+            mapView.getOverlays().remove(mapView.getOverlays().size()-1);
+            Marker startMarker = new Marker(mapView);
+            startMarker.setPosition(geoPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            mapView.getOverlays().add(startMarker);
+            LoadMap(geoPoint);
         }
         else {
-            graphicsOverlay.getGraphics().add(newgraphic);
-            mapView.getGraphicsOverlays().add(graphicsOverlay);
-            Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
-            LoadMap(Latitude, Longitude);
+            Marker startMarker = new Marker(mapView);
+            startMarker.setPosition(geoPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            mapView.getOverlays().add(startMarker);
+            LoadMap(geoPoint);
         }
     }
 
-    //Start of Comments PlotUserLocation()
+    private void LoadMap(GeoPoint gPt) {
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        mapView = findViewById(R.id.MainMapView);
+        mapView.setTileSource(TileSourceFactory.BASE_OVERLAY_NL);
+        mapController = (MapController) mapView.getController();
+        mapController.setZoom(13);
+        mapController.setCenter(gPt);
+        addMarkerUserLocation(gPt);
+    }
+
+    //Start of Comments addMarkerUserLocation()
     /*
      The method takes the latitude and longitude of the user location, and then adds a SimpleMarkerSymbol displaying a blue dot.
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
     */
+    public void addMarkerUserLocation (GeoPoint center){
 
-    private void PlotUserLocation(float Latitude, float Longitude){
-        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE,
-                12);
-        point = new Point(Longitude, Latitude, SpatialReferences.getWgs84());
-        Graphic graphic = new Graphic(point, symbol);
-        pointX = Latitude;
-        pointY = Longitude;
-        GraphicsOverlay graphicsOverlayUser = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlayUser);
-        graphicsOverlayUser.getGraphics().add(graphic);
-        LoadMap(Latitude,Longitude);
-
-    }
-    //Start of Comments LoadMap()
-    /*
-    This method takes two arguments Latitude and Longitude, the method uses a mapview and a graphicsoverlay to set a map and show it then we plot a point
-    at the device location on the map.
-    */
-
-    private void LoadMap(float Latitude, float Longitude) {
-        mapView = findViewById(R.id.MainMapView);
-        map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, Latitude, Longitude, 15);
-        mapView.setMap(map);
-        mapView.getBackgroundGrid().setColor(Color.argb(100,186,217,245));
-        mapView.getBackgroundGrid().setGridLineColor(Color.argb(0,186,217,245));
+        Marker marker = new Marker(mapView);
+        marker.setPosition(center);
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        marker.setDefaultIcon();
+        mapView.getOverlays().clear();
+        mapView.getOverlays().add(marker);
+        mapView.invalidate();
+        marker.setTitle("Din lokation");
     }
 
     //Start of Comments updateGPS()
@@ -242,8 +254,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
-                    LoadMap(Latitude,Longitude);
-                    PlotUserLocation(Latitude,Longitude);
+                    GeoPoint geoPoint = new GeoPoint(Latitude,Longitude);
+                    LoadMap(geoPoint);
                 }
             });
         } else {
@@ -505,8 +517,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Data responseObject1 = response.body().get(0);
                             float searchX = responseObject1.getLatitude();
                             float searchY = responseObject1.getLongitude();
-                            PlotNewDot(searchX,searchY);
-                            //LoadMap(searchX, searchY);
+                            GeoPoint searchgPt = new GeoPoint(searchX,searchY);
+                            PlotNewDot(searchgPt);
+                            LoadMap(searchgPt);
                             searchView.clearFocus();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
                         } else {

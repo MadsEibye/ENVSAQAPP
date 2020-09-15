@@ -32,7 +32,7 @@
             android:layout_height="match_parent">
 
 
-    <com.esri.arcgisruntime.mapping.view.MapView
+    <org.osmdroid.views.MapView
         android:id="@+id/MainMapView"
         mapoptions.ZoomLevel="80"
         mapoptions.MapType="streets"
