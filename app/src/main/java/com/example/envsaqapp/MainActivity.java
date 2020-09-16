@@ -42,7 +42,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HttpUrl url;
     private SimpleMarkerSymbol symbol;
     private String MarkerTitle;
+    GeoPoint UsergeoPoint;
     //endregion Instance Fields
 
     //region Methods
@@ -224,7 +227,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         mapView = findViewById(R.id.MainMapView);
-        mapView.setTileSource(TileSourceFactory.BASE_OVERLAY_NL);
+        //final ITileSource tileSource = TileSourceFactory.MAPNIK;
+        final ITileSource tileSource = new XYTileSource( "Mapnik", 1, 20, 256, ".png",
+                new String[] {
+                        "http://tile.openstreetmap.org/",
+                });
+        mapView.setTileSource(tileSource);
         mapController = (MapController) mapView.getController();
         mapView.setMinZoomLevel(8.0);
         mapController.setZoom(13);
@@ -249,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.invalidate();
         marker.setTitle("Din lokation");
     }
-    GeoPoint UsergeoPoint;
     //Start of Comments updateGPS()
     /*
     This method checks if it has permission to use the device location and if it has permission, then it executes onSuccess which set latitude and longitude.
