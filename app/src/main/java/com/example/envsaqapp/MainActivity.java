@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SearchView searchView;
     private HttpUrl url;
     private SimpleMarkerSymbol symbol;
+    private String MarkerTitle;
     //endregion Instance Fields
 
     //region Methods
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
+            startMarker.setTitle(MarkerTitle);
             mapView.getOverlays().add(startMarker);
             updateGPS();
             mapController.setCenter(geoPoint);
@@ -209,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
+            startMarker.setTitle(MarkerTitle);
             mapView.getOverlays().add(startMarker);
             //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
@@ -527,6 +530,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Data responseObject1 = response.body().get(0);
                             float searchX = responseObject1.getLatitude();
                             float searchY = responseObject1.getLongitude();
+                            String searchAddress = responseObject1.getAddress();
+                            double searchNo2 = responseObject1.getNo2_street();
+                            double searchPM2_5 = responseObject1.getPM2_5();
+                            double searchPM10 = responseObject1.getPM10();
+                            MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " +searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5+ "\n" +
+                                    " PM10 koncentration: " + searchPM10;
                             GeoPoint searchgPt = new GeoPoint(searchX,searchY);
                             PlotNewDot(searchgPt,UsergeoPoint);
                             LoadMap(searchgPt);
