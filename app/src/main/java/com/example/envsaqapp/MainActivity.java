@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -27,7 +28,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.OpenStreetMapLayer;
@@ -58,6 +61,7 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
 import Models.Data;
 import REST.ApiUtils;
 import REST.DataService;
@@ -65,6 +69,7 @@ import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import static android.net.sip.SipErrorCode.TIME_OUT;
 import static java.security.AccessController.getContext;
 
@@ -96,7 +101,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HttpUrl url;
     private SimpleMarkerSymbol symbol;
     private String MarkerTitle;
-    GeoPoint UsergeoPoint;
+    private Switch mainNo2Switch;
+    private Switch mainPm10Switch;
+    private Switch mainPm25Switch;
+    private GeoPoint UsergeoPoint;
     //endregion Instance Fields
 
     //region Methods
@@ -126,6 +134,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.bringToFront();
         searchView.setIconified(false);
         searchView.clearFocus();
+        mainNo2Switch = findViewById(R.id.MainNO2Switch);
+        mainPm10Switch = findViewById(R.id.MainPm10Swtich);
+        mainPm25Switch = findViewById(R.id.MainPm25Switch);
+        mainPm10Switch.bringToFront();
+        mainPm25Switch.bringToFront();
+        mainNo2Switch.bringToFront();
         mapView = findViewById(R.id.MainMapView);
         mapView.setUseDataConnection(true);
         setCloseSearchIcon(searchView);
@@ -153,18 +167,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setNavigationViewListener();
         notifikationskanal();
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-
-        {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit (String query){
+            public boolean onQueryTextSubmit(String query) {
                 // do something on text submit
                 SearchForAddress();
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange (String newText){
+            public boolean onQueryTextChange(String newText) {
                 // do something when text changes
                 return false;
             }
@@ -185,13 +197,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-// Start of Comments PlotNewDot()
+    // Start of Comments PlotNewDot()
     /*
     This method plots a dot for the address typed in the seachbar. It also uses the SimpleMarkerSymbol and GraphicOverlay to display it.
     The dot in this method is set to color red, so you can see the difference between the user location, and the searched location.
     When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
      */
-    private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint){
+    private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint) {
         //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
         Log.d("GList", mapView.getOverlays().toString());
@@ -215,8 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             updateGPS();
             mapController.setCenter(geoPoint);
             //Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -233,13 +244,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         //final ITileSource tileSource = TileSourceFactory.MAPNIK;
-        final ITileSource tileSource = new XYTileSource( "Mapnik", 1, 20, 256, ".png",
-                new String[] {
+        final ITileSource tileSource = new XYTileSource("Mapnik", 1, 20, 256, ".png",
+                new String[]{
                         "http://tile.openstreetmap.org/",
                 });
 
-        final ITileSource dotsOverlay = new XYTileSource( "OSMPublicTransport", 1, 20, 256, ".png",
-                new String[] {
+        final ITileSource dotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
                         "http://openptmap.org/tiles/",
                 });
         mapView.setTileSource(tileSource);
@@ -262,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      The method takes the latitude and longitude of the user location, and then adds a SimpleMarkerSymbol displaying a blue dot.
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
     */
-    public void addMarkerUserLocation (GeoPoint center){
+    public void addMarkerUserLocation(GeoPoint center) {
 
         Marker marker = new Marker(mapView);
         marker.setPosition(center);
@@ -274,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.invalidate();
         marker.setTitle("Din lokation");
     }
+
     //Start of Comments updateGPS()
     /*
     This method checks if it has permission to use the device location and if it has permission, then it executes onSuccess which set latitude and longitude.
@@ -284,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
@@ -293,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
-                    UsergeoPoint = new GeoPoint(Latitude,Longitude);
+                    UsergeoPoint = new GeoPoint(Latitude, Longitude);
                     LoadMap(UsergeoPoint);
                     addMarkerUserLocation(UsergeoPoint);
                 }
@@ -561,10 +573,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             double searchNo2 = responseObject1.getNo2_street();
                             double searchPM2_5 = responseObject1.getPM2_5();
                             double searchPM10 = responseObject1.getPM10();
-                            MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " +searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5+ "\n" +
+                            MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " + searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5 + "\n" +
                                     "PM10 koncentration: " + searchPM10;
-                            GeoPoint searchgPt = new GeoPoint(searchX,searchY);
-                            PlotNewDot(searchgPt,UsergeoPoint);
+                            GeoPoint searchgPt = new GeoPoint(searchX, searchY);
+                            PlotNewDot(searchgPt, UsergeoPoint);
                             LoadMap(searchgPt);
                             searchView.clearFocus();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
@@ -596,5 +608,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startService(new Intent(this, NotificationService.class));
         super.onDestroy();
     }
-    //endregion Methods
+
+
+    public void MainNo2switchClicked(View view) {
+        mainPm10Switch.setChecked(false);
+        mainPm25Switch.setChecked(false);
+        mapView.getOverlays().clear();
+        final ITileSource No2DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(No2DotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+    }
+
+    public void MainPm25switchClicked(View view) {
+        mainNo2Switch.setChecked(false);
+        mainPm10Switch.setChecked(false);
+        mapView.getOverlays().clear();
+        final ITileSource Pm2_5DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(Pm2_5DotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+        mapController.
+    }
+
+    public void MainPm10switchClicked(View view) {
+        mainNo2Switch.setChecked(false);
+        mainPm25Switch.setChecked(false);
+        mapView.getOverlays().clear();
+        final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(Pm10DotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+    }
 }
