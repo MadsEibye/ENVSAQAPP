@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
             startMarker.setTitle(MarkerTitle);
+            startMarker.showInfoWindow();
             mapView.getOverlays().add(startMarker);
             updateGPS();
             mapController.setCenter(geoPoint);
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
             startMarker.setTitle(MarkerTitle);
+            startMarker.showInfoWindow();
             mapView.getOverlays().add(startMarker);
             //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
@@ -513,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (InputArray.length >= 2) {
             String streetName = InputArray[0];
             String houseNumber = InputArray[1];
-            url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=pt_id,lat,long,street_nam,house_num,no2_street" +
+            url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=lat,long,street_nam,house_num,no2_street,pm10_street,pm25_street,address" +
                     "&street_nam=eq." + streetName + "&house_num=eq." + houseNumber);
 
             DataService dataService = ApiUtils.getTrackService();
@@ -535,7 +537,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             double searchPM2_5 = responseObject1.getPM2_5();
                             double searchPM10 = responseObject1.getPM10();
                             MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " +searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5+ "\n" +
-                                    " PM10 koncentration: " + searchPM10;
+                                    "PM10 koncentration: " + searchPM10;
                             GeoPoint searchgPt = new GeoPoint(searchX,searchY);
                             PlotNewDot(searchgPt,UsergeoPoint);
                             LoadMap(searchgPt);
