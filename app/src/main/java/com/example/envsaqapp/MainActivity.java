@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.layers.OpenStreetMapLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
@@ -42,6 +43,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -50,6 +52,9 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.TilesOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -122,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setIconified(false);
         searchView.clearFocus();
         mapView = findViewById(R.id.MainMapView);
+        mapView.setUseDataConnection(true);
         setCloseSearchIcon(searchView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -226,15 +232,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void LoadMap(GeoPoint gPt) {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        mapView = findViewById(R.id.MainMapView);
         //final ITileSource tileSource = TileSourceFactory.MAPNIK;
         final ITileSource tileSource = new XYTileSource( "Mapnik", 1, 20, 256, ".png",
                 new String[] {
                         "http://tile.openstreetmap.org/",
                 });
+
+        final ITileSource dotsOverlay = new XYTileSource( "OSMPublicTransport", 1, 20, 256, ".png",
+                new String[] {
+                        "http://openptmap.org/tiles/",
+                });
         mapView.setTileSource(tileSource);
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(dotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        //mapView.getOverlays().add(dotsOverlay);
         mapController = (MapController) mapView.getController();
         mapView.setMinZoomLevel(8.0);
+        mapView.setMultiTouchControls(true);
         mapController.setZoom(13);
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
@@ -277,8 +294,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
                     UsergeoPoint = new GeoPoint(Latitude,Longitude);
-                    addMarkerUserLocation(UsergeoPoint);
                     LoadMap(UsergeoPoint);
+                    addMarkerUserLocation(UsergeoPoint);
                 }
             });
         } else {
