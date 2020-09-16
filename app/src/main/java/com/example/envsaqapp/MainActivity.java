@@ -226,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView = findViewById(R.id.MainMapView);
         mapView.setTileSource(TileSourceFactory.BASE_OVERLAY_NL);
         mapController = (MapController) mapView.getController();
+        mapView.setMinZoomLevel(8.0);
         mapController.setZoom(13);
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
