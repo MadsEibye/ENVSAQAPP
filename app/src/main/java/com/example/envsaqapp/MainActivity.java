@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,8 +60,17 @@ import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
+import org.osmdroid.wms.WMSEndpoint;
+import org.osmdroid.wms.WMSLayer;
+import org.osmdroid.wms.WMSParser;
+import org.osmdroid.wms.WMSTileSource;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import Models.Data;
@@ -243,12 +253,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void LoadMap(GeoPoint gPt) {
-        Context ctx = getApplicationContext();
+        ParseAndShowLayerWMS();
+        ShowSelectedLayer();
+        /*Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         //final ITileSource tileSource = TileSourceFactory.MAPNIK;
-        final ITileSource tileSource = new XYTileSource("{z}/{x}/{y}", 1, 20, 256, ".png",
+        final ITileSource tileSource = new XYTileSource("Mapnik", 1, 20, 256, ".png",
                 new String[]{
-                        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/",
+                        "http://tile.openstreetmap.org/",
                 });
 
         final ITileSource dotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
@@ -269,11 +281,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.setMultiTouchControls(true);
         mapView.getOverlays().add(this.rotationGestureOverlay);
         mapController.setZoom(13);
-        mapController.setCenter(gPt);
+        mapController.setCenter(gPt);*/
         //addMarkerUserLocation(gPt);
     }
+    HttpURLConnection c = null;
+    InputStream is = null;
+    WMSEndpoint wmsEndpoint = null;
+/*
+    private void ParseAndShowLayerWMS()
 
-    //Start of Comments addMarkerUserLocation()
+    {
+
+        Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
+        Log.d("ShowThis", "hej");
+
+        try {
+            c = (HttpURLConnection) new URL("http://10.28.0.241:8088/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite%3Alpdv2k12_" +
+                    "kbh_no2&bbox=12.4530162811279%2C55.6159400939941%2C12.6479949951172%2C55.7321701049805&width=768&height=457&srs=EPSG%3A4326&format=appl" +
+                    "ication/openlayers").openConnection();
+            is = c.getInputStream();
+            wmsEndpoint = WMSParser.parse(is);
+            Log.d("ShowThis", wmsEndpoint.getLayers().toString());
+            Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
+            is.close();
+            c.disconnect();
+
+    } catch (MalformedURLException e) {
+            Toast.makeText(MainActivity.this, "svin1", Toast.LENGTH_LONG).show();
+            Log.d("ShowThis", "hej1");
+
+            e.printStackTrace();
+        } catch (IOException e) {
+            Toast.makeText(MainActivity.this, "svin2", Toast.LENGTH_LONG).show();
+            Log.d("ShowThis", "hej2");
+
+            e.printStackTrace();
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "svin3", Toast.LENGTH_LONG).show();
+            Log.d("ShowThis", e.getMessage() + e.getCause() + e.getLocalizedMessage() + e.toString());
+
+            e.printStackTrace();
+        }
+
+    }
+        private void ShowSelectedLayer() {
+        Log.d("ShowThis", wmsEndpoint.getLayers().toString());
+            WMSTileSource source = WMSTileSource.createFrom(wmsEndpoint, wmsEndpoint.getLayers().get(0));
+            WMSLayer layer = new WMSLayer();
+            if (layer.getBbox() != null) {
+                //center map on this location
+                mapView.zoomToBoundingBox(layer.getBbox(), true);
+            }
+            mapView.setTileSource(source);
+        }*/
+        //Start of Comments addMarkerUserLocation()
     /*
      The method takes the latitude and longitude of the user location, and then adds a SimpleMarkerSymbol displaying a blue dot.
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
@@ -621,7 +682,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().clear();
         final ITileSource No2DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
                 new String[]{
-                        "http://openptmap.org/tiles/",
+                        "http://10.28.0.241:8088/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite%3Alpdv2k12_kbh_no2&bbox=12.4530162811279%2C55.6159400939941%2C12.6479949951172%2C55.7321701049805&width=768&height=457&srs=EPSG%3A4326&format=application/openlayers",
                 });
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
         provider.setTileSource(No2DotsOverlay);
