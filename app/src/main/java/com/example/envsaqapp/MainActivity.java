@@ -58,6 +58,7 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //region Instance Fields
     private MapView mapView;
+    private RotationGestureOverlay rotationGestureOverlay;
     private MapController mapController;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
@@ -244,9 +246,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         //final ITileSource tileSource = TileSourceFactory.MAPNIK;
-        final ITileSource tileSource = new XYTileSource("Mapnik", 1, 20, 256, ".png",
+        final ITileSource tileSource = new XYTileSource("{z}/{x}/{y}", 1, 20, 256, ".png",
                 new String[]{
-                        "http://tile.openstreetmap.org/",
+                        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/",
                 });
 
         final ITileSource dotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
@@ -262,7 +264,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //mapView.getOverlays().add(dotsOverlay);
         mapController = (MapController) mapView.getController();
         mapView.setMinZoomLevel(8.0);
+        rotationGestureOverlay = new RotationGestureOverlay( mapView);
+        rotationGestureOverlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
+        mapView.getOverlays().add(this.rotationGestureOverlay);
         mapController.setZoom(13);
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
@@ -642,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().add(tilesOverlay);
         addMarkerUserLocation(UsergeoPoint);
         mapController.animateTo(UsergeoPoint);
-        mapController.
+
     }
 
     public void MainPm10switchClicked(View view) {
