@@ -253,9 +253,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void LoadMap(GeoPoint gPt) {
-        ParseAndShowLayerWMS();
-        ShowSelectedLayer();
-        /*Context ctx = getApplicationContext();
+        //ParseAndShowLayerWMS();
+        //ShowSelectedLayer();
+        Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         //final ITileSource tileSource = TileSourceFactory.MAPNIK;
         final ITileSource tileSource = new XYTileSource("Mapnik", 1, 20, 256, ".png",
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.setMultiTouchControls(true);
         mapView.getOverlays().add(this.rotationGestureOverlay);
         mapController.setZoom(13);
-        mapController.setCenter(gPt);*/
+        mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
     }
     HttpURLConnection c = null;
@@ -680,12 +680,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mainPm10Switch.setChecked(false);
         mainPm25Switch.setChecked(false);
         mapView.getOverlays().clear();
-        final ITileSource No2DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+        final ITileSource No2DotsOverlay = new XYTileSource("demo", 1, 20, 256, ".png",
                 new String[]{
-                        "http://10.28.0.241:8088/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite%3Alpdv2k12_kbh_no2&bbox=12.4530162811279%2C55.6159400939941%2C12.6479949951172%2C55.7321701049805&width=768&height=457&srs=EPSG%3A4326&format=application/openlayers",
+                        "http://10.28.0.241:8088/geoserver/gwc/",
                 });
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-        provider.setTileSource(No2DotsOverlay);
+        GeoserverTileSource source = new GeoserverTileSource("gwc", 10, 18, 256, ".png", GeoserverTileSource.TILE_URL);
+        provider.setTileSource(source);
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
         tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
         mapView.getOverlays().add(tilesOverlay);
