@@ -685,7 +685,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         "http://10.28.0.241:8088/geoserver/gwc/",
                 });
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-        GeoserverTileSource source = new GeoserverTileSource("gwc", 10, 18, 256, ".png", GeoserverTileSource.TILE_URL);
+        String[] stringArrayBaseUrl = new String[] {"http://10.28.0.241:8088/geoserver/"};
+        GeoserverTileSource source = new GeoserverTileSource("cite:lpdv2k12_kbh_no2", stringArrayBaseUrl, "cite:lpdv2k12_kbh_no2");
         provider.setTileSource(source);
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
         tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
@@ -698,9 +699,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mainNo2Switch.setChecked(false);
         mainPm10Switch.setChecked(false);
         mapView.getOverlays().clear();
-        final ITileSource Pm2_5DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+        final ITileSource Pm2_5DotsOverlay = new XYTileSource("cite:lpdv2k12_kbh_no2", 1, 20, 256, ".png",
                 new String[]{
-                        "http://openptmap.org/tiles/",
+                        "http://10.28.0.241:8088/geoserver/",
                 });
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
         provider.setTileSource(Pm2_5DotsOverlay);
