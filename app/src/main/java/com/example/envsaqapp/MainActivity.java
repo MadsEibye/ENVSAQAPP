@@ -8,11 +8,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -28,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -46,6 +50,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -72,6 +78,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import Models.Data;
 import REST.ApiUtils;
@@ -81,7 +88,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.PendingIntent.getActivity;
 import static android.net.sip.SipErrorCode.TIME_OUT;
+import static com.esri.arcgisruntime.internal.jni.bf.ex;
 import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -193,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
         });
+        Log.d("Rhino", "onCreate: " + runScript(this));
     }//End of OnCreate
 
     private void setCloseSearchIcon(SearchView searchView) {
@@ -276,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //mapView.getOverlays().add(dotsOverlay);
         mapController = (MapController) mapView.getController();
         mapView.setMinZoomLevel(8.0);
-        rotationGestureOverlay = new RotationGestureOverlay( mapView);
+        rotationGestureOverlay = new RotationGestureOverlay(mapView);
         rotationGestureOverlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
         mapView.getOverlays().add(this.rotationGestureOverlay);
@@ -284,57 +294,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
     }
+
     HttpURLConnection c = null;
     InputStream is = null;
     WMSEndpoint wmsEndpoint = null;
-/*
-    private void ParseAndShowLayerWMS()
 
-    {
+    /*
+        private void ParseAndShowLayerWMS()
 
-        Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
-        Log.d("ShowThis", "hej");
+        {
 
-        try {
-            c = (HttpURLConnection) new URL("http://10.28.0.241:8088/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite%3Alpdv2k12_" +
-                    "kbh_no2&bbox=12.4530162811279%2C55.6159400939941%2C12.6479949951172%2C55.7321701049805&width=768&height=457&srs=EPSG%3A4326&format=appl" +
-                    "ication/openlayers").openConnection();
-            is = c.getInputStream();
-            wmsEndpoint = WMSParser.parse(is);
-            Log.d("ShowThis", wmsEndpoint.getLayers().toString());
             Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
-            is.close();
-            c.disconnect();
+            Log.d("ShowThis", "hej");
 
-    } catch (MalformedURLException e) {
-            Toast.makeText(MainActivity.this, "svin1", Toast.LENGTH_LONG).show();
-            Log.d("ShowThis", "hej1");
+            try {
+                c = (HttpURLConnection) new URL("http://10.28.0.241:8088/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite%3Alpdv2k12_" +
+                        "kbh_no2&bbox=12.4530162811279%2C55.6159400939941%2C12.6479949951172%2C55.7321701049805&width=768&height=457&srs=EPSG%3A4326&format=appl" +
+                        "ication/openlayers").openConnection();
+                is = c.getInputStream();
+                wmsEndpoint = WMSParser.parse(is);
+                Log.d("ShowThis", wmsEndpoint.getLayers().toString());
+                Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
+                is.close();
+                c.disconnect();
 
-            e.printStackTrace();
-        } catch (IOException e) {
-            Toast.makeText(MainActivity.this, "svin2", Toast.LENGTH_LONG).show();
-            Log.d("ShowThis", "hej2");
+        } catch (MalformedURLException e) {
+                Toast.makeText(MainActivity.this, "svin1", Toast.LENGTH_LONG).show();
+                Log.d("ShowThis", "hej1");
 
-            e.printStackTrace();
-        } catch (Exception e) {
-            Toast.makeText(MainActivity.this, "svin3", Toast.LENGTH_LONG).show();
-            Log.d("ShowThis", e.getMessage() + e.getCause() + e.getLocalizedMessage() + e.toString());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Toast.makeText(MainActivity.this, "svin2", Toast.LENGTH_LONG).show();
+                Log.d("ShowThis", "hej2");
 
-            e.printStackTrace();
-        }
+                e.printStackTrace();
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "svin3", Toast.LENGTH_LONG).show();
+                Log.d("ShowThis", e.getMessage() + e.getCause() + e.getLocalizedMessage() + e.toString());
 
-    }
-        private void ShowSelectedLayer() {
-        Log.d("ShowThis", wmsEndpoint.getLayers().toString());
-            WMSTileSource source = WMSTileSource.createFrom(wmsEndpoint, wmsEndpoint.getLayers().get(0));
-            WMSLayer layer = new WMSLayer();
-            if (layer.getBbox() != null) {
-                //center map on this location
-                mapView.zoomToBoundingBox(layer.getBbox(), true);
+                e.printStackTrace();
             }
-            mapView.setTileSource(source);
-        }*/
-        //Start of Comments addMarkerUserLocation()
+
+        }
+            private void ShowSelectedLayer() {
+            Log.d("ShowThis", wmsEndpoint.getLayers().toString());
+                WMSTileSource source = WMSTileSource.createFrom(wmsEndpoint, wmsEndpoint.getLayers().get(0));
+                WMSLayer layer = new WMSLayer();
+                if (layer.getBbox() != null) {
+                    //center map on this location
+                    mapView.zoomToBoundingBox(layer.getBbox(), true);
+                }
+                mapView.setTileSource(source);
+            }*/
+    //Start of Comments addMarkerUserLocation()
     /*
      The method takes the latitude and longitude of the user location, and then adds a SimpleMarkerSymbol displaying a blue dot.
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
@@ -685,7 +697,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         "http://10.28.0.241:8088/geoserver/gwc/",
                 });
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-        String[] stringArrayBaseUrl = new String[] {"http://10.28.0.241:8088/geoserver/"};
+        String[] stringArrayBaseUrl = new String[]{"http://10.28.0.241:8088/geoserver/"};
         GeoserverTileSource source = new GeoserverTileSource("cite:lpdv2k12_kbh_no2", stringArrayBaseUrl, "cite:lpdv2k12_kbh_no2");
         provider.setTileSource(source);
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
@@ -698,7 +710,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void MainPm25switchClicked(View view) {
         mainNo2Switch.setChecked(false);
         mainPm10Switch.setChecked(false);
-        mapView.getOverlays().clear();
+        downloadAndParse();
+        /*mapView.getOverlays().clear();
         final ITileSource Pm2_5DotsOverlay = new XYTileSource("cite:lpdv2k12_kbh_no2", 1, 20, 256, ".png",
                 new String[]{
                         "http://10.28.0.241:8088/geoserver/",
@@ -707,7 +720,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         provider.setTileSource(Pm2_5DotsOverlay);
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
         tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-        mapView.getOverlays().add(tilesOverlay);
+        mapView.getOverlays().add(tilesOverlay);*/
         addMarkerUserLocation(UsergeoPoint);
         mapController.animateTo(UsergeoPoint);
 
@@ -728,5 +741,124 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().add(tilesOverlay);
         addMarkerUserLocation(UsergeoPoint);
         mapController.animateTo(UsergeoPoint);
+    }
+
+    protected String getDefaultUrl() {
+        //"http://192.168.1.1:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities"
+        //return "http://localhost:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities";
+        return "http://10.28.0.241:8088/geoserver/gwc/demo/cite:lpdv2k12_kbh_no2?gridSet=EPSG:4326&format=image/png";
+    }
+
+    WMSEndpoint cap;
+
+    private void downloadAndParse() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean ok = false;
+                Exception root = null;
+                try {
+                    Log.d("WMSFejl", "HttpURLConnection null");
+                    HttpURLConnection c = null;
+                    InputStream is = null;
+                    try {
+                        Log.d("WMSFejl", "open connection");
+                        promptUserForLayerSelection();
+                        c = (HttpURLConnection) new URL(getDefaultUrl()).openConnection();
+                        is = c.getInputStream();
+                        cap = WMSParser.parse(is);
+
+                        ok = true;
+
+                    } catch (Exception ex) {
+                        Log.d("WMSFejl", ex.getMessage());
+                        ex.printStackTrace();
+                        root = ex;
+                    } finally {
+                        if (is != null) try {
+                            Log.d("WMSFejl", "input stream closed");
+                            is.close();
+                        } catch (Exception ex) {
+                            Log.d("WMSFejl", ex.getMessage());
+                        }
+                        if (c != null)
+                            try {
+                                Log.d("WMSFejl", "disconnected");
+                                c.disconnect();
+                            } catch (Exception ex) {
+                                Log.d("WMSFejl", ex.getMessage());
+                            }
+                    }
+
+
+                } catch (Exception ex) {
+                    root = ex;
+                    ex.printStackTrace();
+                    Log.d("WMSFejl", ex.getMessage());
+                }
+                if (ok) {
+                    Log.d("WMSFejl", "promptUserForLayerSelection()");
+                    promptUserForLayerSelection();
+                } else {
+                    showErrorMessage(root);
+                }
+            }
+
+
+        }).start();
+    }
+
+    private void promptUserForLayerSelection() {
+        //Toast.makeText(MainActivity.this, "this method promptUserForLayerSelection is running", Toast.LENGTH_LONG).show();
+        Log.d("WMSFejl", "this method promptUserForLayerSelection is running");
+        for (WMSLayer layer : cap.getLayers()) {
+            WMSTileSource source = WMSTileSource.createFrom(cap, layer);
+
+            mapView.setTileSource(source);
+
+        }
+    }
+
+    private void showErrorMessage(final Exception root) {
+        Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+    }
+
+    public static String runScript(Context androidContextObject) {
+        try {
+            Resources resource = androidContextObject.getResources();
+            InputStream rawResource = resource.openRawResource(R.raw.config);
+
+
+            Properties properties = new Properties();
+            properties.load(rawResource);
+
+            String source = properties.getProperty("jsExecutes");
+            String functionName = "layers";
+            Object[] functionParams = new Object[]{"cool"};
+            org.mozilla.javascript.Context rhino = org.mozilla.javascript.Context.enter();
+
+            rhino.setOptimizationLevel(-1);
+
+            Scriptable scope = rhino.initStandardObjects();
+
+            rhino.evaluateString(scope, source, "JavaScript", 1, null);
+            Object object = scope.get(functionName, scope);
+
+            if (object instanceof Function) {
+                Function function = (Function) object;
+                Object result = function.call(rhino, scope, scope, functionParams);
+
+                String response = org.mozilla.javascript.Context.toString(result);
+                return response;
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            org.mozilla.javascript.Context.exit();
+
+        }
+        return null;
     }
 }
