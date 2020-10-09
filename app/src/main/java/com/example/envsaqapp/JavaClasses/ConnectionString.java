@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.JavaClasses;
 
 public class ConnectionString {
     public static final String connectionString = "";

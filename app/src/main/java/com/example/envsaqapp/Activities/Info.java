@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,13 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.LinkMovementMethod;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
@@ -37,6 +36,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     //endregion Instance Fields
 
     //region Methods
@@ -95,7 +95,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                 }
             }, TIME_OUT);
 
-        }
+        } /*
         else if (ID == item2ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -108,7 +108,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                     finish();
                 }
             }, TIME_OUT);
-        }
+        }*/
         else if (ID == item3ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -176,6 +176,18 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                     finish();
                 }
             }, TIME_OUT);
+        }else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Info.this, webViewActivity.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
         }
     }
 
@@ -199,10 +211,10 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.KortItem2:
+            /*case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;  /*
+                return true;*/  /*
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
@@ -225,6 +237,11 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                 //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
+                return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

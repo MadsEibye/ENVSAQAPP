@@ -89,6 +89,10 @@ public class Data {
         this.address_underscore = address_underscore;
     }
 
+    public Data(String s) {
+        getAddress();
+    }
+
     public Integer getPt_id() {
         return pt_id;
     }

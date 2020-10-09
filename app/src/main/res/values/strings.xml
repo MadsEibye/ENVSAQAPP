@@ -12,5 +12,11 @@
 
     <string name="Open">Open</string>
     <string name="Close">Close</string>
+    <string name="title_activity_list_view_items">list_view_items</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/AUBLUE"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".Activities.MainActivity"
     android:id="@+id/DrawerLayout">
 
     <RelativeLayout
@@ -24,6 +24,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:focusable="false" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/listView"
+            android:divider="#694fea"
+            android:dividerHeight="1dp"
+            android:layout_below="@id/MainsearchView"
+            />
 
         <Switch
             android:layout_below="@+id/MainsearchView"
@@ -69,13 +78,13 @@
             android:layout_height="match_parent">
 
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/MainMapView"
-        mapoptions.ZoomLevel="80"
-        mapoptions.MapType="streets"
-        mapoptions.center="34.056215, -117.195668"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+            <org.osmdroid.views.MapView
+                android:id="@+id/MainMapView"
+                mapoptions.MapType="streets"
+                mapoptions.ZoomLevel="80"
+                mapoptions.center="34.056215, -117.195668"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </RelativeLayout>
 

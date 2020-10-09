@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -6,42 +6,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-
-import Models.Data;
-import REST.ApiUtils;
-import REST.DataService;
-import okhttp3.HttpUrl;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class ForureningHer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    private static float userX;
-    private static float userY;
-    private TextView forureningHerTextViewAddress;
-    private TextView forureningHerTextViewNo2;
-    private TextView forureningHerTextViewPM10;
-    private TextView forureningHerTextViewPM25;
+    private static double userX;
+    private static double userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Integer item1ID;
@@ -51,10 +31,10 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     //endregion Instance Fields
 
     //region Methods
-
     //Start of Comments onCreate()
     /*
     OnCreate() is a method that runs when the activity is created. Fx. if you change activity, it will be created before it is shown.
@@ -68,24 +48,20 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forurening_her);
+        setContentView(R.layout.activity_forurenings_udsigt);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Intent intent = getIntent();
-        userX = intent.getFloatExtra("userX", userX);
-        userY = intent.getFloatExtra("userY", userY);
-        mDrawerLayout = findViewById(R.id.ForHerDrawerLayout);
+        setNavigationViewListener();
+        mDrawerLayout = findViewById(R.id.ForUdsigtDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-        setNavigationViewListener();
+
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        searchForLocation();
 
-
+        Intent intent = getIntent();
+        userX = intent.getDoubleExtra("userX", userX);
+        userY = intent.getDoubleExtra("userY", userY);
     }
-
     //Start of Comments ChangeActivity()
     /*
     ChangeActivity() is the handler for the navigationbar. So when you press an item in the navigationbar, ChangeActivity is run, with the ID you
@@ -95,78 +71,83 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     activity that was pressed in the navigationbar.
     overridePendingTransition is just the animation that is run when you change the activity, and in this case its a fade_in fade_out. And the finish() method is just closing down the last activity
     */
-    public void ChangeActivity(Integer ID) {
-        if (ID == item1ID) {
+    public void ChangeActivity(Integer ID){
+        if (ID == item1ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, ForureningHer.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, ForureningHer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        } else if (ID == item2ID) {
+        }
+        /*else if (ID == item2ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, MainActivity.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, MainActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        } else if (ID == item3ID) {
+        }*/
+        else if (ID == item3ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, ForureningsUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        } else if (ID == item4ID) {
+        }
+        else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, GroenRute.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     //startActivity(i);
-                    Toast.makeText(ForureningHer.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    Toast.makeText(ForureningsUdsigt.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     //finish();
                 }
             }, TIME_OUT);
-        } else if (ID == item5ID) {
+        }
+        else if (ID == item5ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, Notifikationer.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        } else if (ID == item6ID) {
+        }
+        else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, Forureningskala.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, Forureningskala.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -174,7 +155,19 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, Info.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(ForureningsUdsigt.this, webViewActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -184,20 +177,18 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             }, TIME_OUT);
         }
     }
-
     //Start of Comments onOptionsItemSelected
     /*
     This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
 
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
+        }
     //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
@@ -210,10 +201,10 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.KortItem2:
+            /*case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;/*
+                return true; */ /*
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
@@ -237,144 +228,24 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
-
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.ForHerNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.ForUdsigtNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-// Start of comments searchForLocation()
-    /*
-    This is the method that gets the nearest location, and then shows the address and house number.It then gets the values of NO2, PM10 and PM2.5 and displays it.
-    It searches for the nearest address next to the already given location, and then gives the user that location.
-    The error handling in this method checks if the request is valid, and if it is not, it gives an error message "REQUEST NOT SUCCESFUL".
-
-    */
-    private String address;
-    public double no2;
-    public double pm2_5;
-    public double pm10;
-
-    public void searchForLocation() {
-        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long="+ userX +"&y_lat="+ userY);
-        DataService dataService = ApiUtils.getTrackService();
-        Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
-        queueSong.enqueue(new Callback<ArrayList<Data>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
-                if (response.isSuccessful()) {
-                    Log.d("QUERY", " " + response.code());
-                    Log.d("QUERY", response.body().toString());
-                    Log.d("QUERY", url.toString());
-                    Data responseObject1 = response.body().get(0);
-                    address = responseObject1.getStreet_nam() + " " + responseObject1.getHouse_num();
-                    no2 = responseObject1.getNo2_street();
-                    pm2_5 = responseObject1.getPM2_5();
-                    pm10 = responseObject1.getPM10();
-                    Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                    PopulateTextView();
-                    //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
-                    //Log.d("TESTING", SongsInQueue.toString());
-
-
-                } else {
-                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
-                    Toast.makeText(ForureningHer.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
-                    Log.d("Queue", message);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
-                Toast.makeText(ForureningHer.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
-                Log.d("Queue", t.toString());
-            }
-        });
-    }
-
-    // Start of comments PopulateTextView()
-    /*
-    In this method we added some logic for the text colour. It is some simple if-statements, that checks the value of NO2, PM10 and PM2.5, and displays either
-    red, green or yellow regarding to the value.
-     */
-    private void PopulateTextView() {
-        forureningHerTextViewAddress = findViewById(R.id.ForureningHerTextViewAddress);
-        forureningHerTextViewAddress.setText(address);
-
-        if (no2 >= 50) {
-            forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
-            forureningHerTextViewNo2.setText("" + no2);
-            forureningHerTextViewNo2.setTextColor(Color.RED);
-
-        }
-        if (no2 < 50 && no2 >= 30) {
-            forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
-            forureningHerTextViewNo2.setText("" + no2);
-            forureningHerTextViewNo2.setTextColor(Color.YELLOW);
-
-        }
-        if (no2 < 30) {
-            forureningHerTextViewNo2 = findViewById(R.id.ForureningHerTextViewNo2);
-            forureningHerTextViewNo2.setText("" + no2);
-            forureningHerTextViewNo2.setTextColor(Color.GREEN);
-
-        }
-
-
-        if (pm2_5 >= 15) {
-            forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
-            forureningHerTextViewPM25.setText("" + pm2_5);
-            forureningHerTextViewPM25.setTextColor(Color.RED);
-
-        }
-        if (pm2_5 < 15 && pm2_5 >= 5) {
-            forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
-            forureningHerTextViewPM25.setText("" + pm2_5);
-            forureningHerTextViewPM25.setTextColor(Color.YELLOW);
-
-        }
-        if (pm2_5 < 5) {
-            forureningHerTextViewPM25 = findViewById(R.id.ForureningHerTextViewPM2_5);
-            forureningHerTextViewPM25.setText("" + pm2_5);
-            forureningHerTextViewPM25.setTextColor(Color.GREEN);
-
-        }
-
-
-        if (pm10 >= 30) {
-            forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
-            forureningHerTextViewPM10.setText("" + pm10);
-            forureningHerTextViewPM10.setTextColor(Color.RED);
-
-        }
-
-        if (pm10 < 30 && pm10 >= 10) {
-            forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
-            forureningHerTextViewPM10.setText("" + pm10);
-            forureningHerTextViewPM10.setTextColor(Color.YELLOW);
-
-        }
-
-        if (pm10 < 10) {
-            forureningHerTextViewPM10 = findViewById(R.id.ForureningHerTextViewPM10);
-            forureningHerTextViewPM10.setText("" + pm10);
-            forureningHerTextViewPM10.setTextColor(Color.GREEN);
-
-        }
-    }
-//endregion Methods
+    //endregion Methods
 }
-
-
-

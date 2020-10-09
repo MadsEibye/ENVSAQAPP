@@ -1,29 +1,34 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.envsaqapp.JavaClasses.PaamindelseNoti;
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class Forureningskala extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Notifikationer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
     private static double userX;
     private static double userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private Button button;
     private Integer item1ID;
     private Integer item2ID;
     private Integer item3ID;
@@ -31,6 +36,7 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     //endregion Instance Fields
 
     //region Methods
@@ -43,22 +49,41 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
     some instance fields. We find the TextView from the layoutfile with findViewById, and set the TextViews text attribute to show the users coordinates.
     We then do the same with the DrawerLayout but now we create the listeners for the button in the actionBar.
     We then set a navigationViewListener to the navigationview, to check for when an item is pressed.
+    In the method onClick an alarmManager i created and set to trigger a notification after 10 seconds.
     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forureningskala);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_notifikationer);
+        button = findViewById(R.id.notiButton);
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-        mDrawerLayout = findViewById(R.id.SkalaDrawerLayout);
+
+        mDrawerLayout = findViewById(R.id.NotiDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setNavigationViewListener();
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(this, "notifikationen virker", Toast.LENGTH_SHORT).show();
+                SendNotifikation();
+            }
+        });
+
+
+    } //end of onCreate()
+    public void SendNotifikation() {
+        Intent i = new Intent(Notifikationer.this, PaamindelseNoti.class);
+        PendingIntent pendingintent = PendingIntent.getBroadcast(Notifikationer.this, 0, i, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long currenttime = System.currentTimeMillis();
+        long timeout = 1000 * 0;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, currenttime + timeout, pendingintent);
     }
     //Start of Comments ChangeActivity()
     /*
@@ -74,7 +99,7 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, ForureningHer.class);
+                    Intent i = new Intent(Notifikationer.this, ForureningHer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -83,11 +108,11 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
                 }
             }, TIME_OUT);
 
-        } else if (ID == item2ID) {
+        } /*else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, MainActivity.class);
+                    Intent i = new Intent(Notifikationer.this, MainActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -95,11 +120,11 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
                     finish();
                 }
             }, TIME_OUT);
-        } else if (ID == item3ID) {
+        } */else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(Notifikationer.this, ForureningsUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -111,11 +136,11 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, GroenRute.class);
+                    Intent i = new Intent(Notifikationer.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     //startActivity(i);
-                    Toast.makeText(Forureningskala.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Notifikationer.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     //finish();
                 }
@@ -124,7 +149,7 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, Notifikationer.class);
+                    Intent i = new Intent(Notifikationer.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -136,7 +161,7 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, Forureningskala.class);
+                    Intent i = new Intent(Notifikationer.this, Forureningskala.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -148,7 +173,19 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Forureningskala.this, Info.class);
+                    Intent i = new Intent(Notifikationer.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Notifikationer.this, webViewActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -182,10 +219,11 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.KortItem2:
+            /*case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true; /*
+                return true; */
+                /*
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
@@ -209,19 +247,23 @@ public class Forureningskala extends AppCompatActivity implements NavigationView
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
-
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.SkalaNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.NotiNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
     //endregion Methods

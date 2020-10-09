@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -8,17 +8,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.Toast;
 
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class GroenRute extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     //region Instance Fields
     private static double userX;
@@ -32,6 +29,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     //endregion Instance Fields
 
     //region Methods
@@ -48,19 +46,19 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forurenings_udsigt);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setNavigationViewListener();
-        mDrawerLayout = findViewById(R.id.ForUdsigtDrawerLayout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-
-        mDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_groen_rute);
 
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
+
+        mDrawerLayout = findViewById(R.id.GroenDrawerLayout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        setNavigationViewListener();
+        mDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
     //Start of Comments ChangeActivity()
     /*
@@ -76,7 +74,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, ForureningHer.class);
+                    Intent i = new Intent(GroenRute.this, ForureningHer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -85,12 +83,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 }
             }, TIME_OUT);
 
-        }
+        } /*
         else if (ID == item2ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, MainActivity.class);
+                    Intent i = new Intent(GroenRute.this, MainActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -98,12 +96,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     finish();
                 }
             }, TIME_OUT);
-        }
+        }*/
         else if (ID == item3ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(GroenRute.this, ForureningsUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -116,13 +114,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, GroenRute.class);
+                    Intent i = new Intent(GroenRute.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
-                    //startActivity(i);
-                    Toast.makeText(ForureningsUdsigt.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
+                    startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                    //finish();
+                    finish();
                 }
             }, TIME_OUT);
         }
@@ -130,7 +127,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, Notifikationer.class);
+                    Intent i = new Intent(GroenRute.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -143,7 +140,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, Forureningskala.class);
+                    Intent i = new Intent(GroenRute.this, Forureningskala.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -155,7 +152,19 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, Info.class);
+                    Intent i = new Intent(GroenRute.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(GroenRute.this, webViewActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -176,7 +185,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         }
 
         return super.onOptionsItemSelected(item);
-        }
+    }
     //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
@@ -189,10 +198,10 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            case R.id.KortItem2:
+            /*case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;  /*
+                return true; */ /*
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
@@ -216,6 +225,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -227,7 +241,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.ForUdsigtNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.GroenNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
     //endregion Methods

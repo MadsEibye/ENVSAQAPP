@@ -7,7 +7,7 @@ android:icon="@drawable/ic_home"
      android:title="Forurening her!"
      app:showAsAction="never"/>
 
- <item android:id="@+id/KortItem2"
+ <item android:id="@+id/KortItem8"
      android:icon="@drawable/ic_map"
      android:title="Kort"
      app:showAsAction="never"/>
@@ -38,6 +38,9 @@ android:icon="@drawable/ic_home"
      android:icon="@drawable/ic_info"
      android:title="Info"
      app:showAsAction="never"/>
-
-
+<!--
+ <item android:id="@+id/infoItem2"
+     android:icon="@drawable/ic_map"
+     android:title="Kort"
+     app:showAsAction="never"/> -->
 </menu>
