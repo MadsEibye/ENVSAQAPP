@@ -33,6 +33,7 @@ import org.osmdroid.util.GeoPoint;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 //test
+//test2
 public class webViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
