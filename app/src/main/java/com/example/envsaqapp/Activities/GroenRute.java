@@ -83,7 +83,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
                 }
             }, TIME_OUT);
 
-        } /*
+        }
         else if (ID == item2ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -96,7 +96,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
                     finish();
                 }
             }, TIME_OUT);
-        }*/
+        }
         else if (ID == item3ID){
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -198,11 +198,11 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            /*case R.id.KortItem2:
+            case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true; */ /*
-            case R.id.UdsigtItem3:
+                return true;
+            /*case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;

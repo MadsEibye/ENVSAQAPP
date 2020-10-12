@@ -32,8 +32,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.osmdroid.util.GeoPoint;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
-//test
-//test2
+
 public class webViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -104,33 +103,33 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, ForureningHer.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        } /*else if (ID == item2ID) {
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, MainActivity.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        } */else if (ID == item3ID) {
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, ForureningsUdsigt.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -141,8 +140,8 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, GroenRute.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     //startActivity(i);
                     Toast.makeText(webViewActivity.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -154,8 +153,8 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, Notifikationer.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -166,8 +165,8 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, Forureningskala.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -178,8 +177,8 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void run() {
                     Intent i = new Intent(webViewActivity.this, Info.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -252,11 +251,11 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 item1ID = item.getItemId();
                 ChangeActivity(item1ID);
                 return true;
-            /*case R.id.KortItem2:
+            case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;*/  /*
-            case R.id.UdsigtItem3:
+                return true;
+            /*case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;

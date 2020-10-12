@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     private SearchView searchView;
     private HttpUrl url;
     private SimpleMarkerSymbol symbol;
@@ -531,8 +532,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, ForureningHer.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         startActivity(i);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -544,8 +545,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, MainActivity.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         startActivity(i);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -556,8 +557,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         startActivity(i);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -568,8 +569,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, GroenRute.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         //startActivity(i);
                         Toast.makeText(MainActivity.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -581,8 +582,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, Notifikationer.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         startActivity(i);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -593,8 +594,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, Forureningskala.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         startActivity(i);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -605,8 +606,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Intent i = new Intent(MainActivity.this, Info.class);
-                        i.putExtra("userX", pointY);
-                        i.putExtra("userY", pointX);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
+                    }
+                }, TIME_OUT);
+            } else if (ID == item8ID) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(MainActivity.this, webViewActivity.class);
+                        i.putExtra("userX", pointX);
+                        i.putExtra("userY", pointY);
                         startActivity(i);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -640,11 +653,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     item1ID = item.getItemId();
                     ChangeActivity(item1ID);
                     return true;
-                /*case R.id.KortItem2:
+                case R.id.KortItem2:
                     item2ID = item.getItemId();
                     ChangeActivity(item2ID);
-                    return true; */ /*
-            case R.id.UdsigtItem3:
+                    return true;
+            /*case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;
@@ -666,6 +679,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
                     item7ID = item.getItemId();
                     ChangeActivity(item7ID);
+                    return true;
+                case R.id.KortItem8:
+                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                    item8ID = item.getItemId();
+                    ChangeActivity(item8ID);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
