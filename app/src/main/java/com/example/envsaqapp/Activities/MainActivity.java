@@ -195,9 +195,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getSuggestions(newText);
-                String text = newText;
-                adapter.filter(text);
+                //getSuggestions(newText);
+                //String text = newText;
+                //adapter.filter(text);
                 return false;
             }
         });

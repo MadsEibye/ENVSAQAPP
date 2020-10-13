@@ -220,20 +220,20 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
-                    Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
+                    //Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
+                    //Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
                     Latitude = (float) location.getLatitude();
                     Longitude = (float) location.getLongitude();
                     pointX = Latitude;
                     pointY = Longitude;
-                    Log.d("USERLOCATION", " Old Latitude " + Latitude);
-                    Log.d("USERLOCATION", " Old Longitude " + Longitude);
+                    //Log.d("USERLOCATION", " Old Latitude " + Latitude);
+                    //Log.d("USERLOCATION", " Old Longitude " + Longitude);
                     UsergeoPoint = new GeoPoint(Latitude, Longitude);
                     LoadMap();
                 }
             });
         } else {
-
+            Toast.makeText(webViewActivity.this,"AirLITE skal bruge adgang til din lokation for at fungere.", Toast.LENGTH_LONG).show();
         }
     }
     private void LoadMap(){
