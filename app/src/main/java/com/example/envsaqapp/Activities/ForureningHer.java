@@ -50,6 +50,10 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     private Integer item6ID;
     private Integer item7ID;
     private Integer item8ID;
+    private String address;
+    public double no2;
+    public double pm2_5;
+    public double pm10;
     //endregion Instance Fields
 
     //region Methods
@@ -276,10 +280,6 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     The error handling in this method checks if the request is valid, and if it is not, it gives an error message "REQUEST NOT SUCCESFUL".
 
     */
-    private String address;
-    public double no2;
-    public double pm2_5;
-    public double pm10;
 
     public void searchForLocation() {
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long=" + userX + "&y_lat=" + userY);

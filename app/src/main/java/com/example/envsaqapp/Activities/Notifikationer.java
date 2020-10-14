@@ -77,6 +77,12 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
 
 
     } //end of onCreate()
+    //Start of Comments SendNotifikation()
+    /*
+    Basically all this method does is send a notification. It makes an intent to go to the PaamindelseNoti to get the information it needs.
+    It then gets the ALARM_SERVICE from the android device services, and cast the service to an AlarmManager object. Then it sets the AlarmManager to go off after 1000 milliseconds.
+    And then it wakes up the phone with a notification, containing the information it got from PaamindelseNoti.
+     */
     public void SendNotifikation() {
         Intent i = new Intent(Notifikationer.this, PaamindelseNoti.class);
         PendingIntent pendingintent = PendingIntent.getBroadcast(Notifikationer.this, 0, i, 0);

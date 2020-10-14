@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ArrayList<Data> addressArrayList;
     public static ArrayList<Data> array_sort;
     int textlength = 0;
+    private androidx.cursoradapter.widget.CursorAdapter mAdapter;
+    ArrayList<String> addressSuggestions = new ArrayList<>();
     //endregion Instance Fields
 
     //region Methods
@@ -232,166 +234,102 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d("Rhino", "onCreate: " + runScript(this));
     }//End of OnCreate
 
-    private void setUp() {
+    private void setCloseSearchIcon(SearchView searchView) {
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mCloseButton");
+            searchField.setAccessible(true);
+            ImageView closeBtn = (ImageView) searchField.get(searchView);
+            closeBtn.setImageResource(R.drawable.ic_clear_icon_white);
 
-    }
-
-    private androidx.cursoradapter.widget.CursorAdapter mAdapter;
-
-    private void populateAdapter(String query) {
-        final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
-        for (int i = 0; i < addressSuggestions.size(); i++) {
-            if (addressSuggestions.get(i).toLowerCase().startsWith(query.toLowerCase()))
-                c.addRow(new Object[]{i, addressSuggestions.get(i)});
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
-        mAdapter.changeCursor(c);
     }
 
-    ArrayList<String> addressSuggestions = new ArrayList<>();
-
-    private void getSuggestions(String text) {
-        url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=address,kommune" +
-                "&address%like%.eq%" + text + "%");
-        DataService dataService = ApiUtils.getDataService();
-        Call<ArrayList<Data>> getSuggestion = dataService.SearchForLocation(url.toString());
-        getSuggestion.enqueue(new Callback<ArrayList<Data>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
-                if (response.isSuccessful()) {
-                    Log.d("ADRESSSEARCH", " " + response.code());
-                    Log.d("ADRESSSEARCH", response.body().toString());
-                    Log.d("ADRESSSEARCH", url.toString());
-                    Log.d("ADRESSSEARCH", response.body().get(0).getAddress());
-                    if (response.body().size() >= 1) {
-                        for (Data o : response.body()
-                        ) {
-                            String searchAddress = o.getAddress();
-                            String searchKommune = o.getKommune();
-                            String addressandKommune = searchAddress + ", " + searchKommune;
-                            addressSuggestions.add(addressandKommune);
-                            Log.d("REEEEEEEEEEEE",addressSuggestions.toString());
-                        }
-
-                        searchView.clearFocus();
-                        //Log.d("RESPONSEOBJECTS", o.toString());
-                    } else {
-                        Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
-                    Toast.makeText(MainActivity.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
-                    Log.d("Queue", message);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
-
-            }
-        });
-    }
-
-
-        private void setCloseSearchIcon (SearchView searchView){
-            try {
-                Field searchField = SearchView.class.getDeclaredField("mCloseButton");
-                searchField.setAccessible(true);
-                ImageView closeBtn = (ImageView) searchField.get(searchView);
-                closeBtn.setImageResource(R.drawable.ic_clear_icon_white);
-
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Start of Comments PlotNewDot()
-    /*
-    This method plots a dot for the address typed in the seachbar. It also uses the SimpleMarkerSymbol and GraphicOverlay to display it.
-    The dot in this method is set to color red, so you can see the difference between the user location, and the searched location.
-    When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
-     */
-        private void PlotNewDot (GeoPoint geoPoint, GeoPoint oldGeopoint){
-            //Overlay graphicsOverlay = new Overlay();
-            //mapView.getGraphicsOverlays().add(graphicsOverlay);
-            Log.d("GList", mapView.getOverlays().toString());
-            if (mapView.getOverlays().size() >= 2) {
+    // Start of Comments PlotNewDot()
+        /*
+        This method plots a marker for the address typed in the seachbar on the map.
+        The marker in this method is set to a different color than then user location, so you can see the difference between the user location, and the searched location.
+        When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
+        */
+    private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint) {
+        //Overlay graphicsOverlay = new Overlay();
+        //mapView.getGraphicsOverlays().add(graphicsOverlay);
+        Log.d("GList", mapView.getOverlays().toString());
+        if (mapView.getOverlays().size() >= 2) {
             /*
             mapView.getOverlays().remove(mapView.getGraphicsOverlays().size() -1);
             graphicsOverlay.getGraphics().add(newgraphic);
             mapView.getGraphicsOverlays().add(graphicsOverlay);
             Toast.makeText(MainActivity.this,"Graphics deleted and added",Toast.LENGTH_LONG).show();
             LoadMap(Latitude, Longitude);*/
-                //mapView.getOverlays().remove(oldGeopoint);
-                mapView.getOverlays().clear();
-                //mapView.getOverlays().get(mapView.getOverlays().size()-1);
-                Marker startMarker = new Marker(mapView);
-                startMarker.setPosition(geoPoint);
-                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
-                startMarker.setTitle(MarkerTitle);
-                startMarker.showInfoWindow();
-                mapView.getOverlays().add(startMarker);
-                updateGPS();
-                mapController.setCenter(geoPoint);
-                //Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
-            } else {
-                Marker startMarker = new Marker(mapView);
-                startMarker.setPosition(geoPoint);
-                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
-                startMarker.setTitle(MarkerTitle);
-                startMarker.showInfoWindow();
-                mapView.getOverlays().add(startMarker);
-                //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
-            }
-            LoadMap(geoPoint);
+            //mapView.getOverlays().remove(oldGeopoint);
+            mapView.getOverlays().clear();
+            //mapView.getOverlays().get(mapView.getOverlays().size()-1);
+            Marker startMarker = new Marker(mapView);
+            startMarker.setPosition(geoPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
+            startMarker.setTitle(MarkerTitle);
+            startMarker.showInfoWindow();
+            mapView.getOverlays().add(startMarker);
+            updateGPS();
+            mapController.setCenter(geoPoint);
+            //Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
+        } else {
+            Marker startMarker = new Marker(mapView);
+            startMarker.setPosition(geoPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setIcon(getResources().getDrawable(R.drawable.ic_icon_place_blackgray_36dp));
+            startMarker.setTitle(MarkerTitle);
+            startMarker.showInfoWindow();
+            mapView.getOverlays().add(startMarker);
+            //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
+        LoadMap(geoPoint);
+    }
 
-        private void LoadMap (GeoPoint gPt){
-            //ParseAndShowLayerWMS();
-            //ShowSelectedLayer();
-            Context ctx = getApplicationContext();
-            Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-            //final ITileSource tileSource = TileSourceFactory.MAPNIK;
-            final ITileSource tileSource = new XYTileSource("Mapnik", 1, 20, 256, ".png",
-                    new String[]{
-                            "http://tile.openstreetmap.org/",
-                    });
 
-            final ITileSource dotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
-                    new String[]{
-                            "http://openptmap.org/tiles/",
-                    });
-            mapView.setTileSource(tileSource);
-            MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-            provider.setTileSource(dotsOverlay);
-            TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
-            tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-            mapView.getOverlays().add(tilesOverlay);
-            //mapView.getOverlays().add(dotsOverlay);
-            mapController = (MapController) mapView.getController();
-            mapView.setMinZoomLevel(8.0);
-            rotationGestureOverlay = new RotationGestureOverlay(mapView);
-            rotationGestureOverlay.setEnabled(true);
-            mapView.setMultiTouchControls(true);
-            mapView.getOverlays().add(this.rotationGestureOverlay);
-            mapController.setZoom(13);
-            mapController.setCenter(gPt);
-            //addMarkerUserLocation(gPt);
-        }
+    private void LoadMap(GeoPoint gPt) {
+        //ParseAndShowLayerWMS();
+        //ShowSelectedLayer();
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        //final ITileSource tileSource = TileSourceFactory.MAPNIK;
+        final ITileSource tileSource = new XYTileSource("Mapnik", 1, 20, 256, ".png",
+                new String[]{
+                        "http://tile.openstreetmap.org/",
+                });
 
-        HttpURLConnection c = null;
-        InputStream is = null;
-        WMSEndpoint wmsEndpoint = null;
+        final ITileSource dotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        mapView.setTileSource(tileSource);
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(dotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        //mapView.getOverlays().add(dotsOverlay);
+        mapController = (MapController) mapView.getController();
+        mapView.setMinZoomLevel(8.0);
+        rotationGestureOverlay = new RotationGestureOverlay(mapView);
+        rotationGestureOverlay.setEnabled(true);
+        mapView.setMultiTouchControls(true);
+        mapView.getOverlays().add(this.rotationGestureOverlay);
+        mapController.setZoom(13);
+        mapController.setCenter(gPt);
+        //addMarkerUserLocation(gPt);
+    }
+
+
 
     /*
         private void ParseAndShowLayerWMS()
-
         {
-
             Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
             Log.d("ShowThis", "hej");
 
@@ -434,90 +372,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 mapView.setTileSource(source);
             }*/
-        //Start of Comments addMarkerUserLocation()
+    //Start of Comments addMarkerUserLocation()
     /*
      The method takes the latitude and longitude of the user location, and then adds a SimpleMarkerSymbol displaying a blue dot.
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
     */
-        public void addMarkerUserLocation (GeoPoint center){
+    public void addMarkerUserLocation(GeoPoint center) {
 
-            Marker marker = new Marker(mapView);
-            marker.setPosition(center);
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            //marker.setDefaultIcon();
-            marker.setIcon(getResources().getDrawable(R.drawable.ic_icon_person_pin_circle_blackgray_36dp));
-            //mapView.getOverlays().clear();
-            mapView.getOverlays().add(marker);
-            mapView.invalidate();
-            marker.setTitle("Din lokation");
-        }
+        Marker marker = new Marker(mapView);
+        marker.setPosition(center);
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        //marker.setDefaultIcon();
+        marker.setIcon(getResources().getDrawable(R.drawable.ic_icon_person_pin_circle_blackgray_36dp));
+        //mapView.getOverlays().clear();
+        mapView.getOverlays().add(marker);
+        mapView.invalidate();
+        marker.setTitle("Din lokation");
+    }
 
-        //Start of Comments updateGPS()
+    //Start of Comments updateGPS()
     /*
     This method checks if it has permission to use the device location and if it has permission, then it executes onSuccess which set latitude and longitude.
     It then calls the method LoadMap().
     */
-        public void updateGPS () {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+    public void updateGPS() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
-                        Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
-                        Latitude = (float) location.getLatitude();
-                        Longitude = (float) location.getLongitude();
-                        Log.d("USERLOCATION", " Old Latitude " + Latitude);
-                        Log.d("USERLOCATION", " Old Longitude " + Longitude);
-                        UsergeoPoint = new GeoPoint(Latitude, Longitude);
-                        LoadMap(UsergeoPoint);
-                        addMarkerUserLocation(UsergeoPoint);
-                    }
-                });
-            } else {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
+                    Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
+                    Latitude = (float) location.getLatitude();
+                    Longitude = (float) location.getLongitude();
+                    Log.d("USERLOCATION", " Old Latitude " + Latitude);
+                    Log.d("USERLOCATION", " Old Longitude " + Longitude);
+                    UsergeoPoint = new GeoPoint(Latitude, Longitude);
+                    LoadMap(UsergeoPoint);
+                    addMarkerUserLocation(UsergeoPoint);
+                }
+            });
+        } else {
 
-            }
         }
+    }
 
-        //Start of Comments findLocation()
+    //Start of Comments findLocation()
     /*
     This method checks if it has permission to use the device location and if it has permission it calls the method updateGPS()
     if the permission is denied then it makes a toast
     */
-        public void findLocation () {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Log.d("USERLOCATION", "" + Latitude);
-                Log.d("USERLOCATION", "" + Longitude);
-                updateGPS();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(this, "You need too grant acess to your location", Toast.LENGTH_LONG).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+    public void findLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            Log.d("USERLOCATION", "" + Latitude);
+            Log.d("USERLOCATION", "" + Longitude);
+            updateGPS();
+        } else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(this, "You need too grant acess to your location", Toast.LENGTH_LONG).show();
             }
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
 
-        //Start of Comments onRequestPermissionsResult()
+    //Start of Comments onRequestPermissionsResult()
     /*
     This method calls the method updateGPS() if it has a request code that matches with the specific permission needed
     */
-        @Override
-        public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults){
-            if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateGPS();
-                } else {
-                    Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
-                }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                updateGPS();
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
         }
+    }
 
-        //Start of Comments ChangeActivity()
+    //Start of Comments ChangeActivity()
     /*
     ChangeActivity() is the handler for the navigationbar. So when you press an item in the navigationbar, ChangeActivity is run, with the ID you
     get from OnNavigationItemSelected(). The method then takes the ID and checks which ID it matches, and if it matches ID 1 it changes to the first Activity.
@@ -526,137 +463,137 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     activity that was pressed in the navigationbar.
     overridePendingTransition is just the animation that is run when you change the activity, and in this case its a fade_in fade_out. And the finish() method is just closing down the last activity
     */
-        public void ChangeActivity (Integer ID){
-            if (ID == item1ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, ForureningHer.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, ForureningHer.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
 
-            } else if (ID == item2ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, MainActivity.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
-            } else if (ID == item3ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
-            } else if (ID == item4ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, GroenRute.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        //startActivity(i);
-                        Toast.makeText(MainActivity.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        //finish();
-                    }
-                }, TIME_OUT);
-            } else if (ID == item5ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, Notifikationer.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
-            } else if (ID == item6ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, Forureningskala.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
-            } else if (ID == item7ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, Info.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
-            } else if (ID == item8ID) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MainActivity.this, webViewActivity.class);
-                        i.putExtra("userX", pointX);
-                        i.putExtra("userY", pointY);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                    }
-                }, TIME_OUT);
-            }
+        } else if (ID == item2ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, MainActivity.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item3ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item4ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, GroenRute.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    //startActivity(i);
+                    Toast.makeText(MainActivity.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    //finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item5ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Notifikationer.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item6ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Forureningskala.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item7ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, Info.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, webViewActivity.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
         }
+    }
 
-        //Start of Comments onOptionsItemSelected
+    //Start of Comments onOptionsItemSelected
     /*
     This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
     */
-        @Override
-        public boolean onOptionsItemSelected (@NonNull MenuItem item){
-            if (mDrawerToggle.onOptionsItemSelected(item)) {
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
 
-            }
-
-            return super.onOptionsItemSelected(item);
         }
 
-        //Start of Comments onNavigationItemSelected
+        return super.onOptionsItemSelected(item);
+    }
+
+    //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
     Activity to navigate to when pressed. When finished, it changes to a new Activity regarding which ID is selected, and then leads the user to a new Activity.
     */
-        @Override
-        public boolean onNavigationItemSelected (@NonNull MenuItem item){
-            switch (item.getItemId()) {
-                case R.id.ForHerItem1:
-                    item1ID = item.getItemId();
-                    ChangeActivity(item1ID);
-                    return true;
-                case R.id.KortItem2:
-                    item2ID = item.getItemId();
-                    ChangeActivity(item2ID);
-                    return true;
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ForHerItem1:
+                item1ID = item.getItemId();
+                ChangeActivity(item1ID);
+                return true;
+            case R.id.KortItem2:
+                item2ID = item.getItemId();
+                ChangeActivity(item2ID);
+                return true;
             /*case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
@@ -665,72 +602,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
                 return true;*/
-                case R.id.NotiItem5:
-                    item5ID = item.getItemId();
-                    //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
-                    ChangeActivity(item5ID);
-                    return true;
-                case R.id.SkalaItem6:
-                    item6ID = item.getItemId();
-                    //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
-                    ChangeActivity(item6ID);
-                    return true;
-                case R.id.infoItem7:
-                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
-                    item7ID = item.getItemId();
-                    ChangeActivity(item7ID);
-                    return true;
-                case R.id.KortItem8:
-                    //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
-                    item8ID = item.getItemId();
-                    ChangeActivity(item8ID);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
-
+            case R.id.NotiItem5:
+                item5ID = item.getItemId();
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
+                ChangeActivity(item5ID);
+                return true;
+            case R.id.SkalaItem6:
+                item6ID = item.getItemId();
+                //Toast.makeText(this, "Not implemented yet", Toast.LENGTH_LONG).show();
+                ChangeActivity(item6ID);
+                return true;
+            case R.id.infoItem7:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item7ID = item.getItemId();
+                ChangeActivity(item7ID);
+                return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        //Start of Comments setNavigationViewListener
+    }
+
+    //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
-        private void setNavigationViewListener () {
-            navigationView = findViewById(R.id.MainNav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-        }
+    private void setNavigationViewListener() {
+        navigationView = findViewById(R.id.MainNav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        //Start of Comments notifikationskanal()
+    //Start of Comments notifikationskanal()
     /*
     It check if the build version is bigger or equal to ECLAIR_0_1, then it create a new notification channel
     with id, name and importance and instanciate it.
     */
-        private void notifikationskanal () {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) ;
-            {
-                CharSequence name = "min paamindelses kanal";
-                String description = "kanal til luftforurenings app";
-                int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                NotificationChannel channel = new NotificationChannel("ny notifikation", name, importance);
-                channel.setDescription(description);
+    private void notifikationskanal() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) ;
+        {
+            CharSequence name = "min paamindelses kanal";
+            String description = "kanal til luftforurenings app";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("ny notifikation", name, importance);
+            channel.setDescription(description);
 
-                NotificationManager notificationManager = getSystemService(NotificationManager.class);
-                notificationManager.createNotificationChannel(channel);
-            }
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
+    }
 
-    private void setUpMap() {
-        // TODO Auto-generated method stub
-        TileProvider geoServerTileProvider = TileProviderFactory
-                .getGeoServerTileProvider();
-        /*TileOverlay geoServerTileOverlay = mapView.set(
-                new TileOverlayOptions()
-                        .tileProvider(geoServerTileProvider)
-                        .zIndex(10000)
-                        .visible(true));
-*/    }
-        //Start of comments SearchForAddress()
+    //Start of comments SearchForAddress()
     /*
     This method is connected to the searchbar of the app. This is the logic for when you search for a specific address in the database.
     It has an URL, that holds the table of the database, and then pt_id, lat, long, street_nam, house_num and no2_street as parameters.
@@ -739,92 +666,85 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     It also contains some error handling, thats checks if the user has spelled correctly or is simply searching for an address that does not exists in the database.
     If it does not exists, it shows a Toast.makeText("") to the user that displays a message.
     */
-        private void SearchForAddress () {
-            String[] InputArray = searchView.getQuery().toString().split(" ");
-            if (InputArray.length >= 2) {
-                String streetName = InputArray[0];
-                String houseNumber = InputArray[1];
-                url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=lat,long,street_nam,house_num,no2_street,pm10_street,pm25_street,address" +
-                        "&street_nam=eq." + streetName + "&house_num=eq." + houseNumber);
+    private void SearchForAddress() {
+        String[] InputArray = searchView.getQuery().toString().split(" ");
+        if (InputArray.length >= 2) {
+            String streetName = InputArray[0];
+            String houseNumber = InputArray[1];
+            url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=lat,long,street_nam,house_num,no2_street,pm10_street,pm25_street,address" +
+                    "&street_nam=eq." + streetName + "&house_num=eq." + houseNumber);
 
-                DataService dataService = ApiUtils.getDataService();
-                Call<ArrayList<Data>> searchForAddress = dataService.SearchForLocation(url.toString());
-                searchForAddress.request().toString().replace("%3d", "=");
-                searchForAddress.enqueue(new Callback<ArrayList<Data>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
-                        if (response.isSuccessful()) {
-                            Log.d("ADRESSSEARCH", " " + response.code());
-                            Log.d("ADRESSSEARCH", response.body().toString());
-                            Log.d("ADRESSSEARCH", url.toString());
-                            if (response.body().size() >= 1) {
-                                Data responseObject1 = response.body().get(0);
-                                float searchX = responseObject1.getLatitude();
-                                float searchY = responseObject1.getLongitude();
-                                String searchAddress = responseObject1.getAddress();
-                                double searchNo2 = responseObject1.getNo2_street();
-                                double searchPM2_5 = responseObject1.getPM2_5();
-                                double searchPM10 = responseObject1.getPM10();
-                                MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " + searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5 + "\n" +
-                                        "PM10 koncentration: " + searchPM10;
-                                GeoPoint searchgPt = new GeoPoint(searchX, searchY);
-                                PlotNewDot(searchgPt, UsergeoPoint);
-                                LoadMap(searchgPt);
-                                searchView.clearFocus();
-                                Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                            } else {
-                                Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
-                            }
-
+            DataService dataService = ApiUtils.getDataService();
+            Call<ArrayList<Data>> searchForAddress = dataService.SearchForLocation(url.toString());
+            searchForAddress.request().toString().replace("%3d", "=");
+            searchForAddress.enqueue(new Callback<ArrayList<Data>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
+                    if (response.isSuccessful()) {
+                        Log.d("ADRESSSEARCH", " " + response.code());
+                        Log.d("ADRESSSEARCH", response.body().toString());
+                        Log.d("ADRESSSEARCH", url.toString());
+                        if (response.body().size() >= 1) {
+                            Data responseObject1 = response.body().get(0);
+                            float searchX = responseObject1.getLatitude();
+                            float searchY = responseObject1.getLongitude();
+                            String searchAddress = responseObject1.getAddress();
+                            double searchNo2 = responseObject1.getNo2_street();
+                            double searchPM2_5 = responseObject1.getPM2_5();
+                            double searchPM10 = responseObject1.getPM10();
+                            MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " + searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5 + "\n" +
+                                    "PM10 koncentration: " + searchPM10;
+                            GeoPoint searchgPt = new GeoPoint(searchX, searchY);
+                            PlotNewDot(searchgPt, UsergeoPoint);
+                            LoadMap(searchgPt);
+                            searchView.clearFocus();
+                            Log.d("RESPONSEOBJECTS", responseObject1.toString());
                         } else {
-                            String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
-                            Toast.makeText(MainActivity.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
-                            Log.d("Queue", message);
+                            Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
                         }
 
+                    } else {
+                        String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
+                        Toast.makeText(MainActivity.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
+                        Log.d("Queue", message);
                     }
 
-                    @Override
-                    public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
-                        Log.d("Queue", t.toString());
-                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
+                    Toast.makeText(MainActivity.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                    Log.d("Queue", t.toString());
+                }
+            });
+        } else {
+            Toast.makeText(MainActivity.this, "Husk at indtaste et husnummer", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void MainNo2switchClicked(View view) {
+        mainPm10Switch.setChecked(false);
+        mainPm25Switch.setChecked(false);
+        mapView.getOverlays().clear();
+        final ITileSource No2DotsOverlay = new XYTileSource("demo", 1, 20, 256, ".png",
+                new String[]{
+                        "http://10.28.0.241:8088/geoserver/gwc/",
                 });
-            } else {
-                Toast.makeText(MainActivity.this, "Husk at indtaste et husnummer", Toast.LENGTH_LONG).show();
-            }
-        }
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        String[] stringArrayBaseUrl = new String[]{"http://10.28.0.241:8088/gwc/service/tms/1.0.0/"};
+        GeoserverTileSource source = new GeoserverTileSource("cite:lpdv2k12_kbh_no2", stringArrayBaseUrl, "cite:lpdv2k12_kbh_no2");
+        provider.setTileSource(source);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+    }
 
-        @Override
-        protected void onDestroy () {
-            startService(new Intent(this, NotificationService.class));
-            super.onDestroy();
-        }
-
-
-        public void MainNo2switchClicked (View view){
-            mainPm10Switch.setChecked(false);
-            mainPm25Switch.setChecked(false);
-            mapView.getOverlays().clear();
-            final ITileSource No2DotsOverlay = new XYTileSource("demo", 1, 20, 256, ".png",
-                    new String[]{
-                            "http://10.28.0.241:8088/geoserver/gwc/",
-                    });
-            MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-            String[] stringArrayBaseUrl = new String[]{"http://10.28.0.241:8088/gwc/service/tms/1.0.0/"};
-            GeoserverTileSource source = new GeoserverTileSource("cite:lpdv2k12_kbh_no2", stringArrayBaseUrl, "cite:lpdv2k12_kbh_no2");
-            provider.setTileSource(source);
-            TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
-            tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-            mapView.getOverlays().add(tilesOverlay);
-            addMarkerUserLocation(UsergeoPoint);
-            mapController.animateTo(UsergeoPoint);
-        }
-
-        public void MainPm25switchClicked (View view){
-            mainNo2Switch.setChecked(false);
-            mainPm10Switch.setChecked(false);
-            downloadAndParse();
+    public void MainPm25switchClicked(View view) {
+        mainNo2Switch.setChecked(false);
+        mainPm10Switch.setChecked(false);
+        downloadAndParse();
         /*mapView.getOverlays().clear();
         final ITileSource Pm2_5DotsOverlay = new XYTileSource("cite:lpdv2k12_kbh_no2", 1, 20, 256, ".png",
                 new String[]{
@@ -835,144 +755,222 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
         tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
         mapView.getOverlays().add(tilesOverlay);*/
-            addMarkerUserLocation(UsergeoPoint);
-            mapController.animateTo(UsergeoPoint);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
 
+    }
+
+    public void MainPm10switchClicked(View view) {
+        mainNo2Switch.setChecked(false);
+        mainPm25Switch.setChecked(false);
+        mapView.getOverlays().clear();
+        final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(Pm10DotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+    }
+
+
+    //region Stuff That Did Not Work
+
+    HttpURLConnection c = null;
+    InputStream is = null;
+    WMSEndpoint wmsEndpoint = null;
+    WMSEndpoint cap;
+
+    private void populateAdapter(String query) {
+        final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
+        for (int i = 0; i < addressSuggestions.size(); i++) {
+            if (addressSuggestions.get(i).toLowerCase().startsWith(query.toLowerCase()))
+                c.addRow(new Object[]{i, addressSuggestions.get(i)});
         }
+        mAdapter.changeCursor(c);
+    }
 
-        public void MainPm10switchClicked (View view){
-            mainNo2Switch.setChecked(false);
-            mainPm25Switch.setChecked(false);
-            mapView.getOverlays().clear();
-            final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
-                    new String[]{
-                            "http://openptmap.org/tiles/",
-                    });
-            MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-            provider.setTileSource(Pm10DotsOverlay);
-            TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
-            tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-            mapView.getOverlays().add(tilesOverlay);
-            addMarkerUserLocation(UsergeoPoint);
-            mapController.animateTo(UsergeoPoint);
-        }
+    private void getSuggestions(String text) {
+        url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=address,kommune" +
+                "&address%like%.eq%" + text + "%");
+        DataService dataService = ApiUtils.getDataService();
+        Call<ArrayList<Data>> getSuggestion = dataService.SearchForLocation(url.toString());
+        getSuggestion.enqueue(new Callback<ArrayList<Data>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("ADRESSSEARCH", " " + response.code());
+                    Log.d("ADRESSSEARCH", response.body().toString());
+                    Log.d("ADRESSSEARCH", url.toString());
+                    Log.d("ADRESSSEARCH", response.body().get(0).getAddress());
+                    if (response.body().size() >= 1) {
+                        for (Data o : response.body()
+                        ) {
+                            String searchAddress = o.getAddress();
+                            String searchKommune = o.getKommune();
+                            String addressandKommune = searchAddress + ", " + searchKommune;
+                            addressSuggestions.add(addressandKommune);
+                            Log.d("REEEEEEEEEEEE", addressSuggestions.toString());
+                        }
 
-        protected String getDefaultUrl () {
-            //"http://192.168.1.1:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities"
-            //return "http://localhost:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities";
-            return "http://10.28.0.241:8088/geoserver/gwc/demo/cite:lpdv2k12_kbh_no2?gridSet=EPSG:4326&format=image/png";
-        }
+                        searchView.clearFocus();
+                        //Log.d("RESPONSEOBJECTS", o.toString());
+                    } else {
+                        Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
+                    }
 
-        WMSEndpoint cap;
+                } else {
+                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
+                    Toast.makeText(MainActivity.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
+                    Log.d("Queue", message);
+                }
+            }
 
-        private void downloadAndParse () {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    boolean ok = false;
-                    Exception root = null;
+            @Override
+            public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        startService(new Intent(this, NotificationService.class));
+        super.onDestroy();
+    }
+
+    protected String getDefaultUrl() {
+        //"http://192.168.1.1:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities"
+        //return "http://localhost:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities";
+        return "http://10.28.0.241:8088/geoserver/gwc/demo/cite:lpdv2k12_kbh_no2?gridSet=EPSG:4326&format=image/png";
+    }
+
+    private void downloadAndParse() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean ok = false;
+                Exception root = null;
+                try {
+                    Log.d("WMSFejl", "HttpURLConnection null");
+                    HttpURLConnection c = null;
+                    InputStream is = null;
                     try {
-                        Log.d("WMSFejl", "HttpURLConnection null");
-                        HttpURLConnection c = null;
-                        InputStream is = null;
-                        try {
-                            Log.d("WMSFejl", "open connection");
-                            promptUserForLayerSelection();
-                            c = (HttpURLConnection) new URL(getDefaultUrl()).openConnection();
-                            is = c.getInputStream();
-                            cap = WMSParser.parse(is);
+                        Log.d("WMSFejl", "open connection");
+                        promptUserForLayerSelection();
+                        c = (HttpURLConnection) new URL(getDefaultUrl()).openConnection();
+                        is = c.getInputStream();
+                        cap = WMSParser.parse(is);
 
-                            ok = true;
+                        ok = true;
 
+                    } catch (Exception ex) {
+                        Log.d("WMSFejl", ex.getMessage());
+                        ex.printStackTrace();
+                        root = ex;
+                    } finally {
+                        if (is != null) try {
+                            Log.d("WMSFejl", "input stream closed");
+                            is.close();
                         } catch (Exception ex) {
                             Log.d("WMSFejl", ex.getMessage());
-                            ex.printStackTrace();
-                            root = ex;
-                        } finally {
-                            if (is != null) try {
-                                Log.d("WMSFejl", "input stream closed");
-                                is.close();
+                        }
+                        if (c != null)
+                            try {
+                                Log.d("WMSFejl", "disconnected");
+                                c.disconnect();
                             } catch (Exception ex) {
                                 Log.d("WMSFejl", ex.getMessage());
                             }
-                            if (c != null)
-                                try {
-                                    Log.d("WMSFejl", "disconnected");
-                                    c.disconnect();
-                                } catch (Exception ex) {
-                                    Log.d("WMSFejl", ex.getMessage());
-                                }
-                        }
+                    }
 
 
-                    } catch (Exception ex) {
-                        root = ex;
-                        ex.printStackTrace();
-                        Log.d("WMSFejl", ex.getMessage());
-                    }
-                    if (ok) {
-                        Log.d("WMSFejl", "promptUserForLayerSelection()");
-                        promptUserForLayerSelection();
-                    } else {
-                        showErrorMessage(root);
-                    }
+                } catch (Exception ex) {
+                    root = ex;
+                    ex.printStackTrace();
+                    Log.d("WMSFejl", ex.getMessage());
                 }
-
-
-            }).start();
-        }
-
-        private void promptUserForLayerSelection () {
-            //Toast.makeText(MainActivity.this, "this method promptUserForLayerSelection is running", Toast.LENGTH_LONG).show();
-            Log.d("WMSFejl", "this method promptUserForLayerSelection is running");
-            for (WMSLayer layer : cap.getLayers()) {
-                WMSTileSource source = WMSTileSource.createFrom(cap, layer);
-
-                mapView.setTileSource(source);
-
-            }
-        }
-
-        private void showErrorMessage ( final Exception root){
-            Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-        }
-
-        public static String runScript (Context androidContextObject){
-            try {
-                Resources resource = androidContextObject.getResources();
-                InputStream rawResource = resource.openRawResource(R.raw.config);
-
-
-                Properties properties = new Properties();
-                properties.load(rawResource);
-
-                String source = properties.getProperty("jsExecutes");
-                String functionName = "layers";
-                Object[] functionParams = new Object[]{"cool"};
-                org.mozilla.javascript.Context rhino = org.mozilla.javascript.Context.enter();
-
-                rhino.setOptimizationLevel(-1);
-
-                Scriptable scope = rhino.initStandardObjects();
-
-                rhino.evaluateString(scope, source, "JavaScript", 1, null);
-                Object object = scope.get(functionName, scope);
-
-                if (object instanceof Function) {
-                    Function function = (Function) object;
-                    Object result = function.call(rhino, scope, scope, functionParams);
-
-                    String response = org.mozilla.javascript.Context.toString(result);
-                    return response;
+                if (ok) {
+                    Log.d("WMSFejl", "promptUserForLayerSelection()");
+                    promptUserForLayerSelection();
                 } else {
-                    return null;
+                    showErrorMessage(root);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                org.mozilla.javascript.Context.exit();
-
             }
-            return null;
+
+
+        }).start();
+    }
+
+    private void promptUserForLayerSelection() {
+        //Toast.makeText(MainActivity.this, "this method promptUserForLayerSelection is running", Toast.LENGTH_LONG).show();
+        Log.d("WMSFejl", "this method promptUserForLayerSelection is running");
+        for (WMSLayer layer : cap.getLayers()) {
+            WMSTileSource source = WMSTileSource.createFrom(cap, layer);
+
+            mapView.setTileSource(source);
+
         }
     }
+
+    private void showErrorMessage(final Exception root) {
+        Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+    }
+
+    public static String runScript(Context androidContextObject) {
+        try {
+            Resources resource = androidContextObject.getResources();
+            InputStream rawResource = resource.openRawResource(R.raw.config);
+
+
+            Properties properties = new Properties();
+            properties.load(rawResource);
+
+            String source = properties.getProperty("jsExecutes");
+            String functionName = "layers";
+            Object[] functionParams = new Object[]{"cool"};
+            org.mozilla.javascript.Context rhino = org.mozilla.javascript.Context.enter();
+
+            rhino.setOptimizationLevel(-1);
+
+            Scriptable scope = rhino.initStandardObjects();
+
+            rhino.evaluateString(scope, source, "JavaScript", 1, null);
+            Object object = scope.get(functionName, scope);
+
+            if (object instanceof Function) {
+                Function function = (Function) object;
+                Object result = function.call(rhino, scope, scope, functionParams);
+
+                String response = org.mozilla.javascript.Context.toString(result);
+                return response;
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            org.mozilla.javascript.Context.exit();
+
+        }
+        return null;
+    }
+
+    private void setUpMap() {
+        // TODO Auto-generated method stub
+        TileProvider geoServerTileProvider = TileProviderFactory
+                .getGeoServerTileProvider();
+        /*TileOverlay geoServerTileOverlay = mapView.set(
+                new TileOverlayOptions()
+                        .tileProvider(geoServerTileProvider)
+                        .zIndex(10000)
+                        .visible(true));
+*/
+    }
+
+    //endregion Stuff That Did Not Work
+}

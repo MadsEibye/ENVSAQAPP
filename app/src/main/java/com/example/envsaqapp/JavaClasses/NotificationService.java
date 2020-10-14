@@ -15,7 +15,7 @@ import java.util.TimerTask;
 
 public class NotificationService extends Service {
 
-
+    double no2;
     Timer timer;
     TimerTask timerTask;
     String TAG = "Timers";
@@ -32,59 +32,10 @@ public class NotificationService extends Service {
         return START_STICKY;
     }
 
-    double pointX;
-    double pointY;
-    double no2;
-    double pm2_5;
-    double pm10;
     @Override
     public void onCreate() {
-        /*Log.e(TAG, "onCreate");
-        MainActivity mainActivity = new MainActivity();
-        pointX = mainActivity.pointX;
-        pointY = mainActivity.pointY;
-        Log.d(TAG, pointX + pointY + "");
-        searchForLocation();
-        while (true){
-            YOURNOTIFICATIONFUNCTION();
-        }*/
     }
-    /*public void searchForLocation() {
-        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long="+ pointX +"&y_lat="+ pointY);
-        DataService dataService = ApiUtils.getTrackService();
-        Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
-        queueSong.enqueue(new Callback<ArrayList<Data>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
-                if (response.isSuccessful()) {
-                    Log.d("QUERY", " " + response.code());
-                    Log.d("QUERY", response.body().toString());
-                    Log.d("QUERY", url.toString());
-                    Data responseObject1 = response.body().get(0);
-                    //address = responseObject1.getStreet_nam() + " " + responseObject1.getHouse_num();
-                    no2 = responseObject1.getNo2_street();
-                    pm2_5 = responseObject1.getPM2_5();
-                    pm10 = responseObject1.getPM10();
-                    Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                    //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
-                    //Log.d("TESTING", SongsInQueue.toString());
 
-
-                } else {
-                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
-                    Toast.makeText(NotificationService.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
-                    Log.d("Queue", message);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
-                Toast.makeText(NotificationService.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
-                Log.d("Queue", t.toString());
-            }
-        });
-    }*/
 
     @Override
     public void onDestroy() {

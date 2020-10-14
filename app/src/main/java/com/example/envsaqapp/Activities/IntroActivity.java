@@ -19,7 +19,7 @@ public class IntroActivity extends AppCompatActivity {
     //region Methods
     //Start of Comments onCreate
     /*
-    This method shows the intro screen for five seconds and then change activity to MainActivity.
+    This method shows the intro screen in fullscreen mode for five seconds and then change activity to webViewActivity.
     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
