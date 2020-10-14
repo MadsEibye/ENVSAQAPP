@@ -294,13 +294,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         LoadMap(geoPoint);
     }
+
+    //Start of Comments LoadMap()
     /*
     This method loads the map by first setting the tile source to what we want to show when the map is loaded.
     We also set an overlay to display on top of the map, this is the main feature.
-    some secondary features is ad follows, setting minimum zoom level, setting a rotation gesture, setting the zoom level when the app is opened.
-    and finally center the view with the geopoint given as an argument when calling this method.
-     */
-
+    some secondary features is as follows, setting minimum zoom level, setting a rotation gesture, setting the zoom level when the app is opened.
+    and finally center the view with the geopoint given as an argument when calling this method (Which is the user location).
+    */
     private void LoadMap(GeoPoint gPt) {
         //ParseAndShowLayerWMS();
         //ShowSelectedLayer();
@@ -333,8 +334,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
     }
-
-
 
     /*
         private void ParseAndShowLayerWMS()
