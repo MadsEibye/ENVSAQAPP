@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }//End of OnCreate
 
     /*
-    this method sets the closing icon for the searchView to ic_clear_icon_white
+    This method sets the closing icon for the searchView to ic_clear_icon_white
     and if it doesn't exist or it can't get access then it throws an appropriate exception.
      */
     private void setCloseSearchIcon(SearchView searchView) {
