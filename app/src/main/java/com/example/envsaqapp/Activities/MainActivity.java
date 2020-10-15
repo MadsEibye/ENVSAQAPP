@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         The marker in this method is set to a different color than then user location, so you can see the difference between the user location, and the searched location.
         When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
         */
-    private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint) {
+    private void PlotNewDot(GeoPoint geoPoint) {
         //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
         Log.d("GList", mapView.getOverlays().toString());
@@ -280,8 +280,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.showInfoWindow();
             mapView.getOverlays().add(startMarker);
             updateGPS();
-            mapController.setCenter(geoPoint);
-            //Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
+            //mapController.setCenter(geoPoint);
+            mapController.animateTo(geoPoint);
+            Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
         } else {
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
@@ -290,7 +291,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.setTitle(MarkerTitle);
             startMarker.showInfoWindow();
             mapView.getOverlays().add(startMarker);
-            //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
+            //mapController.setCenter(geoPoint);
+            mapController.animateTo(geoPoint);
+            Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
         LoadMap(geoPoint);
     }
@@ -324,12 +327,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().add(tilesOverlay);
         //mapView.getOverlays().add(dotsOverlay);
         mapController = (MapController) mapView.getController();
-        mapView.setMinZoomLevel(8.0);
+        //mapView.setMinZoomLevel(8.0);
         rotationGestureOverlay = new RotationGestureOverlay(mapView);
         rotationGestureOverlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
         mapView.getOverlays().add(this.rotationGestureOverlay);
-        mapController.setZoom(13);
+        //mapController.setZoom(13);
+        mapController.setZoom(4);
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
     }
@@ -387,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
     */
     public void addMarkerUserLocation(GeoPoint center) {
-
+        LoadMap(center);
         Marker marker = new Marker(mapView);
         marker.setPosition(center);
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -419,7 +423,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
                     UsergeoPoint = new GeoPoint(Latitude, Longitude);
-                    LoadMap(UsergeoPoint);
                     addMarkerUserLocation(UsergeoPoint);
                 }
             });
@@ -704,8 +707,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " + searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5 + "\n" +
                                     "PM10 koncentration: " + searchPM10;
                             GeoPoint searchgPt = new GeoPoint(searchX, searchY);
-                            PlotNewDot(searchgPt, UsergeoPoint);
-                            LoadMap(searchgPt);
+                            PlotNewDot(searchgPt);
                             searchView.clearFocus();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
                         } else {
