@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -113,9 +114,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HttpUrl url;
     private SimpleMarkerSymbol symbol;
     private String MarkerTitle;
-    private Switch mainNo2Switch;
-    private Switch mainPm10Switch;
-    private Switch mainPm25Switch;
+    private Button mainNo2Switch;
+    private Button mainPm10Switch;
+    private Button mainPm25Switch;
     private GeoPoint UsergeoPoint;
     ArrayList<Data> arraylist = new ArrayList<Data>();
     private ListView list;
@@ -230,14 +231,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        mainPm25Switch.setAlpha(.5f);
+        mainPm10Switch.setAlpha(.5f);
+
 
         Log.d("Rhino", "onCreate: " + runScript(this));
     }//End of OnCreate
 
+
+
     /*
-    This method sets the closing icon for the searchView to ic_clear_icon_white
-    and if it doesn't exist or it can't get access then it throws an appropriate exception.
-     */
+        This method sets the closing icon for the searchView to ic_clear_icon_white
+        and if it doesn't exist or it can't get access then it throws an appropriate exception.
+         */
     private void setCloseSearchIcon(SearchView searchView) {
         try {
             Field searchField = SearchView.class.getDeclaredField("mCloseButton");
@@ -328,13 +334,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().add(tilesOverlay);
         //mapView.getOverlays().add(dotsOverlay);
         mapController = (MapController) mapView.getController();
-        //mapView.setMinZoomLevel(8.0);
+        mapView.setMinZoomLevel(8.0);
         rotationGestureOverlay = new RotationGestureOverlay(mapView);
         rotationGestureOverlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
         mapView.getOverlays().add(this.rotationGestureOverlay);
-        //mapController.setZoom(13);
-        mapController.setZoom(4);
+        mapController.setZoom(13);
+        //mapController.setZoom(4);
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
     }
@@ -733,8 +739,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void MainNo2switchClicked(View view) {
-        mainPm10Switch.setChecked(false);
-        mainPm25Switch.setChecked(false);
+        mainPm10Switch.setAlpha(.50f);
+        mainPm25Switch.setAlpha(.50f);
+        mainNo2Switch.setAlpha(1f);
+        mainNo2Switch.setEnabled(false);
+        mainPm10Switch.setEnabled(true);
+        mainPm25Switch.setEnabled(true);
         mapView.getOverlays().clear();
         final ITileSource No2DotsOverlay = new XYTileSource("demo", 1, 20, 256, ".png",
                 new String[]{
@@ -752,9 +762,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void MainPm25switchClicked(View view) {
-        mainNo2Switch.setChecked(false);
-        mainPm10Switch.setChecked(false);
-        downloadAndParse();
+        mainNo2Switch.setAlpha(.50f);
+        mainPm10Switch.setAlpha(.50f);
+        mainPm25Switch.setAlpha(1f);
+        mainPm25Switch.setEnabled(false);
+        mainPm10Switch.setEnabled(true);
+        mainNo2Switch.setEnabled(true);
+        //downloadAndParse();
         /*mapView.getOverlays().clear();
         final ITileSource Pm2_5DotsOverlay = new XYTileSource("cite:lpdv2k12_kbh_no2", 1, 20, 256, ".png",
                 new String[]{
@@ -771,8 +785,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void MainPm10switchClicked(View view) {
-        mainNo2Switch.setChecked(false);
-        mainPm25Switch.setChecked(false);
+        mainNo2Switch.setAlpha(.50f);
+        mainPm25Switch.setAlpha(.50f);
+        mainPm10Switch.setAlpha(1f);
+        mainPm10Switch.setEnabled(false);
+        mainNo2Switch.setEnabled(true);
+        mainPm25Switch.setEnabled(true);
         mapView.getOverlays().clear();
         final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
                 new String[]{
@@ -786,7 +804,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addMarkerUserLocation(UsergeoPoint);
         mapController.animateTo(UsergeoPoint);
     }
+    public void mainTestSwtich(View view) {
 
+        mapView.getOverlays().clear();
+        final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(Pm10DotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+    }
 
     //region Stuff That Did Not Work
 
