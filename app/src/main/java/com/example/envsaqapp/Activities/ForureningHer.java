@@ -284,8 +284,8 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     public void searchForLocation() {
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long=" + userX + "&y_lat=" + userY);
         DataService dataService = ApiUtils.getDataService();
-        Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
-        queueSong.enqueue(new Callback<ArrayList<Data>>() {
+        Call<ArrayList<Data>> searchLocation = dataService.SearchForLocation(url.toString());
+        searchLocation.enqueue(new Callback<ArrayList<Data>>() {
             @Override
             public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
                 if (response.isSuccessful()) {
