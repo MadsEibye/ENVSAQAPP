@@ -368,5 +368,10 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Toast.makeText(ForureningsUdsigt.this,"REEEEEEEEEEEEEEE",Toast.LENGTH_LONG).show();
     }
 
+    public void LocationPick(View view){
+        Intent i = new Intent(ForureningsUdsigt.this, MapPickActivity.class);
+        startActivity(i);
+    }
+
     //endregion Methods
 }

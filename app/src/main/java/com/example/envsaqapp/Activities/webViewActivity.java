@@ -108,7 +108,9 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
             }
         };
         findLocation();
-
+        Intent intent = getIntent();
+        userX = intent.getDoubleExtra("userX", userX);
+        userY = intent.getDoubleExtra("userY", userY);
     }
 
     //Start of Comments setNavigationViewListener

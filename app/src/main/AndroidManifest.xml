@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/loadingscreen_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.webViewActivity"></activity>
+        <activity android:name=".Activities.MapPickActivity"></activity>
+        <activity android:name=".Activities.webViewActivity" />
 
         <uses-library
             android:name="com.google.android.wearable"
@@ -35,8 +36,8 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
-        <activity android:name=".Activities.NavigationUdsigt"></activity>
 
+        <activity android:name=".Activities.NavigationUdsigt" />
 
         <service
             android:name=".JavaClasses.NotificationService"
@@ -47,7 +48,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
-
 
         <activity android:name=".Activities.Forureningskala" />
         <activity android:name=".Activities.GroenRute" />
@@ -75,7 +75,6 @@
         </activity>
 
         <receiver android:name=".JavaClasses.PaamindelseNoti" />
-
     </application>
 
 </manifest>
