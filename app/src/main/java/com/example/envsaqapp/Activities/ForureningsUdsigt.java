@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.envsaqapp.R;
@@ -78,6 +79,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         CustomizeLinechart(linechart1,"NO2","16/11/2020");
         CustomizeLinechart(linechart2,"NO2","17/11/2020");
         CustomizeLinechart(linechart3,"NO2","18/11/2020");
+        Button button1 = findViewById(R.id.Udsigtbutton1);
+        Button button2 = findViewById(R.id.Udsigtbutton2);
+        Button button3 = findViewById(R.id.Udsigtbutton3);
+        button1.bringToFront();
+        button2.bringToFront();
+        button3.bringToFront();
 
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -320,7 +327,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         lineDataSet.setCircleColor(Color.GRAY);
         linechart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         linechart.getAxisRight().setEnabled(false);
-        linechart.getXAxis().setLabelCount(24,true);
+        linechart.getXAxis().setLabelCount(8,true);
         linechart.setDoubleTapToZoomEnabled(false);
         linechart.setScaleEnabled(false);
         linechart.getAxisLeft().setLabelCount(10);
