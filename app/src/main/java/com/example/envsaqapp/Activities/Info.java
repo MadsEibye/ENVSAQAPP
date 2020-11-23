@@ -113,7 +113,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Info.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(Info.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -215,10 +215,14 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/Info.java
             /*case R.id.UdsigtItem3:
+=======
+            case R.id.UdsigtItem3:
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/Info.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);

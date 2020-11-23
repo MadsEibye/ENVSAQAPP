@@ -1,6 +1,6 @@
 package Models;
 
-import com.esri.arcgisruntime.geometry.Geometry;
+//import com.esri.arcgisruntime.geometry.Geometry;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -49,9 +49,9 @@ public class Data {
     @SerializedName("idnr")
     @Expose
     private BigInteger idnr;
-    @SerializedName("geom")
+    /*@SerializedName("geom")
     @Expose
-    private Geometry geom;
+    private Geometry geom;*/
     @SerializedName("pt_id")
     @Expose
     private Integer pt_id;
@@ -68,7 +68,7 @@ public class Data {
 
     public Data(Integer gid, double PM2_5, double PM10, BigInteger object_id, float longitude, float latitude, BigInteger x_utm,
                 BigInteger y_utm, String x_y_utm, String street_nam, String house_num, String kommune, double no2_street, BigInteger idnr,
-                Geometry geom, Integer pt_id, String address, String address_underscore) {
+                 Integer pt_id, String address, String address_underscore) {
         this.gid = gid;
         this.PM2_5 = PM2_5;
         this.PM10 = PM10;
@@ -83,7 +83,6 @@ public class Data {
         this.kommune = kommune;
         this.no2_street = no2_street;
         this.idnr = idnr;
-        this.geom = geom;
         this.pt_id = pt_id;
         this.address = address;
         this.address_underscore = address_underscore;
@@ -228,7 +227,7 @@ public class Data {
     public void setIdnr(BigInteger idnr) {
         this.idnr = idnr;
     }
-
+/*
     public Geometry getGeom() {
         return geom;
     }
@@ -236,7 +235,7 @@ public class Data {
     public void setGeom(Geometry geom) {
         this.geom = geom;
     }
-
+*/
     @Override
     public String toString() {
         return "Data{" +
@@ -254,7 +253,6 @@ public class Data {
                 ", kommune='" + kommune + '\'' +
                 ", no2_street=" + no2_street +
                 ", idnr=" + idnr +
-                ", geom=" + geom +
                 ", pt_id=" + pt_id +
                 ", address='" + address + '\'' +
                 ", address_underscore='" + address_underscore + '\'' +

@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.example.envsaqapp.GeoServer.GeoserverTileSource;
@@ -43,6 +44,17 @@ import com.example.envsaqapp.JavaClasses.ListViewAdapter;
 import com.example.envsaqapp.JavaClasses.NotificationService;
 import com.example.envsaqapp.R;
 import com.example.envsaqapp.GeoServer.TileProviderFactory;
+=======
+/*import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.layers.OpenStreetMapLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;*/
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.TileProvider;
@@ -95,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public float Latitude;
     public float Longitude;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private Point point;
+    //private Point point;
     private FusedLocationProviderClient fusedLocationProviderClient;
     public float pointX;
     public float pointY;
@@ -112,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item8ID;
     private SearchView searchView;
     private HttpUrl url;
-    private SimpleMarkerSymbol symbol;
+    //private SimpleMarkerSymbol symbol;
     private String MarkerTitle;
     private Button mainNo2Switch;
     private Button mainPm10Switch;
@@ -510,9 +522,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
                     Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
                     i.putExtra("userX", pointX);
                     i.putExtra("userY", pointY);
+=======
+                    Intent i = new Intent(MainActivity.this, NavigationUdsigt.class);
+                    i.putExtra("userX", pointY);
+                    i.putExtra("userY", pointX);
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -611,10 +629,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
             /*case R.id.UdsigtItem3:
+=======
+            case R.id.UdsigtItem3:
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
@@ -803,6 +825,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().add(tilesOverlay);
         addMarkerUserLocation(UsergeoPoint);
         mapController.animateTo(UsergeoPoint);
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
+=======
+
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
     }
     public void mainTestSwtich(View view) {
 

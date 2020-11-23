@@ -130,7 +130,7 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Notifikationer.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(Notifikationer.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -230,10 +230,14 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                 ChangeActivity(item2ID);
                 return true;
 
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/Notifikationer.java
             /*case R.id.UdsigtItem3:
+=======
+            case R.id.UdsigtItem3:
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/Notifikationer.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);

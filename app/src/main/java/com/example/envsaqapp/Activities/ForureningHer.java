@@ -128,7 +128,7 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningHer.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(ForureningHer.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -229,10 +229,14 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningHer.java
             /*case R.id.UdsigtItem3:
+=======
+            case R.id.UdsigtItem3:
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningHer.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);

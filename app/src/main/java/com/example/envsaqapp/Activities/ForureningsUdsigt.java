@@ -6,14 +6,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningsUdsigt.java
 import com.example.envsaqapp.R;
+=======
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningsUdsigt.java
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -31,7 +45,14 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningsUdsigt.java
     private Integer item8ID;
+=======
+    LineChart linechart1;
+    LineChart linechart2;
+    LineChart linechart3;
+    LineDataSet set1,set2;
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningsUdsigt.java
     //endregion Instance Fields
 
     //region Methods
@@ -54,6 +75,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         mDrawerLayout = findViewById(R.id.ForUdsigtDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
+        linechart1 = findViewById(R.id.LineChart);
+        linechart2 = findViewById(R.id.LineChart2);
+        linechart3 = findViewById(R.id.LineChart3);
+        CustomizeLinechart(linechart1,"NO2","16/11/2020");
+        CustomizeLinechart(linechart2,"NO2","17/11/2020");
+        CustomizeLinechart(linechart3,"NO2","18/11/2020");
 
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -103,7 +130,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(ForureningsUdsigt.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -205,10 +232,14 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
+<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningsUdsigt.java
             /*case R.id.UdsigtItem3:
+=======
+            case R.id.UdsigtItem3:
+>>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningsUdsigt.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
@@ -247,5 +278,78 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.ForUdsigtNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    private void PopulateCharts(){
+
+    }
+
+    private void CustomizeLinechart(LineChart linechart,String component,String Date){
+        LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(),component);
+        ArrayList<ILineDataSet> iLineDataSets = new ArrayList<>();
+        iLineDataSets.add(lineDataSet);
+        linechart.getDescription().setText(Date);
+        linechart.getDescription().setTextSize(12);
+        linechart.getDescription().setYOffset(-25);
+        linechart.getDescription().setTextColor(Color.GRAY);
+        linechart.animateX(1000);
+        LineData lineData = new LineData(iLineDataSets);
+        linechart.setData(lineData);
+        linechart.invalidate();
+        linechart.setBackgroundColor(getResources().getColor(R.color.Lightblue));
+        lineDataSet.setLineWidth(2);
+        lineDataSet.setColor(Color.GRAY);
+        lineDataSet.setDrawCircles(true);
+        lineDataSet.setCircleRadius(5);
+        lineDataSet.setCircleHoleColor(Color.GRAY);
+        lineDataSet.setValueTextSize(10);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setFillAlpha(128);
+        lineDataSet.setFillColor(Color.GRAY);
+        lineDataSet.setValueTextColor(Color.BLACK);
+        lineData.setValueTypeface(Typeface.SERIF);
+        lineDataSet.setCircleColor(Color.GRAY);
+        linechart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        linechart.getAxisRight().setEnabled(false);
+        linechart.getXAxis().setLabelCount(24,true);
+        linechart.setDoubleTapToZoomEnabled(false);
+        linechart.setScaleEnabled(false);
+        linechart.getAxisLeft().setLabelCount(10);
+        linechart.getAxisLeft().setXOffset(12);
+    }
+
+    private ArrayList<Entry> lineChartDataSet(){
+        ArrayList<Entry> dataSet = new ArrayList<Entry>();
+        dataSet.add(new Entry(00f,42));
+        dataSet.add(new Entry(01f,18.5f));
+        dataSet.add(new Entry(02f,12.6f));
+        dataSet.add(new Entry(03f,32));
+        dataSet.add(new Entry(04f,58));
+        dataSet.add(new Entry(05f,69));
+        dataSet.add(new Entry(06f,17));
+        dataSet.add(new Entry(07f,23));
+        dataSet.add(new Entry(08f,36));
+        dataSet.add(new Entry(09f,15));
+        dataSet.add(new Entry(10f,70));
+        dataSet.add(new Entry(11f,16));
+        dataSet.add(new Entry(12f,30));
+        dataSet.add(new Entry(13f,17));
+        dataSet.add(new Entry(14f,56));
+        dataSet.add(new Entry(15f,10));
+        dataSet.add(new Entry(16f,19));
+        dataSet.add(new Entry(17f,22));
+        dataSet.add(new Entry(18f,33));
+        dataSet.add(new Entry(19f,70));
+        dataSet.add(new Entry(20f,80));
+        dataSet.add(new Entry(21f,52));
+        dataSet.add(new Entry(22f,32));
+        dataSet.add(new Entry(23f,16));
+
+        return dataSet;
+    }
+
+    public void Toast(View view) {
+        Toast.makeText(ForureningsUdsigt.this,"REEEEEEEEEEEEEEE",Toast.LENGTH_LONG).show();
+    }
+
     //endregion Methods
 }
