@@ -12,35 +12,24 @@ android:icon="@drawable/ic_home"
      android:title="Kort"
      app:showAsAction="never"/>
 
-<<<<<<< Updated upstream
  <item android:id="@+id/KortItem2"
     android:icon="@drawable/ic_map"
     android:title="KortUdenOverlays"
     app:showAsAction="never"/>
 
- <!--
-=======
->>>>>>> Stashed changes
+
   <item android:id="@+id/UdsigtItem3"
       android:icon="@drawable/ic_sologsky"
       android:title="Forureningsudsigt"
       app:showAsAction="never"
       />
 
-<<<<<<< Updated upstream
-  <item android:id="@+id/GroenItem4"
-      android:icon="@drawable/ic_pedal_bike"
-      android:title="Grøn Rute"
-      app:showAsAction="never"/>
- -->
-=======
  <!--
    <item android:id="@+id/GroenItem4"
        android:icon="@drawable/ic_pedal_bike"
        android:title="Grøn Rute"
        app:showAsAction="never"/>
   -->
->>>>>>> Stashed changes
  <item android:id="@+id/NotiItem5"
      android:icon="@drawable/ic_notifications"
      android:title="Notifikationer"

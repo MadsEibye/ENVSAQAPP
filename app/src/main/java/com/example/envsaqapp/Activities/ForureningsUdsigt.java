@@ -10,21 +10,19 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningsUdsigt.java
 import com.example.envsaqapp.R;
-=======
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningsUdsigt.java
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -36,6 +34,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     //region Instance Fields
     private static double userX;
     private static double userY;
+    private static String componentExtra;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Integer item1ID;
@@ -45,14 +44,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningsUdsigt.java
     private Integer item8ID;
-=======
     LineChart linechart1;
     LineChart linechart2;
     LineChart linechart3;
     LineDataSet set1,set2;
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningsUdsigt.java
+    private String component;
     //endregion Instance Fields
 
     //region Methods
@@ -86,8 +83,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        userX = intent.getDoubleExtra("userX", userX);
+        userX = intent.getDoubleExtra("pointX", userX);
         userY = intent.getDoubleExtra("userY", userY);
+        component = intent.getStringExtra("componentExtra");
+        Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
+        PopulateCharts(component);
     }
     //Start of Comments ChangeActivity()
     /*
@@ -232,11 +232,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/ForureningsUdsigt.java
-            /*case R.id.UdsigtItem3:
-=======
+
             case R.id.UdsigtItem3:
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/ForureningsUdsigt.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;/*
@@ -279,7 +276,19 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void PopulateCharts(){
+    private void PopulateCharts(String component){
+        if (component == "No2"){
+
+        }
+        else if (component == "O3"){
+
+        }
+        else if (component == "PM25"){
+
+        }
+        else if (component == "PM10"){
+
+        }
 
     }
 
@@ -296,15 +305,16 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         linechart.setData(lineData);
         linechart.invalidate();
         linechart.setBackgroundColor(getResources().getColor(R.color.Lightblue));
-        lineDataSet.setLineWidth(2);
-        lineDataSet.setColor(Color.GRAY);
-        lineDataSet.setDrawCircles(true);
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setColor(R.color.colorPrimaryDark);
+        lineDataSet.setDrawCircles(false);
         lineDataSet.setCircleRadius(5);
         lineDataSet.setCircleHoleColor(Color.GRAY);
+        lineDataSet.setDrawValues(false);
         lineDataSet.setValueTextSize(10);
+        lineDataSet.setFillColor(R.color.colorPrimaryDark);
         lineDataSet.setDrawFilled(true);
-        lineDataSet.setFillAlpha(128);
-        lineDataSet.setFillColor(Color.GRAY);
+        lineDataSet.setFillAlpha(120);
         lineDataSet.setValueTextColor(Color.BLACK);
         lineData.setValueTypeface(Typeface.SERIF);
         lineDataSet.setCircleColor(Color.GRAY);

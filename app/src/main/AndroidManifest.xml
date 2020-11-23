@@ -23,7 +23,6 @@
         android:roundIcon="@mipmap/loadingscreen_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< Updated upstream
         <activity android:name=".Activities.webViewActivity"></activity>
 
         <uses-library
@@ -36,9 +35,8 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
-=======
-        <activity android:name=".NavigationUdsigt"></activity>
->>>>>>> Stashed changes
+        <activity android:name=".Activities.NavigationUdsigt"></activity>
+
 
         <service
             android:name=".JavaClasses.NotificationService"
@@ -50,15 +48,10 @@
             </intent-filter>
         </service>
 
-<<<<<<< Updated upstream
+
         <activity android:name=".Activities.Forureningskala" />
         <activity android:name=".Activities.GroenRute" />
         <activity android:name=".Activities.Notifikationer" />
-=======
-        <activity android:name=".Forureningskala" />
-        <activity android:name=".GroenRute" />
-        <activity android:name=".Notifikationer" />
->>>>>>> Stashed changes
         <activity
             android:name=".Activities.ForureningsUdsigt"
             android:theme="@style/AppTheme" />
@@ -81,11 +74,8 @@
             </intent-filter>
         </activity>
 
-<<<<<<< Updated upstream
         <receiver android:name=".JavaClasses.PaamindelseNoti" />
-=======
-        <receiver android:name=".PaamindelseNoti" />
->>>>>>> Stashed changes
+
     </application>
 
 </manifest>

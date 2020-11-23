@@ -22,7 +22,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.geometry.Point;
+
+
 import com.example.envsaqapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -159,7 +160,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(webViewActivity.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(webViewActivity.this, NavigationUdsigt.class);
                     i.putExtra("userX", pointX);
                     i.putExtra("userY", pointY);
                     startActivity(i);
@@ -263,8 +264,9 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                     Longitude = (float) location.getLongitude();
                     pointX = Latitude;
                     pointY = Longitude;
-                    //Log.d("USERLOCATION", " Old Latitude " + Latitude);
-                    //Log.d("USERLOCATION", " Old Longitude " + Longitude);
+                    Log.d("USERLOCATION", " Latitude " + Latitude);
+                    Log.d("USERLOCATION", " Longitude " + Longitude);
+                    Log.d("USERLOCATION", "UPDATEGPS");
                     UsergeoPoint = new GeoPoint(Latitude, Longitude);
                     LoadMapWebView();
                 }
@@ -303,10 +305,10 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-            /*case R.id.UdsigtItem3:
+            case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
@@ -345,8 +347,9 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            Log.d("USERLOCATION", "" + Latitude);
-            Log.d("USERLOCATION", "" + Longitude);
+            //Log.d("USERLOCATION", "" + Latitude);
+            //Log.d("USERLOCATION", "" + Longitude);
+            Log.d("USERLOCATION", "FINDLOCATION");
             updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -364,7 +367,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                updateGPS();
+                findLocation();
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }

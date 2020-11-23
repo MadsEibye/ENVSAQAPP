@@ -36,25 +36,13 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+
 import com.example.envsaqapp.GeoServer.GeoserverTileSource;
 import com.example.envsaqapp.JavaClasses.ListViewAdapter;
 import com.example.envsaqapp.JavaClasses.NotificationService;
 import com.example.envsaqapp.R;
 import com.example.envsaqapp.GeoServer.TileProviderFactory;
-=======
-/*import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
-import com.esri.arcgisruntime.layers.OpenStreetMapLayer;
-import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
-import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;*/
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.TileProvider;
@@ -196,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onProviderDisabled(String provider) {
             }
         };
-        findLocation();
+        //findLocation();
         navigationView = (NavigationView) findViewById(R.id.MainNav_view);
         setNavigationViewListener();
         notifikationskanal();
@@ -435,6 +423,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onSuccess(Location location) {
                     Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
                     Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
+                    Log.d("USERLOCATION", "UPDATEGPS");
                     Latitude = (float) location.getLatitude();
                     Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
@@ -459,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
+            Log.d("USERLOCATION", "TESTING" );
             updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -476,7 +466,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                updateGPS();
+                findLocation();
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
@@ -522,15 +512,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
-                    Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
-                    i.putExtra("userX", pointX);
-                    i.putExtra("userY", pointY);
-=======
                     Intent i = new Intent(MainActivity.this, NavigationUdsigt.class);
                     i.putExtra("userX", pointY);
                     i.putExtra("userY", pointX);
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -629,11 +613,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
-            /*case R.id.UdsigtItem3:
-=======
+
             case R.id.UdsigtItem3:
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;/*
@@ -825,10 +806,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.getOverlays().add(tilesOverlay);
         addMarkerUserLocation(UsergeoPoint);
         mapController.animateTo(UsergeoPoint);
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/MainActivity.java
-=======
 
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/MainActivity.java
     }
     public void mainTestSwtich(View view) {
 

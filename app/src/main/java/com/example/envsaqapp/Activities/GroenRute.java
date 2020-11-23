@@ -202,11 +202,8 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/GroenRute.java
-            /*case R.id.UdsigtItem3:
-=======
+
             case R.id.UdsigtItem3:
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/GroenRute.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;/*

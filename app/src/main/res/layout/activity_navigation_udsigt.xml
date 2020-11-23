@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NavigationUdsigt">
+    android:background="@color/Lightblue"
+    tools:context=".Activities.NavigationUdsigt">
 
     <LinearLayout
         android:gravity="center"
@@ -14,21 +15,25 @@
         android:layout_height="match_parent">
 
         <Button
+            android:onClick="UdsigtNo2"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="50dp"/>
         <Button
+            android:onClick="UdsigtO3"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="50dp"/>
         <Button
+            android:onClick="Udsigtpm25"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="50dp"/>
         <Button
+            android:onClick="Udsigtpm10"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:layout_width="200dp"

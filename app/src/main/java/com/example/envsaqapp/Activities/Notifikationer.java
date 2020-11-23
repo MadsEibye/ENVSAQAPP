@@ -230,11 +230,8 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                 ChangeActivity(item2ID);
                 return true;
 
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/Notifikationer.java
-            /*case R.id.UdsigtItem3:
-=======
+
             case R.id.UdsigtItem3:
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/Notifikationer.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;/*

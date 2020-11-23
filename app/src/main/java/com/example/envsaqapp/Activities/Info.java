@@ -215,11 +215,8 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
                 return true;
-<<<<<<< Updated upstream:app/src/main/java/com/example/envsaqapp/Activities/Info.java
-            /*case R.id.UdsigtItem3:
-=======
+
             case R.id.UdsigtItem3:
->>>>>>> Stashed changes:app/src/main/java/com/example/envsaqapp/Info.java
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
                 return true;/*

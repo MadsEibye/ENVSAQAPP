@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
@@ -27,9 +29,11 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
+    private static String componentExtra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,10 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationViewListener();
+
+        Intent intent = getIntent();
+        userX = intent.getFloatExtra("userX",userX);
+        userY = intent.getFloatExtra("userY",userY);
     }
 
     private void setNavigationViewListener() {
@@ -145,6 +153,18 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
                     finish();
                 }
             }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(NavigationUdsigt.this, webViewActivity.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
         }
     }
 
@@ -181,10 +201,35 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+
+    }
+    private String No2 = "No2";
+    public void UdsigtNo2(View view) {
+        Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
+        i.putExtra("userX", userX);
+        i.putExtra("userY", userY);
+        i.putExtra("componentExtra",No2);
+        startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
+    public void UdsigtO3(View view) {
+    }
+
+    public void Udsigtpm25(View view) {
+    }
+
+    public void Udsigtpm10(View view) {
+
+    }
 }
