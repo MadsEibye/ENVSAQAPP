@@ -98,7 +98,8 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
         mapView.setMultiTouchControls(true);
         mapController.setZoom(13);
         //mapController.setZoom(4);
-        mapController.setCenter(gPt);
+        GeoPoint geopointcenter = new GeoPoint(55.64152, 12.08035);
+        mapController.setCenter(geopointcenter);
         //addMarkerUserLocation(gPt);
     }
     private void setNavigationViewListener() {
