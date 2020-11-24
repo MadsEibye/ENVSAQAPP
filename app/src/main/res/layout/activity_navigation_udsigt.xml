@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/NavDrawerLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Lightblue"
+    tools:context=".Activities.NavigationUdsigt">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Kvælstofdioxid (NO2)"
+            android:textColor="@color/White"
+            android:background="@drawable/button_background_blue"
+            android:onClick="UdsigtNo2"
+            android:layout_gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="75dp"/>
+        <Button
+            android:text="Ozon (O3)"
+            android:textColor="@color/White"
+            android:background="@drawable/button_background_blue"
+            android:onClick="UdsigtO3"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="75dp"/>
+        <Button
+            android:text="Partikeldiameter 2,5"
+            android:textColor="@color/White"
+            android:background="@drawable/button_background_blue"
+            android:onClick="Udsigtpm25"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="75dp"/>
+        <Button
+            android:text="Partikeldiameter 10"
+            android:textColor="@color/White"
+            android:background="@drawable/button_background_blue"
+            android:onClick="Udsigtpm10"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="75dp"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/NavNav_view"
+        android:background="@color/Lightblue"
+        android:layout_width="230dp"
+        android:layout_height="match_parent"
+        app:menu="@menu/example_menu"
+        android:layout_gravity="start"
+        />
+</androidx.drawerlayout.widget.DrawerLayout>

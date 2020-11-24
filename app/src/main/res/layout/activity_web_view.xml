@@ -5,19 +5,28 @@
     android:layout_width="match_parent"
     android:background="@color/AUBLUE"
     android:layout_height="match_parent"
-    tools:context=".Activities.GroenRute"
-    android:id="@+id/GroenDrawerLayout">
+    tools:context=".Activities.webViewActivity"
+    android:id="@+id/DrawerLayout">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/webView"/>
 
-    </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/GroenNav_view"
+        android:id="@+id/webNavView"
         android:background="@color/Lightblue"
         android:layout_width="230dp"
         android:layout_height="match_parent"

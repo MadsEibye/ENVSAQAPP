@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -7,46 +7,45 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
+
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
-import com.esri.arcgisruntime.layers.OpenStreetMapLayer;
-import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
-import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+
+import com.example.envsaqapp.GeoServer.GeoserverTileSource;
+import com.example.envsaqapp.JavaClasses.ListViewAdapter;
+import com.example.envsaqapp.JavaClasses.NotificationService;
+import com.example.envsaqapp.R;
+import com.example.envsaqapp.GeoServer.TileProviderFactory;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
@@ -55,27 +54,21 @@ import org.mozilla.javascript.Scriptable;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.TilesOverlay;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.wms.WMSEndpoint;
 import org.osmdroid.wms.WMSLayer;
 import org.osmdroid.wms.WMSParser;
 import org.osmdroid.wms.WMSTileSource;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -90,8 +83,6 @@ import retrofit2.Response;
 
 import static android.app.PendingIntent.getActivity;
 import static android.net.sip.SipErrorCode.TIME_OUT;
-import static com.esri.arcgisruntime.internal.jni.bf.ex;
-import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -104,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public float Latitude;
     public float Longitude;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private Point point;
+    //private Point point;
     private FusedLocationProviderClient fusedLocationProviderClient;
     public float pointX;
     public float pointY;
@@ -118,14 +109,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     private SearchView searchView;
     private HttpUrl url;
-    private SimpleMarkerSymbol symbol;
+    //private SimpleMarkerSymbol symbol;
     private String MarkerTitle;
-    private Switch mainNo2Switch;
-    private Switch mainPm10Switch;
-    private Switch mainPm25Switch;
+    private Button mainNo2Switch;
+    private Button mainPm10Switch;
+    private Button mainPm25Switch;
     private GeoPoint UsergeoPoint;
+    ArrayList<Data> arraylist = new ArrayList<Data>();
+    private ListView list;
+    private ListViewAdapter adapter;
+    private String[] DataList;
+    public static ArrayList<Data> addressArrayList;
+    public static ArrayList<Data> array_sort;
+    int textlength = 0;
+    private androidx.cursoradapter.widget.CursorAdapter mAdapter;
+    ArrayList<String> addressSuggestions = new ArrayList<>();
     //endregion Instance Fields
 
     //region Methods
@@ -183,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onProviderDisabled(String provider) {
             }
         };
-        findLocation();
+        //findLocation();
         navigationView = (NavigationView) findViewById(R.id.MainNav_view);
         setNavigationViewListener();
         notifikationskanal();
@@ -191,20 +192,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // do something on text submit
                 SearchForAddress();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // do something when text changes
+                //getSuggestions(newText);
+                //String text = newText;
+                //adapter.filter(text);
                 return false;
             }
         });
+        final String[] from = new String[]{"address"};
+        final int[] to = new int[]{android.R.id.text1};
+
+        // Locate the ListView in listview_main.xml
+        list = (ListView) findViewById(R.id.listView);
+        list.bringToFront();
+        addressArrayList = new ArrayList<>();
+
+        for (int i = 0; i < addressSuggestions.size(); i++) {
+            Data address = new Data(addressSuggestions.get(i));
+            // Binds all strings into an array
+            addressArrayList.add(address);
+        }
+
+        adapter = new ListViewAdapter(this);
+
+        list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, addressArrayList.get(i).getAddress(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+        mainPm25Switch.setAlpha(.5f);
+        mainPm10Switch.setAlpha(.5f);
+
+
         Log.d("Rhino", "onCreate: " + runScript(this));
     }//End of OnCreate
 
+
+
+    /*
+        This method sets the closing icon for the searchView to ic_clear_icon_white
+        and if it doesn't exist or it can't get access then it throws an appropriate exception.
+         */
     private void setCloseSearchIcon(SearchView searchView) {
         try {
             Field searchField = SearchView.class.getDeclaredField("mCloseButton");
@@ -220,12 +259,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Start of Comments PlotNewDot()
-    /*
-    This method plots a dot for the address typed in the seachbar. It also uses the SimpleMarkerSymbol and GraphicOverlay to display it.
-    The dot in this method is set to color red, so you can see the difference between the user location, and the searched location.
-    When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
-     */
-    private void PlotNewDot(GeoPoint geoPoint, GeoPoint oldGeopoint) {
+        /*
+        This method plots a marker for the address typed in the seachbar on the map.
+        The marker in this method is set to a different color than then user location, so you can see the difference between the user location, and the searched location.
+        When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
+        */
+    private void PlotNewDot(GeoPoint geoPoint) {
         //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
         Log.d("GList", mapView.getOverlays().toString());
@@ -247,8 +286,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.showInfoWindow();
             mapView.getOverlays().add(startMarker);
             updateGPS();
-            mapController.setCenter(geoPoint);
-            //Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
+            //mapController.setCenter(geoPoint);
+            mapController.animateTo(geoPoint);
+            Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
         } else {
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
@@ -257,11 +297,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startMarker.setTitle(MarkerTitle);
             startMarker.showInfoWindow();
             mapView.getOverlays().add(startMarker);
-            //Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
+            //mapController.setCenter(geoPoint);
+            mapController.animateTo(geoPoint);
+            Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
         }
         LoadMap(geoPoint);
     }
 
+    //Start of Comments LoadMap()
+    /*
+    This method loads the map by first setting the tile source to what we want to show when the map is loaded.
+    We also set an overlay to display on top of the map, this is the main feature.
+    some secondary features is as follows, setting minimum zoom level, setting a rotation gesture, setting the zoom level when the app is opened.
+    and finally center the view with the geopoint given as an argument when calling this method (Which is the user location).
+    */
     private void LoadMap(GeoPoint gPt) {
         //ParseAndShowLayerWMS();
         //ShowSelectedLayer();
@@ -291,19 +340,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.setMultiTouchControls(true);
         mapView.getOverlays().add(this.rotationGestureOverlay);
         mapController.setZoom(13);
+        //mapController.setZoom(4);
         mapController.setCenter(gPt);
         //addMarkerUserLocation(gPt);
     }
 
-    HttpURLConnection c = null;
-    InputStream is = null;
-    WMSEndpoint wmsEndpoint = null;
-
     /*
         private void ParseAndShowLayerWMS()
-
         {
-
             Toast.makeText(MainActivity.this, "svin", Toast.LENGTH_LONG).show();
             Log.d("ShowThis", "hej");
 
@@ -352,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      It is added as a GraphicsOverlay to the map, and then the map is reloaded using the LoadMap() method.
     */
     public void addMarkerUserLocation(GeoPoint center) {
-
+        LoadMap(center);
         Marker marker = new Marker(mapView);
         marker.setPosition(center);
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -379,12 +423,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onSuccess(Location location) {
                     Log.d("USERLOCATION", " New Latitude " + location.getLatitude());
                     Log.d("USERLOCATION", " New Longitude " + location.getLongitude());
+                    Log.d("USERLOCATION", "UPDATEGPS");
                     Latitude = (float) location.getLatitude();
                     Longitude = (float) location.getLongitude();
                     Log.d("USERLOCATION", " Old Latitude " + Latitude);
                     Log.d("USERLOCATION", " Old Longitude " + Longitude);
                     UsergeoPoint = new GeoPoint(Latitude, Longitude);
-                    LoadMap(UsergeoPoint);
                     addMarkerUserLocation(UsergeoPoint);
                 }
             });
@@ -404,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
+            Log.d("USERLOCATION", "TESTING" );
             updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -418,11 +463,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     This method calls the method updateGPS() if it has a request code that matches with the specific permission needed
     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                updateGPS();
+                findLocation();
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
@@ -444,8 +488,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, ForureningHer.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -457,8 +501,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, MainActivity.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -468,7 +512,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(MainActivity.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(MainActivity.this, NavigationUdsigt.class);
                     i.putExtra("userX", pointY);
                     i.putExtra("userY", pointX);
                     startActivity(i);
@@ -481,8 +525,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, GroenRute.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     //startActivity(i);
                     Toast.makeText(MainActivity.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -494,8 +538,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, Notifikationer.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -506,8 +550,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, Forureningskala.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -518,8 +562,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     Intent i = new Intent(MainActivity.this, Info.class);
-                    i.putExtra("userX", pointY);
-                    i.putExtra("userY", pointX);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, webViewActivity.class);
+                    i.putExtra("userX", pointX);
+                    i.putExtra("userY", pointY);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -556,11 +612,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;  /*
+                return true;
+
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
@@ -580,6 +637,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -592,9 +654,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        navigationView = (NavigationView) findViewById(R.id.MainNav_view);
+        navigationView = findViewById(R.id.MainNav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     //Start of Comments notifikationskanal()
@@ -633,10 +694,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=lat,long,street_nam,house_num,no2_street,pm10_street,pm25_street,address" +
                     "&street_nam=eq." + streetName + "&house_num=eq." + houseNumber);
 
-            DataService dataService = ApiUtils.getTrackService();
-            Call<ArrayList<Data>> queueSong = dataService.SearchForLocation(url.toString());
-            queueSong.request().toString().replace("%3d", "=");
-            queueSong.enqueue(new Callback<ArrayList<Data>>() {
+            DataService dataService = ApiUtils.getDataService();
+            Call<ArrayList<Data>> searchForAddress = dataService.SearchForLocation(url.toString());
+            searchForAddress.request().toString().replace("%3d", "=");
+            searchForAddress.enqueue(new Callback<ArrayList<Data>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
                     if (response.isSuccessful()) {
@@ -654,8 +715,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             MarkerTitle = searchAddress + "\n" + "NO2 koncentration: " + searchNo2 + "\n" + "PM2.5 koncentration: " + searchPM2_5 + "\n" +
                                     "PM10 koncentration: " + searchPM10;
                             GeoPoint searchgPt = new GeoPoint(searchX, searchY);
-                            PlotNewDot(searchgPt, UsergeoPoint);
-                            LoadMap(searchgPt);
+                            PlotNewDot(searchgPt);
                             searchView.clearFocus();
                             Log.d("RESPONSEOBJECTS", responseObject1.toString());
                         } else {
@@ -681,23 +741,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        startService(new Intent(this, NotificationService.class));
-        super.onDestroy();
-    }
-
-
     public void MainNo2switchClicked(View view) {
-        mainPm10Switch.setChecked(false);
-        mainPm25Switch.setChecked(false);
+        mainPm10Switch.setAlpha(.50f);
+        mainPm25Switch.setAlpha(.50f);
+        mainNo2Switch.setAlpha(1f);
+        mainNo2Switch.setEnabled(false);
+        mainPm10Switch.setEnabled(true);
+        mainPm25Switch.setEnabled(true);
         mapView.getOverlays().clear();
         final ITileSource No2DotsOverlay = new XYTileSource("demo", 1, 20, 256, ".png",
                 new String[]{
                         "http://10.28.0.241:8088/geoserver/gwc/",
                 });
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-        String[] stringArrayBaseUrl = new String[]{"http://10.28.0.241:8088/geoserver/"};
+        String[] stringArrayBaseUrl = new String[]{"http://10.28.0.241:8088/gwc/service/tms/1.0.0/"};
         GeoserverTileSource source = new GeoserverTileSource("cite:lpdv2k12_kbh_no2", stringArrayBaseUrl, "cite:lpdv2k12_kbh_no2");
         provider.setTileSource(source);
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
@@ -708,9 +765,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void MainPm25switchClicked(View view) {
-        mainNo2Switch.setChecked(false);
-        mainPm10Switch.setChecked(false);
-        downloadAndParse();
+        mainNo2Switch.setAlpha(.50f);
+        mainPm10Switch.setAlpha(.50f);
+        mainPm25Switch.setAlpha(1f);
+        mainPm25Switch.setEnabled(false);
+        mainPm10Switch.setEnabled(true);
+        mainNo2Switch.setEnabled(true);
+        //downloadAndParse();
         /*mapView.getOverlays().clear();
         final ITileSource Pm2_5DotsOverlay = new XYTileSource("cite:lpdv2k12_kbh_no2", 1, 20, 256, ".png",
                 new String[]{
@@ -727,8 +788,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void MainPm10switchClicked(View view) {
-        mainNo2Switch.setChecked(false);
-        mainPm25Switch.setChecked(false);
+        mainNo2Switch.setAlpha(.50f);
+        mainPm25Switch.setAlpha(.50f);
+        mainPm10Switch.setAlpha(1f);
+        mainPm10Switch.setEnabled(false);
+        mainNo2Switch.setEnabled(true);
+        mainPm25Switch.setEnabled(true);
+        mapView.getOverlays().clear();
+        final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
+                new String[]{
+                        "http://openptmap.org/tiles/",
+                });
+        MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+        provider.setTileSource(Pm10DotsOverlay);
+        TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
+        tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        mapView.getOverlays().add(tilesOverlay);
+        addMarkerUserLocation(UsergeoPoint);
+        mapController.animateTo(UsergeoPoint);
+
+    }
+    public void mainTestSwtich(View view) {
+
         mapView.getOverlays().clear();
         final ITileSource Pm10DotsOverlay = new XYTileSource("OSMPublicTransport", 1, 20, 256, ".png",
                 new String[]{
@@ -743,13 +824,76 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapController.animateTo(UsergeoPoint);
     }
 
+    //region Stuff That Did Not Work
+
+    HttpURLConnection c = null;
+    InputStream is = null;
+    WMSEndpoint wmsEndpoint = null;
+    WMSEndpoint cap;
+
+    private void populateAdapter(String query) {
+        final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
+        for (int i = 0; i < addressSuggestions.size(); i++) {
+            if (addressSuggestions.get(i).toLowerCase().startsWith(query.toLowerCase()))
+                c.addRow(new Object[]{i, addressSuggestions.get(i)});
+        }
+        mAdapter.changeCursor(c);
+    }
+
+    private void getSuggestions(String text) {
+        url = HttpUrl.parse("http://10.28.0.241:3000/lpdv2k12_kbh_no2?select=address,kommune" +
+                "&address%like%.eq%" + text + "%");
+        DataService dataService = ApiUtils.getDataService();
+        Call<ArrayList<Data>> getSuggestion = dataService.SearchForLocation(url.toString());
+        getSuggestion.enqueue(new Callback<ArrayList<Data>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Data>> call, Response<ArrayList<Data>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("ADRESSSEARCH", " " + response.code());
+                    Log.d("ADRESSSEARCH", response.body().toString());
+                    Log.d("ADRESSSEARCH", url.toString());
+                    Log.d("ADRESSSEARCH", response.body().get(0).getAddress());
+                    if (response.body().size() >= 1) {
+                        for (Data o : response.body()
+                        ) {
+                            String searchAddress = o.getAddress();
+                            String searchKommune = o.getKommune();
+                            String addressandKommune = searchAddress + ", " + searchKommune;
+                            addressSuggestions.add(addressandKommune);
+                            Log.d("REEEEEEEEEEEE", addressSuggestions.toString());
+                        }
+
+                        searchView.clearFocus();
+                        //Log.d("RESPONSEOBJECTS", o.toString());
+                    } else {
+                        Toast.makeText(MainActivity.this, "Noget gik galt. Har du stavet rigtigt?", Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
+                    Toast.makeText(MainActivity.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
+                    Log.d("Queue", message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Data>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        startService(new Intent(this, NotificationService.class));
+        super.onDestroy();
+    }
+
     protected String getDefaultUrl() {
         //"http://192.168.1.1:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities"
         //return "http://localhost:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities";
         return "http://10.28.0.241:8088/geoserver/gwc/demo/cite:lpdv2k12_kbh_no2?gridSet=EPSG:4326&format=image/png";
     }
-
-    WMSEndpoint cap;
 
     private void downloadAndParse() {
         new Thread(new Runnable() {
@@ -861,4 +1005,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return null;
     }
+
+    private void setUpMap() {
+        // TODO Auto-generated method stub
+        TileProvider geoServerTileProvider = TileProviderFactory
+                .getGeoServerTileProvider();
+        /*TileOverlay geoServerTileOverlay = mapView.set(
+                new TileOverlayOptions()
+                        .tileProvider(geoServerTileProvider)
+                        .zIndex(10000)
+                        .visible(true));
+*/
+    }
+
+    //endregion Stuff That Did Not Work
 }

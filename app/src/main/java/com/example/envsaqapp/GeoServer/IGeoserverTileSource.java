@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.GeoServer;
 
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.util.MapTileIndex;

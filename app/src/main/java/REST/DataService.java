@@ -12,4 +12,6 @@ public interface DataService {
     @GET
     Call<ArrayList<Data>> SearchForLocation(@Url String url);
 
+    @GET
+    Call<ArrayList<Data>> GetAddresses(@Url String url);
 }

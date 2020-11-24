@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -8,21 +8,25 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+public class Info extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //region Instance Fields
     private static double userX;
     private static double userY;
+    private TextView textViewLink1;
+    private TextView textViewLink2;
+    private TextView textViewLink3;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Integer item1ID;
@@ -32,6 +36,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     //endregion Instance Fields
 
     //region Methods
@@ -48,15 +53,20 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forurenings_udsigt);
+        setContentView(R.layout.activity_info);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setNavigationViewListener();
-        mDrawerLayout = findViewById(R.id.ForUdsigtDrawerLayout);
+        textViewLink1 = findViewById(R.id.infoTextViewLink1);
+        textViewLink2 = findViewById(R.id.infoTextViewLink2);
+        textViewLink3 = findViewById(R.id.infoTextViewLink3);
+        textViewLink1.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewLink2.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewLink3.setMovementMethod(LinkMovementMethod.getInstance());
+        mDrawerLayout = findViewById(R.id.InfoDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setNavigationViewListener();
 
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
@@ -76,7 +86,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, ForureningHer.class);
+                    Intent i = new Intent(Info.this, ForureningHer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -90,7 +100,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, MainActivity.class);
+                    Intent i = new Intent(Info.this, MainActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -103,7 +113,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(Info.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -116,21 +126,22 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, GroenRute.class);
+                    Intent i = new Intent(Info.this, GroenRute.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     //startActivity(i);
-                    Toast.makeText(ForureningsUdsigt.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Info.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     //finish();
                 }
             }, TIME_OUT);
+
         }
         else if (ID == item5ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, Notifikationer.class);
+                    Intent i = new Intent(Info.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -138,12 +149,13 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     finish();
                 }
             }, TIME_OUT);
+
         }
         else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, Forureningskala.class);
+                    Intent i = new Intent(Info.this, Forureningskala.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -151,11 +163,24 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     finish();
                 }
             }, TIME_OUT);
+
         } else if (ID == item7ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(ForureningsUdsigt.this, Info.class);
+                    Intent i = new Intent(Info.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        }else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Info.this, webViewActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -165,10 +190,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             }, TIME_OUT);
         }
     }
-    //Start of Comments onOptionsItemSelected
-    /*
-    This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
-    */
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)){
@@ -176,7 +198,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         }
 
         return super.onOptionsItemSelected(item);
-        }
+    }
     //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
@@ -192,11 +214,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;  /*
+                return true;
+
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
@@ -216,18 +239,24 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
+
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.ForUdsigtNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.InfoNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
     //endregion Methods

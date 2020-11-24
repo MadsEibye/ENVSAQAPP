@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.JavaClasses;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.media.RingtoneManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.example.envsaqapp.R;
 
 public class PaamindelseNoti extends BroadcastReceiver {
 

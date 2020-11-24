@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,12 +9,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
-public class GroenRute extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Forureningskala extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
     private static double userX;
@@ -28,6 +31,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
     private Integer item5ID;
     private Integer item6ID;
     private Integer item7ID;
+    private Integer item8ID;
     //endregion Instance Fields
 
     //region Methods
@@ -44,13 +48,12 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groen_rute);
-
+        setContentView(R.layout.activity_forureningskala);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-
-        mDrawerLayout = findViewById(R.id.GroenDrawerLayout);
+        mDrawerLayout = findViewById(R.id.SkalaDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setNavigationViewListener();
@@ -67,82 +70,78 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
     activity that was pressed in the navigationbar.
     overridePendingTransition is just the animation that is run when you change the activity, and in this case its a fade_in fade_out. And the finish() method is just closing down the last activity
     */
-    public void ChangeActivity(Integer ID){
-        if (ID == item1ID){
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, ForureningHer.class);
+                    Intent i = new Intent(Forureningskala.this, ForureningHer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item2ID){
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, MainActivity.class);
+                    Intent i = new Intent(Forureningskala.this, MainActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item3ID){
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, ForureningsUdsigt.class);
+                    Intent i = new Intent(Forureningskala.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item4ID) {
+        } else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, GroenRute.class);
+                    Intent i = new Intent(Forureningskala.this, GroenRute.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    //startActivity(i);
+                    Toast.makeText(Forureningskala.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    //finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item5ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Forureningskala.this, Notifikationer.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item5ID) {
+        } else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, Notifikationer.class);
+                    Intent i = new Intent(Forureningskala.this, Forureningskala.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                    finish();
-                }
-            }, TIME_OUT);
-        }
-        else if (ID == item6ID) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(GroenRute.this, Forureningskala.class);
-                    i.putExtra("userX", userX);
-                    i.putExtra("userY", userY);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -150,7 +149,19 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(GroenRute.this, Info.class);
+                    Intent i = new Intent(Forureningskala.this, Info.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else if (ID == item8ID) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Forureningskala.this, webViewActivity.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
@@ -166,7 +177,7 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)){
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
 
         }
 
@@ -187,11 +198,12 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
             case R.id.KortItem2:
                 item2ID = item.getItemId();
                 ChangeActivity(item2ID);
-                return true;  /*
+                return true;
+
             case R.id.UdsigtItem3:
                 item3ID = item.getItemId();
                 ChangeActivity(item3ID);
-                return true;
+                return true;/*
             case R.id.GroenItem4:
                 item4ID = item.getItemId();
                 ChangeActivity(item4ID);
@@ -211,18 +223,24 @@ public class GroenRute extends AppCompatActivity implements NavigationView.OnNav
                 item7ID = item.getItemId();
                 ChangeActivity(item7ID);
                 return true;
+            case R.id.KortItem8:
+                //Toast.makeText(this, "" + item.getItemId(), Toast.LENGTH_SHORT).show();
+                item8ID = item.getItemId();
+                ChangeActivity(item8ID);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
+
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.GroenNav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.SkalaNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
     //endregion Methods

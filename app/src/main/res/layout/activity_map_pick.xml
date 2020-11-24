@@ -3,21 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/AUBLUE"
     android:layout_height="match_parent"
-    tools:context=".Activities.GroenRute"
-    android:id="@+id/GroenDrawerLayout">
+    android:id="@+id/PickDrawerLayout"
+    tools:context=".Activities.MapPickActivity">
 
-    <LinearLayout
+    <org.osmdroid.views.MapView
+        android:id="@+id/PickMapView"
+        mapoptions.MapType="streets"
+        mapoptions.ZoomLevel="80"
+        mapoptions.center="34.056215, -117.195668"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/GroenNav_view"
+        android:id="@+id/PickNav_view"
         android:background="@color/Lightblue"
         android:layout_width="230dp"
         android:layout_height="match_parent"

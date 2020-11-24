@@ -1,4 +1,4 @@
-package com.example.envsaqapp;
+package com.example.envsaqapp.GeoServer;
 
 import android.util.Log;
 

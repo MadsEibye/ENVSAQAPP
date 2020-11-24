@@ -5,13 +5,86 @@ xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/ForUdsigtDrawerLayout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".ForureningsUdsigt">
+android:background="@color/Lightblue"
+tools:context=".Activities.ForureningsUdsigt">
 
-<TextView
-    android:layout_centerInParent="true"
-    android:text="Forureningsudsigten"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Hovedbanegården københavn 2000"
+            android:textColor="@color/Black"
+            android:textAlignment="textStart"
+            android:layout_width="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:maxWidth="230dp"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/Udsigtbutton1"
+            android:background="@drawable/refresh_foreground"
+            android:onClick="Toast"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+        <Button
+            android:id="@+id/Udsigtbutton2"
+            android:background="@drawable/ic_map"
+            android:onClick="LocationPick"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+        <Button
+            android:id="@+id/Udsigtbutton3"
+            android:background="@drawable/play_foreground"
+            android:clickable="true"
+            android:onClick="Toast"
+            android:layout_width="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="30dp"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/LineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/LineChart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/LineChart3"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 <com.google.android.material.navigation.NavigationView
     android:id="@+id/ForUdsigtNav_view"
