@@ -80,6 +80,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         if (lon <= 12.823929 && lon >= 10.947876 && lat <= 56.134281 && lat >= 54.554544){
             regionnumber = 1;
             regionString = "Sjælland";
+
         }
         else if (lon < 10.947876 && lon > 9.700178 && lat < 55.647727 && lat > 54.708756){
             regionnumber = 2;
@@ -267,8 +268,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private String No2 = "No2";
     public void UdsigtNo2(View view) {
         Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
-        i.putExtra("userX", userX);
-        i.putExtra("userY", userY);
+        i.putExtra("region",regionnumber);
         i.putExtra("componentExtra",No2);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

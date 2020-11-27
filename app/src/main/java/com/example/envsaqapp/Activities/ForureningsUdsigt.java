@@ -26,16 +26,27 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+
+import Models.Data;
+import Models.ForureningsDataModel;
+import REST.ApiUtils;
+import REST.DataService;
+import okhttp3.HttpUrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    private static double userX;
-    private static double userY;
-    private static String componentExtra;
+    private double userX;
+    private double userY;
+    private int regionNumber;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Integer item1ID;
@@ -76,9 +87,6 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         linechart1 = findViewById(R.id.LineChart);
         linechart2 = findViewById(R.id.LineChart2);
         linechart3 = findViewById(R.id.LineChart3);
-        CustomizeLinechart(linechart1,"NO2","16/11/2020");
-        CustomizeLinechart(linechart2,"NO2","17/11/2020");
-        CustomizeLinechart(linechart3,"NO2","18/11/2020");
         Button button1 = findViewById(R.id.Udsigtbutton1);
         Button button2 = findViewById(R.id.Udsigtbutton2);
         Button button3 = findViewById(R.id.Udsigtbutton3);
@@ -90,11 +98,13 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        userX = intent.getDoubleExtra("pointX", userX);
-        userY = intent.getDoubleExtra("userY", userY);
+        userX = intent.getDoubleExtra("userX",userX);
+        userY = intent.getDoubleExtra("userY",userY);
+        regionNumber = intent.getIntExtra("region",regionNumber);
         component = intent.getStringExtra("componentExtra");
         Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
-        PopulateCharts(component);
+        PopulateCharts();
+        GetDataForCharts(component);
     }
     //Start of Comments ChangeActivity()
     /*
@@ -283,24 +293,252 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void PopulateCharts(String component){
+    private String DbName;
+    private void GetDataForCharts(String component){
         if (component == "No2"){
-
+            if (regionNumber == 1){
+                DbName = "Sjaelland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 2){
+                DbName = "Fyn_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 3){
+                DbName = "Sonderjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 4){
+                DbName = "Midtjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 5){
+                DbName = "Nordjylland_udsigt";
+                //GetData(component,DbName);
+            }
         }
         else if (component == "O3"){
-
+            if (regionNumber == 1){
+                DbName = "Sjaelland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 2){
+                DbName = "Fyn_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 3){
+                DbName = "Sonderjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 4){
+                DbName = "Midtjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 5){
+                DbName = "Nordjylland_udsigt";
+                //GetData(component,DbName);
+            }
         }
         else if (component == "PM25"){
-
+            if (regionNumber == 1){
+                DbName = "Sjaelland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 2){
+                DbName = "Fyn_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 3){
+                DbName = "Sonderjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 4){
+                DbName = "Midtjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 5){
+                DbName = "Nordjylland_udsigt";
+                //GetData(component,DbName);
+            }
         }
         else if (component == "PM10"){
-
+            if (regionNumber == 1){
+                DbName = "Sjaelland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 2){
+                DbName = "Fyn_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 3){
+                DbName = "Sonderjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 4){
+                DbName = "Midtjylland_udsigt";
+                //GetData(component,DbName);
+            }
+            if (regionNumber == 5){
+                DbName = "Nordjylland_udsigt";
+                //GetData(component,DbName);
+            }
         }
 
     }
 
-    private void CustomizeLinechart(LineChart linechart,String component,String Date){
-        LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(),component);
+    private Integer i;
+    private Integer j;
+    private Integer x_utm;
+    private Integer y_utm;
+    private double No2;
+    private double O3;
+    private double PM2_5;
+    private double PM10;
+    private Integer Hour;
+    private Integer Day;
+    //private ArrayList<ForureningsDataModel> dataList;
+
+
+    /*private ArrayList<ForureningsDataModel> GetData(String component, String DbName){
+        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long=" + userX + "&y_lat=" + userY);
+        DataService dataService = ApiUtils.getDataService();
+        Call<ArrayList<ForureningsDataModel>> searchForData = dataService.GetForureningsData(url.toString());
+        searchForData.enqueue(new Callback<ArrayList<ForureningsDataModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ForureningsDataModel>> call, Response<ArrayList<ForureningsDataModel>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("QUERY", " " + response.code());
+                    Log.d("QUERY", response.body().toString());
+                    Log.d("QUERY", url.toString());
+                    ForureningsDataModel responseObject1 = response.body().get(0);
+                    dataList = response.body();
+                    No2 = responseObject1.getNo2();
+                    O3 = responseObject1.getO3();
+                    PM2_5 = responseObject1.getPM2_5();
+                    PM10 = responseObject1.getPM10();
+                    Log.d("RESPONSEOBJECTS", responseObject1.toString());
+                    //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
+                    //Log.d("TESTING", SongsInQueue.toString());
+                    PopulateCharts();
+
+                } else {
+                    String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
+                    Toast.makeText(ForureningsUdsigt.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
+                    Log.d("Queue", message);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ForureningsDataModel>> call, Throwable t) {
+                Toast.makeText(ForureningsUdsigt.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                Log.d("Queue", t.toString());
+            }
+        });
+        return dataList;
+    }*/
+
+    ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
+
+
+
+    ArrayList dag1data;
+    ArrayList dag2data;
+    ArrayList dag3data;
+    List dag1 = new ArrayList<ForureningsDataModel>();
+    List dag2 = new ArrayList<ForureningsDataModel>();
+    List dag3 = new ArrayList<ForureningsDataModel>();
+
+    private void PopulateCharts() {
+
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,10,12,12,12,1,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,2,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,14,12,12,12,3,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,17,12,12,12,4,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,1,12,12,12,5,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,6,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,1,12,12,12,7,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,8,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,9,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,10,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,11,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,12,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,13,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,14,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,15,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,16,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,17,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,18,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,19,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,20,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,21,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,22,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,23,1));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,24,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,25,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,26,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,27,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,28,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,29,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,30,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,31,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,32,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,33,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,34,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,35,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,36,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,37,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,38,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,39,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,40,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,41,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,42,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,43,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,44,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,45,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,46,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,47,2));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,48,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,49,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,50,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,51,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,52,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,53,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,54,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,55,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,56,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,57,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,58,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,59,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,60,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,61,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,62,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,63,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,64,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,65,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,66,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,67,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,68,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,69,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,70,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,71,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,72,3));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,73,4));
+
+        dag1 = dataList.subList(0,24);
+        dag1data = new ArrayList<ForureningsDataModel>(dag1);
+        dag2 = dataList.subList(24,48);
+        dag2data = new ArrayList<ForureningsDataModel>(dag2);
+        dag3 = dataList.subList(48,72);
+        dag3data = new ArrayList<ForureningsDataModel>(dag3);
+
+        CustomizeLinechart(linechart1,component,"16/11/2020",dag1data);
+        CustomizeLinechart(linechart2,component,"17/11/2020",dag2data);
+        CustomizeLinechart(linechart3,component,"18/11/2020",dag3data);
+    }
+
+    private void CustomizeLinechart(LineChart linechart,String component,String Date,ArrayList linedata){
+        LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(linedata),component);
         ArrayList<ILineDataSet> iLineDataSets = new ArrayList<>();
         iLineDataSets.add(lineDataSet);
         linechart.getDescription().setText(Date);
@@ -334,33 +572,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         linechart.getAxisLeft().setXOffset(12);
     }
 
-    private ArrayList<Entry> lineChartDataSet(){
+    private ArrayList<Entry> lineChartDataSet(ArrayList<ForureningsDataModel> dataList){
         ArrayList<Entry> dataSet = new ArrayList<Entry>();
-        dataSet.add(new Entry(00f,42));
-        dataSet.add(new Entry(01f,18.5f));
-        dataSet.add(new Entry(02f,12.6f));
-        dataSet.add(new Entry(03f,32));
-        dataSet.add(new Entry(04f,58));
-        dataSet.add(new Entry(05f,69));
-        dataSet.add(new Entry(06f,17));
-        dataSet.add(new Entry(07f,23));
-        dataSet.add(new Entry(08f,36));
-        dataSet.add(new Entry(09f,15));
-        dataSet.add(new Entry(10f,70));
-        dataSet.add(new Entry(11f,16));
-        dataSet.add(new Entry(12f,30));
-        dataSet.add(new Entry(13f,17));
-        dataSet.add(new Entry(14f,56));
-        dataSet.add(new Entry(15f,10));
-        dataSet.add(new Entry(16f,19));
-        dataSet.add(new Entry(17f,22));
-        dataSet.add(new Entry(18f,33));
-        dataSet.add(new Entry(19f,70));
-        dataSet.add(new Entry(20f,80));
-        dataSet.add(new Entry(21f,52));
-        dataSet.add(new Entry(22f,32));
-        dataSet.add(new Entry(23f,16));
-
+        for (ForureningsDataModel o:dataList
+             ) {
+            dataSet.add(new Entry(o.getHour(),(float) o.getNo2()));
+        }
         return dataSet;
     }
 
