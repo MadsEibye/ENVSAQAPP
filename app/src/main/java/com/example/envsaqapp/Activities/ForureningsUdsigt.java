@@ -398,7 +398,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer Day;
     //private ArrayList<ForureningsDataModel> dataList;
 
-
+    //("Select Hour",+ component +" FROM " + DbName + "WHERE" + get_nearest_squire?x_long=" + userX +"&y_lat" + userY)
     /*private ArrayList<ForureningsDataModel> GetData(String component, String DbName){
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long=" + userX + "&y_lat=" + userY);
         DataService dataService = ApiUtils.getDataService();
