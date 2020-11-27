@@ -67,23 +67,43 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         UTM_Letter = intent.getCharExtra("UTM_Letter",UTM_Letter);
 
         Log.d("UTMCOORDINATES"," " + X_UTM + ", " + Y_UTM + " | " + UTM_Zone + UTM_Letter);
-
+        getRegion(userY, userX);
+        Log.d("latlong", userX + "" + userY);
     }
 
-    // regionnumbers | 1 - Sjælland | 2 - Fyn | 3 - Sønderjylland | 4 - Midtjylland | 5 - Nordjylland |
+    // regionnumbers | 1 - Sjælland | 2 - Fyn | 3 - Sønderjylland | 4 - Midtjylland | 5 - Nordjylland | 6 - Bornholm |
     private int regionnumber;
-
+    private String regionString;
     GeoPoint geoPointVestJylland = new GeoPoint(55.561068,8.072119);
     GeoPoint geoPointØstJylland = new GeoPoint(55.466399,10.802307);
-    private getRegion (){
-        if (){
-
+    private void getRegion (double lon, double lat){
+        if (lon <= 12.823929 && lon >= 10.947876 && lat <= 56.134281 && lat >= 54.554544){
+            regionnumber = 1;
+            regionString = "Sjælland";
         }
-        else if (){
-
+        else if (lon < 10.947876 && lon > 9.700178 && lat < 55.647727 && lat > 54.708756){
+            regionnumber = 2;
+            regionString = "Fyn";
         }
+        else if (lon <= 9.700178 && lon >= 8.065962 && lat <= 55.783032 && lat >= 54.796079) {
+            regionnumber = 3;
+            regionString = "Sønderjylland";
+        }
+        else if (lon < 10.972346 && lon > 8.065962 && lat < 56.549574 && lat > 54.796079 || lon < 11.668604 && lon > 11.501063 && lat < 56.740811 && lat > 56.683083) {
+            regionnumber = 4;
+            regionString = "Midtjylland";
+        }
+        else if (lon <= 10.596563 && lon >= 8.031006 && lat <= 57.759402 && lat >= 56.549574 || lon < 11.208552 && lon > 10.851496 && lat < 57.365995 && lat > 57.192291) {
+            regionnumber = 5;
+            regionString = "Nordjylland";
+        }
+        else if (lon < 15.181857 && lon > 14.660007 && lat < 55.309965 && lat > 54.971022) {
+            regionnumber = 1;
+            regionString = "Bornholm";
+        }
+        Log.d("regionNumber", + regionnumber + " " + regionString);
     }
-
+//lon <  && lon > && lat < && lat >
     private void setNavigationViewListener() {
         navigationView = findViewById(R.id.NavNav_view);
         navigationView.setNavigationItemSelectedListener(this);
