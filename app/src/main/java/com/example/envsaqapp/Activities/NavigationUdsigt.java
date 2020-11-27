@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
+
+import org.osmdroid.util.GeoPoint;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -34,6 +37,14 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
     private static String componentExtra;
+    private double X_UTM;
+    private double Y_UTM;
+    private int UTM_Zone;
+    private char UTM_Letter;
+    /*i.putExtra("X_UTM",userX_UTM);
+                    i.putExtra("Y_UTM",userY_UTM);
+                    i.putExtra("UTM_Zone",UserZone_UTM);
+                    i.putExtra("UTM_Letter",UserLetter_UTM);*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,27 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         Intent intent = getIntent();
         userX = intent.getFloatExtra("userX",userX);
         userY = intent.getFloatExtra("userY",userY);
+        X_UTM = intent.getDoubleExtra("X_UTM",X_UTM);
+        Y_UTM = intent.getDoubleExtra("Y_UTM",Y_UTM);
+        UTM_Zone = intent.getIntExtra("UTM_Zone",UTM_Zone);
+        UTM_Letter = intent.getCharExtra("UTM_Letter",UTM_Letter);
+
+        Log.d("UTMCOORDINATES"," " + X_UTM + ", " + Y_UTM + " | " + UTM_Zone + UTM_Letter);
+
+    }
+
+    // regionnumbers | 1 - Sjælland | 2 - Fyn | 3 - Sønderjylland | 4 - Midtjylland | 5 - Nordjylland |
+    private int regionnumber;
+
+    GeoPoint geoPointVestJylland = new GeoPoint(55.561068,8.072119);
+    GeoPoint geoPointØstJylland = new GeoPoint(55.466399,10.802307);
+    private getRegion (){
+        if (){
+
+        }
+        else if (){
+
+        }
     }
 
     private void setNavigationViewListener() {

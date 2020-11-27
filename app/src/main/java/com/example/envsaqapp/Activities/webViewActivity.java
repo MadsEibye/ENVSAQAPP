@@ -23,7 +23,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 
-
+import com.example.envsaqapp.JavaClasses.UTMConverter;
 import com.example.envsaqapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -60,6 +60,11 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     private WebView webView;
+    private UTMConverter utmConverter;
+    private double userX_UTM;
+    private double userY_UTM;
+    private int UserZone_UTM;
+    private char UserLetter_UTM;
     //endregion Instance Fields
 
     //region Methods
@@ -107,10 +112,11 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
             public void onProviderDisabled(String provider) {
             }
         };
-        findLocation();
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
+        findLocation();
+
     }
 
     //Start of Comments setNavigationViewListener
@@ -165,6 +171,10 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                     Intent i = new Intent(webViewActivity.this, NavigationUdsigt.class);
                     i.putExtra("userX", pointX);
                     i.putExtra("userY", pointY);
+                    i.putExtra("X_UTM",userX_UTM);
+                    i.putExtra("Y_UTM",userY_UTM);
+                    i.putExtra("UTM_Zone",UserZone_UTM);
+                    i.putExtra("UTM_Letter",UserLetter_UTM);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -270,6 +280,11 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                     Log.d("USERLOCATION", " Longitude " + Longitude);
                     Log.d("USERLOCATION", "UPDATEGPS");
                     UsergeoPoint = new GeoPoint(Latitude, Longitude);
+                    utmConverter = new UTMConverter(Latitude,Longitude);
+                    userX_UTM = utmConverter.getEasting();
+                    userY_UTM = utmConverter.getNorthing();
+                    UserZone_UTM = utmConverter.getZone();
+                    UserLetter_UTM = utmConverter.getLetter();
                     LoadMapWebView();
                 }
             });
