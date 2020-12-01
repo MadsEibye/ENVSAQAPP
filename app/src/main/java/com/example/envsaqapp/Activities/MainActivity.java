@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     If it does not exists, it shows a Toast.makeText("") to the user that displays a message.
     */
     private void SearchForAddress() {
-        String[] InputArray = searchView.getQuery().toString().split(" ");tiv
+        String[] InputArray = searchView.getQuery().toString().split(" ");
         if (InputArray.length >= 2) {
             String streetName = InputArray[0];
             String houseNumber = InputArray[1];
