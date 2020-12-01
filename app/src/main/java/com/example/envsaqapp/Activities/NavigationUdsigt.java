@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,12 +17,14 @@ import android.widget.Toast;
 import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
 
+import org.osmdroid.util.GeoPoint;
+
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class NavigationUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static float userX;
-    private static float userY;
+    private static double userX;
+    private static double userY;
     private Integer item1ID;
     private Integer item2ID;
     private Integer item3ID;
@@ -34,6 +37,14 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
     private static String componentExtra;
+    private double X_UTM;
+    private double Y_UTM;
+    private int UTM_Zone;
+    private char UTM_Letter;
+    /*i.putExtra("X_UTM",userX_UTM);
+                    i.putExtra("Y_UTM",userY_UTM);
+                    i.putExtra("UTM_Zone",UserZone_UTM);
+                    i.putExtra("UTM_Letter",UserLetter_UTM);*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +59,52 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         setNavigationViewListener();
 
         Intent intent = getIntent();
-        userX = intent.getFloatExtra("userX",userX);
-        userY = intent.getFloatExtra("userY",userY);
+        userX = intent.getDoubleExtra("userX",userX);
+        userY = intent.getDoubleExtra("userY",userY);
+        X_UTM = intent.getDoubleExtra("X_UTM",X_UTM);
+        Y_UTM = intent.getDoubleExtra("Y_UTM",Y_UTM);
+        UTM_Zone = intent.getIntExtra("UTM_Zone",UTM_Zone);
+        UTM_Letter = intent.getCharExtra("UTM_Letter",UTM_Letter);
+
+        Log.d("UTMCOORDINATES"," " + X_UTM + ", " + Y_UTM + " | " + UTM_Zone + UTM_Letter);
+        getRegion(userY, userX);
+        Log.d("USERLOCATION", "NAV: " + userX + "" + userY);
     }
 
+    // regionnumbers | 1 - Sjælland | 2 - Fyn | 3 - Sønderjylland | 4 - Midtjylland | 5 - Nordjylland | 6 - Bornholm |
+    private int regionnumber;
+    private String regionString;
+    GeoPoint geoPointVestJylland = new GeoPoint(55.561068,8.072119);
+    GeoPoint geoPointØstJylland = new GeoPoint(55.466399,10.802307);
+    private void getRegion (double lon, double lat){
+        if (lon <= 12.823929 && lon >= 10.947876 && lat <= 56.134281 && lat >= 54.554544){
+            regionnumber = 1;
+            regionString = "Sjælland";
+
+        }
+        else if (lon < 10.947876 && lon > 9.700178 && lat < 55.647727 && lat > 54.708756){
+            regionnumber = 2;
+            regionString = "Fyn";
+        }
+        else if (lon <= 9.700178 && lon >= 8.065962 && lat <= 55.783032 && lat >= 54.796079) {
+            regionnumber = 3;
+            regionString = "Sønderjylland";
+        }
+        else if (lon < 10.972346 && lon > 8.065962 && lat < 56.549574 && lat > 54.796079 || lon < 11.668604 && lon > 11.501063 && lat < 56.740811 && lat > 56.683083) {
+            regionnumber = 4;
+            regionString = "Midtjylland";
+        }
+        else if (lon <= 10.596563 && lon >= 8.031006 && lat <= 57.759402 && lat >= 56.549574 || lon < 11.208552 && lon > 10.851496 && lat < 57.365995 && lat > 57.192291) {
+            regionnumber = 5;
+            regionString = "Nordjylland";
+        }
+        else if (lon < 15.181857 && lon > 14.660007 && lat < 55.309965 && lat > 54.971022) {
+            regionnumber = 1;
+            regionString = "Bornholm";
+        }
+        Log.d("regionNumber", + regionnumber + " " + regionString);
+    }
+//lon <  && lon > && lat < && lat >
     private void setNavigationViewListener() {
         navigationView = findViewById(R.id.NavNav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -215,8 +268,9 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private String No2 = "No2";
     public void UdsigtNo2(View view) {
         Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
-        i.putExtra("userX", userX);
-        i.putExtra("userY", userY);
+        i.putExtra("userX",userX);
+        i.putExtra("userY",userY);
+        i.putExtra("region",regionnumber);
         i.putExtra("componentExtra",No2);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
