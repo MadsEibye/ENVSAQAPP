@@ -100,12 +100,14 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX",userX);
         userY = intent.getDoubleExtra("userY",userY);
+        Log.d("USERLOCATION","FU: " + userX + ", " + userY);
         regionNumber = intent.getIntExtra("region",regionNumber);
         component = intent.getStringExtra("componentExtra");
         Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
         PopulateCharts();
         GetDataForCharts(component);
     }
+
     //Start of Comments ChangeActivity()
     /*
     ChangeActivity() is the handler for the navigationbar. So when you press an item in the navigationbar, ChangeActivity is run, with the ID you
@@ -587,6 +589,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
 
     public void LocationPick(View view){
         Intent i = new Intent(ForureningsUdsigt.this, MapPickActivity.class);
+        i.putExtra("userX",userX);
+        i.putExtra("userY",userY);
         startActivity(i);
     }
 

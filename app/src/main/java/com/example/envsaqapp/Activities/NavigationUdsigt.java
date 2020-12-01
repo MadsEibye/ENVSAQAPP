@@ -23,8 +23,8 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class NavigationUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static float userX;
-    private static float userY;
+    private static double userX;
+    private static double userY;
     private Integer item1ID;
     private Integer item2ID;
     private Integer item3ID;
@@ -59,8 +59,8 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         setNavigationViewListener();
 
         Intent intent = getIntent();
-        userX = intent.getFloatExtra("userX",userX);
-        userY = intent.getFloatExtra("userY",userY);
+        userX = intent.getDoubleExtra("userX",userX);
+        userY = intent.getDoubleExtra("userY",userY);
         X_UTM = intent.getDoubleExtra("X_UTM",X_UTM);
         Y_UTM = intent.getDoubleExtra("Y_UTM",Y_UTM);
         UTM_Zone = intent.getIntExtra("UTM_Zone",UTM_Zone);
@@ -68,7 +68,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
 
         Log.d("UTMCOORDINATES"," " + X_UTM + ", " + Y_UTM + " | " + UTM_Zone + UTM_Letter);
         getRegion(userY, userX);
-        Log.d("latlong", userX + "" + userY);
+        Log.d("USERLOCATION", "NAV: " + userX + "" + userY);
     }
 
     // regionnumbers | 1 - Sjælland | 2 - Fyn | 3 - Sønderjylland | 4 - Midtjylland | 5 - Nordjylland | 6 - Bornholm |
@@ -268,6 +268,8 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private String No2 = "No2";
     public void UdsigtNo2(View view) {
         Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
+        i.putExtra("userX",userX);
+        i.putExtra("userY",userY);
         i.putExtra("region",regionnumber);
         i.putExtra("componentExtra",No2);
         startActivity(i);
