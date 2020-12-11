@@ -402,7 +402,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
 
 
     private ArrayList<ForureningsDataModel> GetData(String component, String DbName){
-        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid?x_long=" + userX + "&y_lat=" + userY);
+        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid?x_long=" + userY + "&y_lat=" + userX);
         DataService dataService = ApiUtils.getDataService();
         Call<ArrayList<ForureningsDataModel>> searchForData = dataService.GetForureningsData(url.toString());
         searchForData.enqueue(new Callback<ArrayList<ForureningsDataModel>>() {
