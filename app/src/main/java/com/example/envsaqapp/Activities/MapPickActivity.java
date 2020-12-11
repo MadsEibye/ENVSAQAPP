@@ -263,8 +263,8 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
                     Intent i = new Intent(MapPickActivity.this,ForureningsUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
-                    i.putExtra("geoX",geoX);
-                    i.putExtra("geoY",geoY);
+                    i.putExtra("geoX",geoY);
+                    i.putExtra("geoY",geoX);
                     i.putExtra("geoString", geoString);
                     setResult(2,i);
                     finish();

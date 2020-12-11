@@ -104,9 +104,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX",userX);
         userY = intent.getDoubleExtra("userY",userY);
-        geoX = intent.getDoubleExtra("geoX",geoX);
-        geoY = intent.getDoubleExtra("geoY",geoY);
-        geoString = intent.getStringExtra("geoString");
+
 
 
         Log.d("USERLOCATION","FU: " + userX + ", " + userY);
@@ -543,8 +541,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2){
-            GetData("No2","",geoX,geoY,geoString);
+        if (resultCode == 2){
+            Log.d("GetData", "Den kom ind");
+            geoX = data.getDoubleExtra("geoX",geoX);
+            geoY = data.getDoubleExtra("geoY",geoY);
+            geoString = data.getStringExtra("geoString");
+            GetData("No2","",geoY,geoX,geoString);
         }
     }
 
