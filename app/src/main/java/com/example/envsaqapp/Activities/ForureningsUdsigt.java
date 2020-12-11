@@ -104,8 +104,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         regionNumber = intent.getIntExtra("region",regionNumber);
         component = intent.getStringExtra("componentExtra");
         Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
-        PopulateCharts();
-        GetDataForCharts(component);
+        GetData("","");
+        //GetDataForCharts(component);
     }
 
     //Start of Comments ChangeActivity()
@@ -400,9 +400,9 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private Integer Day;
     //private ArrayList<ForureningsDataModel> dataList;
 
-    //("Select Hour",+ component +" FROM " + DbName + "WHERE" + get_nearest_square?x_long=" + userX +"&y_lat" + userY)
-    /*private ArrayList<ForureningsDataModel> GetData(String component, String DbName){
-        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_house?x_long=" + userX + "&y_lat=" + userY);
+
+    private ArrayList<ForureningsDataModel> GetData(String component, String DbName){
+        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid?x_long=" + userX + "&y_lat=" + userY);
         DataService dataService = ApiUtils.getDataService();
         Call<ArrayList<ForureningsDataModel>> searchForData = dataService.GetForureningsData(url.toString());
         searchForData.enqueue(new Callback<ArrayList<ForureningsDataModel>>() {
@@ -438,7 +438,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             }
         });
         return dataList;
-    }*/
+    }
 
     ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
 
@@ -452,7 +452,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     List dag3 = new ArrayList<ForureningsDataModel>();
 
     private void PopulateCharts() {
-
+        /*
         dataList.add(new ForureningsDataModel(277,281,456545,123541,10,12,12,12,1,1));
         dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,2,1));
         dataList.add(new ForureningsDataModel(277,281,456545,123541,14,12,12,12,3,1));
@@ -525,7 +525,14 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,70,3));
         dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,71,3));
         dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,72,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,73,4));
+        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,73,4));*/
+
+        Integer i = 1;
+        for (ForureningsDataModel o:dataList
+             ) {
+            o.setHour(i);
+            i++;
+        }
 
         dag1 = dataList.subList(0,24);
         dag1data = new ArrayList<ForureningsDataModel>(dag1);
@@ -567,11 +574,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         lineDataSet.setCircleColor(Color.GRAY);
         linechart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         linechart.getAxisRight().setEnabled(false);
-        linechart.getXAxis().setLabelCount(8,true);
+        linechart.getXAxis().setLabelCount(10,true);
         linechart.setDoubleTapToZoomEnabled(false);
         linechart.setScaleEnabled(false);
-        linechart.getAxisLeft().setLabelCount(10);
-        linechart.getAxisLeft().setXOffset(12);
+        linechart.getAxisLeft().setLabelCount(8);
+        linechart.getAxisLeft().setXOffset(10);
     }
 
     private ArrayList<Entry> lineChartDataSet(ArrayList<ForureningsDataModel> dataList){
