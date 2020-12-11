@@ -418,7 +418,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             @Override
             public void onResponse(Call<ArrayList<ForureningsDataModel>> call, Response<ArrayList<ForureningsDataModel>> response) {
                 if (response.isSuccessful()) {
-                    if (response.body() != null) {
+                    if (response.body().size() >= 1) {
                         Log.d("QUERY", " " + response.code());
                         Log.d("QUERY", response.body().toString());
                         Log.d("QUERY", url.toString());

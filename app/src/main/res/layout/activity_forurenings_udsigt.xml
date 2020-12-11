@@ -17,6 +17,8 @@ tools:context=".Activities.ForureningsUdsigt">
         android:layout_height="wrap_content">
 
         <TextView
+            android:layout_weight="4"
+            android:layout_marginStart="10dp"
             android:id="@+id/LocationHeader"
             android:text="Hovedbanegården københavn 2000"
             android:textColor="@color/Black"
