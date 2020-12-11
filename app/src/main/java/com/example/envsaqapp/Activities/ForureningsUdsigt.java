@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.envsaqapp.R;
@@ -66,6 +67,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private double geoX;
     private double geoY;
     private String geoString;
+    TextView locationHeader;
     //endregion Instance Fields
 
     //region Methods
@@ -97,7 +99,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         button1.bringToFront();
         button2.bringToFront();
         button3.bringToFront();
-
+        locationHeader = findViewById(R.id.LocationHeader);
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -416,21 +418,25 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             @Override
             public void onResponse(Call<ArrayList<ForureningsDataModel>> call, Response<ArrayList<ForureningsDataModel>> response) {
                 if (response.isSuccessful()) {
-                    Log.d("QUERY", " " + response.code());
-                    Log.d("QUERY", response.body().toString());
-                    Log.d("QUERY", url.toString());
-                    ForureningsDataModel responseObject1 = response.body().get(0);
-                    dataList = response.body();
-                    No2 = responseObject1.getNo2();
-                    O3 = responseObject1.getO3();
-                    PM2_5 = responseObject1.getPM2_5();
-                    PM10 = responseObject1.getPM10();
-
-                    Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                    //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
-                    //Log.d("TESTING", SongsInQueue.toString());
-                    PopulateCharts();
-
+                    if (response.body() != null) {
+                        Log.d("QUERY", " " + response.code());
+                        Log.d("QUERY", response.body().toString());
+                        Log.d("QUERY", url.toString());
+                        ForureningsDataModel responseObject1 = response.body().get(0);
+                        dataList = response.body();
+                        No2 = responseObject1.getNo2();
+                        O3 = responseObject1.getO3();
+                        PM2_5 = responseObject1.getPM2_5();
+                        PM10 = responseObject1.getPM10();
+                        locationHeader.setText(name);
+                        Log.d("RESPONSEOBJECTS", responseObject1.toString());
+                        //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
+                        //Log.d("TESTING", SongsInQueue.toString());
+                        PopulateCharts();
+                    }
+                    else {
+                        Toast.makeText(ForureningsUdsigt.this,"Fandt ikke noget data",Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
                     Toast.makeText(ForureningsUdsigt.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
