@@ -260,9 +260,14 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
                     geoX = o.getLatitude();
                     geoY = o.getLongitude();
                     geoString = o.getName();
-                    ForureningsUdsigt udsigt = new ForureningsUdsigt();
-                    udsigt.GetData("No2","",geoX,geoY,geoString);
-                    ChangeActivity(3);
+                    Intent i = new Intent(MapPickActivity.this,ForureningsUdsigt.class);
+                    i.putExtra("userX", userX);
+                    i.putExtra("userY", userY);
+                    i.putExtra("geoX",geoX);
+                    i.putExtra("geoY",geoY);
+                    i.putExtra("geoString", geoString);
+                    setResult(2,i);
+                    finish();
                     return true;
                 }
             });

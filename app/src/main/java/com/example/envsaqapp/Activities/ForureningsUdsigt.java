@@ -1,6 +1,7 @@
 package com.example.envsaqapp.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -536,7 +537,15 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Intent i = new Intent(ForureningsUdsigt.this, MapPickActivity.class);
         i.putExtra("userX",userX);
         i.putExtra("userY",userY);
-        startActivity(i);
+        startActivityForResult(i,2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2){
+            GetData("No2","",geoX,geoY,geoString);
+        }
     }
 
     //endregion Methods
