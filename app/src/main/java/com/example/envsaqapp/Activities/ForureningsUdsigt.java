@@ -62,6 +62,9 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     LineChart linechart3;
     LineDataSet set1,set2;
     private String component;
+    private double geoX;
+    private double geoY;
+    private String geoString;
     //endregion Instance Fields
 
     //region Methods
@@ -100,11 +103,16 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX",userX);
         userY = intent.getDoubleExtra("userY",userY);
+        geoX = intent.getDoubleExtra("geoX",geoX);
+        geoY = intent.getDoubleExtra("geoY",geoY);
+        geoString = intent.getStringExtra("geoString");
+
+
         Log.d("USERLOCATION","FU: " + userX + ", " + userY);
         regionNumber = intent.getIntExtra("region",regionNumber);
         component = intent.getStringExtra("componentExtra");
         Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
-        GetData("","");
+        GetData("","",userX,userY,"Your location");
         //GetDataForCharts(component);
     }
 
@@ -401,7 +409,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     //private ArrayList<ForureningsDataModel> dataList;
 
 
-    private ArrayList<ForureningsDataModel> GetData(String component, String DbName){
+    public ArrayList<ForureningsDataModel> GetData(String component, String DbName, double userX, double userY, String name){
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid?x_long=" + userY + "&y_lat=" + userX);
         DataService dataService = ApiUtils.getDataService();
         Call<ArrayList<ForureningsDataModel>> searchForData = dataService.GetForureningsData(url.toString());
@@ -418,6 +426,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     O3 = responseObject1.getO3();
                     PM2_5 = responseObject1.getPM2_5();
                     PM10 = responseObject1.getPM10();
+
                     Log.d("RESPONSEOBJECTS", responseObject1.toString());
                     //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
                     //Log.d("TESTING", SongsInQueue.toString());
@@ -452,80 +461,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     List dag3 = new ArrayList<ForureningsDataModel>();
 
     private void PopulateCharts() {
-        /*
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,10,12,12,12,1,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,2,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,14,12,12,12,3,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,17,12,12,12,4,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,1,12,12,12,5,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,6,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,1,12,12,12,7,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,8,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,9,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,10,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,11,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,12,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,13,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,14,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,15,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,16,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,17,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,18,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,19,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,20,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,21,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,22,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,23,1));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,24,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,25,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,26,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,27,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,28,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,29,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,30,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,31,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,32,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,33,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,34,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,35,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,36,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,37,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,38,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,39,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,40,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,41,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,42,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,43,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,44,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,45,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,46,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,47,2));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,48,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,49,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,50,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,51,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,52,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,53,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,54,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,55,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,56,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,57,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,58,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,59,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,60,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,61,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,62,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,63,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,13,12,12,12,64,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,65,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,66,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,67,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,68,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,69,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,70,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,71,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,72,3));
-        dataList.add(new ForureningsDataModel(277,281,456545,123541,12,12,12,12,73,4));*/
+
 
         Integer i = 1;
         for (ForureningsDataModel o:dataList
@@ -545,6 +481,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         CustomizeLinechart(linechart2,component,"17/11/2020",dag2data);
         CustomizeLinechart(linechart3,component,"18/11/2020",dag3data);
     }
+
+
 
     private void CustomizeLinechart(LineChart linechart,String component,String Date,ArrayList linedata){
         LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(linedata),component);

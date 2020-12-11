@@ -257,6 +257,12 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     Toast.makeText(MapPickActivity.this,o.getName() ,Toast.LENGTH_LONG).show();
+                    geoX = o.getLatitude();
+                    geoY = o.getLongitude();
+                    geoString = o.getName();
+                    ForureningsUdsigt udsigt = new ForureningsUdsigt();
+                    udsigt.GetData("No2","",geoX,geoY,geoString);
+                    ChangeActivity(3);
                     return true;
                 }
             });
@@ -264,6 +270,10 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
         }
 
     }
+
+    private double geoX;
+    private double geoY;
+    private String geoString;
 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -354,6 +364,10 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
                     Intent i = new Intent(MapPickActivity.this, NavigationUdsigt.class);
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
+                    i.putExtra("geoX",geoX);
+                    i.putExtra("geoY",geoY);
+                    i.putExtra("geoString", geoString);
+
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
