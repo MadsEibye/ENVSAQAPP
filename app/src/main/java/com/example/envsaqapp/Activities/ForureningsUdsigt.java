@@ -525,8 +525,18 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private ArrayList<Entry> lineChartDataSet(ArrayList<ForureningsDataModel> dataList){
         ArrayList<Entry> dataSet = new ArrayList<Entry>();
         for (ForureningsDataModel o:dataList
-             ) {
-            dataSet.add(new Entry(o.getHour(),(float) o.getNo2()));
+             ) { if (component == "No2") {
+            dataSet.add(new Entry(o.getHour(), (float) o.getNo2()));
+        }
+        else if (component == "O3"){
+            dataSet.add(new Entry(o.getHour(), (float) o.getO3()));
+        }
+        else if (component == "PM2_5"){
+            dataSet.add(new Entry(o.getHour(), (float) o.getPM2_5()));
+        }
+        else {
+            dataSet.add(new Entry(o.getHour(), (float) o.getPM10()));
+        }
         }
         return dataSet;
     }
