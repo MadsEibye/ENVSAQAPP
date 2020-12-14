@@ -542,7 +542,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         i.putExtra("component",component);
         startActivityForResult(i,2);
     }
-
+    private boolean isLocationPicked = false;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -552,12 +552,18 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             geoY = data.getDoubleExtra("geoY",geoY);
             geoString = data.getStringExtra("geoString");
             component = data.getStringExtra("component");
-            GetData("No2","",geoY,geoX,geoString);
+            isLocationPicked = true;
+            GetData(component,"",geoY,geoX,geoString);
         }
     }
 
     public void refreshData(View view){
-        GetData(component,"",userX,userY,geoString);
+        if (isLocationPicked == false) {
+            GetData(component, "", userX, userY, geoString);
+        }
+        else{
+            GetData(component,"",geoX,geoY,geoString);
+        }
     }
 
     //endregion Methods
