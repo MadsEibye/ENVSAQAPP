@@ -577,5 +577,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         }
     }
 
+    public void animationButtonClicked(View view){
+        Intent intent = new Intent(ForureningsUdsigt.this, ForureningsAnimation.class);
+        intent.putExtra("component",component);
+        startActivity(intent);
+    }
+
     //endregion Methods
 }
