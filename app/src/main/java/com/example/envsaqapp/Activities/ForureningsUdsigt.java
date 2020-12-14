@@ -562,7 +562,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             GetData(component, "", userX, userY, geoString);
         }
         else{
-            GetData(component,"",geoX,geoY,geoString);
+            GetData(component,"",geoY,geoX,geoString);
         }
     }
 
