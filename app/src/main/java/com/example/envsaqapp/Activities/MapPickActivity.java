@@ -54,6 +54,7 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
     private Integer item8ID;
     private static double userX;
     private static double userY;
+    private static String component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
+        component = intent.getStringExtra("component");
         Log.d("USERLOCATION","LP:" + userX + ", " + userY);
         GeoPoint geoPoint = new GeoPoint(userX,userY);
         PlotDots();
@@ -266,6 +268,7 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
                     i.putExtra("geoX",geoY);
                     i.putExtra("geoY",geoX);
                     i.putExtra("geoString", geoString);
+                    i.putExtra("component",component);
                     setResult(2,i);
                     finish();
                     return true;

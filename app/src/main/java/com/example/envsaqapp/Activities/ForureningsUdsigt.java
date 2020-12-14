@@ -106,14 +106,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX",userX);
         userY = intent.getDoubleExtra("userY",userY);
-
-
-
         Log.d("USERLOCATION","FU: " + userX + ", " + userY);
         regionNumber = intent.getIntExtra("region",regionNumber);
         component = intent.getStringExtra("componentExtra");
         Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
-        GetData("","",userX,userY,"Your location");
+        geoString = "Your location";
+        GetData(component,"",userX,userY,geoString);
         //GetDataForCharts(component);
     }
 
@@ -541,6 +539,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         Intent i = new Intent(ForureningsUdsigt.this, MapPickActivity.class);
         i.putExtra("userX",userX);
         i.putExtra("userY",userY);
+        i.putExtra("component",component);
         startActivityForResult(i,2);
     }
 
@@ -552,8 +551,13 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             geoX = data.getDoubleExtra("geoX",geoX);
             geoY = data.getDoubleExtra("geoY",geoY);
             geoString = data.getStringExtra("geoString");
+            component = data.getStringExtra("component");
             GetData("No2","",geoY,geoX,geoString);
         }
+    }
+
+    public void refreshData(View view){
+        GetData(component,"",userX,userY,geoString);
     }
 
     //endregion Methods

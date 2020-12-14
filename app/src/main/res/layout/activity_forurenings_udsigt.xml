@@ -32,7 +32,7 @@ tools:context=".Activities.ForureningsUdsigt">
         <Button
             android:id="@+id/Udsigtbutton1"
             android:background="@drawable/refresh_foreground"
-            android:onClick="Toast"
+            android:onClick="refreshData"
             android:clickable="true"
             android:layout_marginEnd="10dp"
             android:layout_width="30dp"

@@ -276,14 +276,39 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
-
+    private String O3 = "O3";
     public void UdsigtO3(View view) {
+        Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
+        i.putExtra("userX",userX);
+        i.putExtra("userY",userY);
+        i.putExtra("region",regionnumber);
+        i.putExtra("componentExtra",O3);
+        startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
+    private String PM25 = "PM2_5";
     public void Udsigtpm25(View view) {
+        Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
+        i.putExtra("userX",userX);
+        i.putExtra("userY",userY);
+        i.putExtra("region",regionnumber);
+        i.putExtra("componentExtra",PM25);
+        startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
+    private String PM10 = "PM10";
     public void Udsigtpm10(View view) {
-
+        Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);
+        i.putExtra("userX",userX);
+        i.putExtra("userY",userY);
+        i.putExtra("region",regionnumber);
+        i.putExtra("componentExtra",PM10);
+        startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 }
