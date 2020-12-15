@@ -8,8 +8,9 @@
     tools:context=".Activities.ForureningsAnimation">
 
 
-    <WebView
-        android:id="@+id/ForAniWebView"
+    <ImageView
+        android:src="@drawable/play_foreground"
+        android:id="@+id/ForAniImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -3,19 +3,33 @@ package com.example.envsaqapp.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.envsaqapp.R;
 import com.google.android.material.navigation.NavigationView;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
@@ -34,6 +48,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private Integer item7ID;
     private Integer item8ID;
     private WebView webview;
+    private ImageView imageView;
 
 
     @Override
@@ -41,7 +56,9 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forurenings_animation);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        webview = findViewById(R.id.ForAniWebView);
+        //webview = findViewById(R.id.ForAniWebView);
+        imageView = findViewById(R.id.ForAniImageView);
+        imageView.bringToFront();
         mDrawerLayout = findViewById(R.id.ForAniDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -52,17 +69,33 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
+/*
+        String url = "https://envs.au.dk/faglige-omraader/luftforurening-udledninger-og-effekter/data-om-luftkvalitet/luftudsigten/";
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setColorScheme(CustomTabsIntent.COLOR_SCHEME_LIGHT);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(this, Uri.parse(url));
+        */
+        //LoadWebView();
+        LoadImage loadImage = new LoadImage(imageView);
+        loadImage.execute(uri);
+    }
 
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                webview.loadUrl("https://envs.au.dk/faglige-omraader/luftforurening-udledninger-og-effekter/data-om-luftkvalitet/luftudsigten/");
-                super.onPageFinished(view, url);
-            }
-        });
+    private void LoadWebView(){
+        webview.setWebViewClient(new WebViewClient());
+        webview.loadUrl("http://envs.au.dk/videnudveksling/luft/luftudsigten/oversigtskort");
+        //http://lpdv.spatialsuite.dk/spatialmap
+        WebSettings webSettings = webview.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
 
     }
+    String uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_1.png";
+    ArrayList<Image> images = new ArrayList<>();
+    Bitmap bitmap;
+
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -223,5 +256,38 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private void setNavigationViewListener() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.ForAniNav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private class LoadImage extends AsyncTask<String,Void,Bitmap> {
+        ImageView imageView;
+        public LoadImage(ImageView ivResult){
+            this.imageView = ivResult;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            Integer i = 1;
+            //while (i < 74) {
+                //uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + i +".png";
+                i++;
+                Log.d("DOINBACKGROUND1",uri);
+                try {
+                    InputStream is = new java.net.URL(uri).openStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return bitmap;
+            }
+            //Toast.makeText(ForureningsAnimation.this,"DO IT AGAIN",Toast.LENGTH_LONG);
+
+        //}
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+                imageView.postInvalidateDelayed(2000);
+                imageView.setImageBitmap(bitmap);
+            Log.d("DOINBACKGROUND1","ONPOSTEXECUTE");
+        }
     }
 }
