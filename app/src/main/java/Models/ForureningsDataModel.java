@@ -120,13 +120,13 @@ public class ForureningsDataModel {
     @SerializedName("j")
     @Expose
     private Integer j;
-    @SerializedName("x_utm")
+    @SerializedName("xutm")
     @Expose
     private Integer x_utm;
-    @SerializedName("y_utm")
+    @SerializedName("yutm")
     @Expose
     private Integer y_utm;
-    @SerializedName("no2")
+    @SerializedName("no2_conc")
     @Expose
     private double No2;
     @SerializedName("o3")
