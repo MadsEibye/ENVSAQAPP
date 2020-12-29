@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.android.internal.http.multipart.Part;
 import com.example.envsaqapp.R;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Callback;
@@ -74,11 +76,12 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(ForureningsAnimation.this);
         setContentView(R.layout.activity_forurenings_animation);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //webview = findViewById(R.id.ForAniWebView);
-        imageView = findViewById(R.id.ForAniImageView);
-        imageView.bringToFront();
+        //imageView = findViewById(R.id.ForAniImageView);
+        //imageView.bringToFront();
         mDrawerLayout = findViewById(R.id.ForAniDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -131,7 +134,6 @@ private void testingFileImport() {
 }*/
 
     ArrayList<Bitmap> arrayList = new ArrayList();
-    //String uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + i + ".png";
 
     /*private void testingTarget() {
 
@@ -155,28 +157,16 @@ private void testingFileImport() {
     Bitmap bitmap1;
 
     private void getImages() {
-        String uris = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + 1 + ".png";
-
-        while (i < 6) {
+        while (i<10) {
             String uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + i + ".png";
-            Picasso.get().load(uri).into(target, new Callback() {
-                @Override
-                public void onSuccess() {
-                    
-                }
-
-                @Override
-                public void onError(Exception e) {
-
-                }
-            });
-            i++;
-
-            Log.d("YES", i + "");
+            Uri imageUri = Uri.parse(uri);
+            SimpleDraweeView draweeView = findViewById(R.id.sdvImage);
+            draweeView.setImageURI(imageUri);
             try {
                 Thread.sleep(2000);
+                i++;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.e("FRESCO",e.getMessage());
             }
         }
 
