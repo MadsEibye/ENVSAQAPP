@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -25,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.internal.http.multipart.Part;
+import com.example.envsaqapp.JavaClasses.CustomPagerAdapter;
+import com.example.envsaqapp.JavaClasses.CustomScroller;
 import com.example.envsaqapp.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -41,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -49,6 +54,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.OkHttpClient;
 
@@ -68,9 +75,12 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private Integer item6ID;
     private Integer item7ID;
     private Integer item8ID;
-    private WebView webview;
-    private ImageView imageView;
     int i = 1;
+    int currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
+    final long PERIOD_MS = 1000; // time in milliseconds between successive task executions.
+    ArrayList<String> photoUrls = new ArrayList<>();
 
 
     @Override
@@ -79,9 +89,6 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         Fresco.initialize(ForureningsAnimation.this);
         setContentView(R.layout.activity_forurenings_animation);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //webview = findViewById(R.id.ForAniWebView);
-        //imageView = findViewById(R.id.ForAniImageView);
-        //imageView.bringToFront();
         mDrawerLayout = findViewById(R.id.ForAniDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -92,123 +99,52 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-/*
-        String url = "https://envs.au.dk/faglige-omraader/luftforurening-udledninger-og-effekter/data-om-luftkvalitet/luftudsigten/";
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setColorScheme(CustomTabsIntent.COLOR_SCHEME_LIGHT);
-        CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(this, Uri.parse(url));
-        */
-        //LoadWebView();
-        //LoadImage loadImage = new LoadImage(imageView);
-        //loadImage.execute(uri + "");
 
-        getImages();
-        //testingTarget();
+
     }
-//File f = new File("http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + 54 + ".png");
-/*
-private void testingFileImport() {
-    Part file;
 
-// more code
-    try {
-        InputStream is = file.getInputStream();
+    private void animationNo2() {
+        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
 
-        File f = new File("http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + 54 + ".png");
-
-        OutputStream os = new FileOutputStream(f);
-        byte[] buf = new byte[1024];
-        int len;
-
-        while ((len = is.read(buf)) > 0) {
-            os.write(buf, 0, len);
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/noxbum_"+ i + ".png");
+            i++;
         }
 
-        os.close();
-        is.close();
-
-    } catch (IOException e) {
-        System.out.println("Error");
-    }
-}*/
-
-    ArrayList<Bitmap> arrayList = new ArrayList();
-
-    /*private void testingTarget() {
-
-        Picasso.get().load(uri).into(imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(ForureningsAnimation.this, "Yehaaw", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
-        i++;
-
-        //Log.d("SHOWARRAYLIST", arrayList.size() + "");
-
-    }*/
-
-    Bitmap bitmap1;
-
-    private void getImages() {
-        while (i<10) {
-            String uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + i + ".png";
-            Uri imageUri = Uri.parse(uri);
-            SimpleDraweeView draweeView = findViewById(R.id.sdvImage);
-            draweeView.setImageURI(imageUri);
-            try {
-                Thread.sleep(2000);
-                i++;
-            } catch (InterruptedException e) {
-                Log.e("FRESCO",e.getMessage());
-            }
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
 
-    }
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
 
-
-
-
-//RequestCreator image = Picasso.get().load(uri);
-//imageView.setImageURI(new Uri(uri));
-            /*Picasso.get().load(uri).into(imageView, new Callback() {
-                @Override
-                public void onSuccess() {
-                    i++;
-
-                    getImages();
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
                 }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
 
-                @Override
-                public void onError(Exception e) {
-                    Toast.makeText(ForureningsAnimation.this, "something went wrong", Toast.LENGTH_LONG).show();
-
-                }
-            });
-        }
-    }*/
-
-    private void showImageAsync() {
-
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
     }
 
-    private void LoadWebView() {
-        webview.setWebViewClient(new WebViewClient());
-        webview.loadUrl("http://envs.au.dk/videnudveksling/luft/luftudsigten/oversigtskort");
-        //http://lpdv.spatialsuite.dk/spatialmap
-        WebSettings webSettings = webview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-
-    }
-
-    ArrayList<Image> images = new ArrayList<>();
 
 
     @Override
@@ -367,75 +303,4 @@ private void testingFileImport() {
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-   /* private class LoadImage extends AsyncTask<String,Void,Bitmap> {
-        ImageView imageView;
-        public LoadImage(ImageView ivResult){
-            this.imageView = ivResult;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Integer i = 1;
-            //while (i < 74) {
-                //uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + i +".png";
-                i++;
-                Log.d("DOINBACKGROUND1", "" + uri);
-
-
-
-            /*HttpGet httpRequest = null;
-
-            try {
-                httpRequest = new HttpGet(bitmapUrl.toURI());
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
-            URLConnection httpclient = new URLConnection() {
-                @Override
-                public void connect() throws IOException {
-
-                }
-            };
-            HttpResponse response = (HttpResponse) httpclient.execute
-                    (httpRequest);
-
-            HttpEntity entity = response.getEntity();
-            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity
-                    (entity);
-            InputStream instream = bufHttpEntity.getContent();
-            bm = BitmapFactory.decodeStream(instream);*/
-                /*try {
-                    //InputStream is = new java.net.URL(uri).openStream();
-                    //Log.e("DOINBACKGROUND1", is.toString());
-                    //bitmap = BitmapFactory.decodeStream(uri.openConnection().getInputStream());
-
-
-                    //Log.e("DOINBACKGROUND1", "Jeg var her" + bitmap.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("DOINBACKGROUND1", e.toString());
-                }
-
-            return bitmap;
-            }
-            //Toast.makeText(ForureningsAnimation.this,"DO IT AGAIN",Toast.LENGTH_LONG);
-
-        //}
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-               // imageView.postInvalidateDelayed(2000);
-            try {
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                    Log.d("DOINBACKGROUND1", "ONPOSTEXECUTE");
-                } else { Log.e("DOINBACKGROUND1", "bitmap = null");
-                }
-            } catch (Exception e) {
-                Log.e("DOINBACKGROUND1", e.getMessage());
-            }
-
-        }
-    }*/
 }
