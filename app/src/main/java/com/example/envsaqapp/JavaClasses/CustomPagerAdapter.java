@@ -27,6 +27,8 @@ public class CustomPagerAdapter extends PagerAdapter {
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+
+
     @Override
     public int getCount() {
         return mResources.size();

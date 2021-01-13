@@ -527,7 +527,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         for (ForureningsDataModel o:dataList
              ) {
             if (component.equals("No2")) {
-                dataSet.add(new Entry(o.getHour(), (float) o.getNo2()));
+                    dataSet.add(new Entry(o.getHour(), (float) o.getNo2()));
             }
             else if (component.equals("O3")){
                 dataSet.add(new Entry(o.getHour(), (float) o.getO3()));

@@ -10,14 +10,11 @@
     tools:context=".Activities.ForureningsAnimation">
 
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:background="@color/Lightblue"
-        android:id="@+id/sdvImage"
+    <androidx.viewpager.widget.ViewPager
+        android:padding="5dp"
+        android:id="@+id/vp_photogallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        fresco:actualImageScaleType="fitXY"
-        fresco:placeholderImage="@drawable/play_foreground"
-        />
+        android:layout_height="match_parent" />
 
 
     <com.google.android.material.navigation.NavigationView

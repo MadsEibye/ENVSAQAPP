@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebSettings;
@@ -67,6 +68,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private ActionBarDrawerToggle mDrawerToggle;
     private static double userX;
     private static double userY;
+    private String component;
     private Integer item1ID;
     private Integer item2ID;
     private Integer item3ID;
@@ -90,22 +92,35 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         setContentView(R.layout.activity_forurenings_animation);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mDrawerLayout = findViewById(R.id.ForAniDrawerLayout);
+        mDrawerLayout.bringToFront();
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationViewListener();
 
+
         Intent intent = getIntent();
+        component = intent.getStringExtra("component");
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
 
+        ShowAnimation();
 
+    }
+
+    private void ShowAnimation (){
+        if (component.equals("No2")){ animationNo2();
+        }
+        else if (component.equals("O3")){ animation03();
+        }
+        else if (component.equals("PM2_5")){ animationPM2_5();
+        }
+        else { animationPM10(); }
     }
 
     private void animationNo2() {
         final ViewPager viewPager = findViewById(R.id.vp_photogallery);
-
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/noxbum_"+ i + ".png");
             i++;
@@ -145,7 +160,137 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         }, DELAY_MS, PERIOD_MS);
     }
 
+    private void animation03() {
+        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
+        while (i<75){
+            photoUrls.add("https://www2.dmu.dk/thorben_new/Danmark/o3bum_"+ i +".png");
+            i++;
+        }
 
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    private void animationPM2_5() {
+        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm25bum_"+ i +".png");
+            i++;
+        }
+
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    private void animationPM10() {
+        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm10bum_"+ i +".png");
+            i++;
+        }
+
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

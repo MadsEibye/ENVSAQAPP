@@ -67,7 +67,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         UTM_Letter = intent.getCharExtra("UTM_Letter",UTM_Letter);
 
         Log.d("UTMCOORDINATES"," " + X_UTM + ", " + Y_UTM + " | " + UTM_Zone + UTM_Letter);
-        getRegion(userY, userX);
+        //getRegion(userY, userX);
         Log.d("USERLOCATION", "NAV: " + userX + "" + userY);
     }
 
