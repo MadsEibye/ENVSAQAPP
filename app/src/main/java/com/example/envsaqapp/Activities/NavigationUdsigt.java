@@ -265,6 +265,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
 
 
     }
+
     private String No2 = "No2";
     public void UdsigtNo2(View view) {
         Intent i = new Intent(NavigationUdsigt.this, ForureningsUdsigt.class);

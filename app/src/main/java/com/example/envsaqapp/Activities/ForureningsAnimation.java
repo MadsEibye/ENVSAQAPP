@@ -104,7 +104,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         component = intent.getStringExtra("component");
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-
+        Log.d("TESTINGINTENT","UserX: " + userX + "UserY: "+ userY);
         ShowAnimation();
 
     }

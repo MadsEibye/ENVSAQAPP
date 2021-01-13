@@ -68,6 +68,25 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private double geoY;
     private String geoString;
     TextView locationHeader;
+    private String DbName;
+    private Integer i;
+    private Integer j;
+    private Integer x_utm;
+    private Integer y_utm;
+    private double No2;
+    private double O3;
+    private double PM2_5;
+    private double PM10;
+    private Integer Hour;
+    private Integer Day;
+    ArrayList dag1data;
+    ArrayList dag2data;
+    ArrayList dag3data;
+    List dag1 = new ArrayList<ForureningsDataModel>();
+    List dag2 = new ArrayList<ForureningsDataModel>();
+    List dag3 = new ArrayList<ForureningsDataModel>();
+    ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
+    //private ArrayList<ForureningsDataModel> dataList;
     //endregion Instance Fields
 
     //region Methods
@@ -111,6 +130,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         component = intent.getStringExtra("componentExtra");
         Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
         geoString = "Your location";
+        Log.d("TESTINGINTENT", "" + userX + userY);
         GetData(component,"",userX,userY,geoString);
         //GetDataForCharts(component);
     }
@@ -302,7 +322,6 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private String DbName;
     private void GetDataForCharts(String component){
         if (component == "No2"){
             if (regionNumber == 1){
@@ -395,19 +414,6 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
 
     }
 
-    private Integer i;
-    private Integer j;
-    private Integer x_utm;
-    private Integer y_utm;
-    private double No2;
-    private double O3;
-    private double PM2_5;
-    private double PM10;
-    private Integer Hour;
-    private Integer Day;
-    //private ArrayList<ForureningsDataModel> dataList;
-
-
     public ArrayList<ForureningsDataModel> GetData(String component, String DbName, double userX, double userY, String name){
         HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid2?x_long=" + userY + "&y_lat=" + userX);
         DataService dataService = ApiUtils.getDataService();
@@ -452,17 +458,6 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         return dataList;
     }
 
-    ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
-
-
-
-    ArrayList dag1data;
-    ArrayList dag2data;
-    ArrayList dag3data;
-    List dag1 = new ArrayList<ForureningsDataModel>();
-    List dag2 = new ArrayList<ForureningsDataModel>();
-    List dag3 = new ArrayList<ForureningsDataModel>();
-
     private void PopulateCharts() {
 
 
@@ -484,8 +479,6 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         CustomizeLinechart(linechart2,component,"17/11/2020",dag2data);
         CustomizeLinechart(linechart3,component,"18/11/2020",dag3data);
     }
-
-
 
     private void CustomizeLinechart(LineChart linechart,String component,String Date,ArrayList linedata){
         LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(linedata),component);
@@ -579,6 +572,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
 
     public void animationButtonClicked(View view){
         Intent intent = new Intent(ForureningsUdsigt.this, ForureningsAnimation.class);
+        intent.putExtra("userX",userX);
+        intent.putExtra("userY",userY);
         intent.putExtra("component",component);
         startActivity(intent);
     }
