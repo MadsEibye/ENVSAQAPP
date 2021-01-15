@@ -70,6 +70,7 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class ForureningsAnimation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    //region Instance fields
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private static double userX, userY;
@@ -86,7 +87,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private LinearLayout backbuttonLinear;
     private TextView textView, linktextview;
     private Button backbutton;
-
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
