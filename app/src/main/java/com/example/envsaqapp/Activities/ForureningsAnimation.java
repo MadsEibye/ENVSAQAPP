@@ -80,6 +80,8 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     ViewPager viewPager, viewPager2;
     private boolean darkmode;
     ViewFlipper viewFlipper;
+    private LinearLayout backbuttonLinear;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         setNavigationViewListener();
         Intent intent = getIntent();
         component = intent.getStringExtra("component");
+        backbuttonLinear = findViewById(R.id.backbuttonLinear);
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
         darkmode = intent.getBooleanExtra("darkmode",darkmode);
@@ -103,6 +106,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         viewPager = findViewById(R.id.vp_photogalleryDark);
 
         if (darkmode == true){
+            backbuttonLinear.setBackgroundColor(getResources().getColor(R.color.Gray));
             viewPager = findViewById(R.id.vp_photogalleryDark);
             viewFlipper.showNext();
         }
