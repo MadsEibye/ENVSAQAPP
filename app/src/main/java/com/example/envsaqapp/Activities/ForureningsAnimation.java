@@ -454,4 +454,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    public void backButtonPressed(View view) {
+        finish();
+    }
 }

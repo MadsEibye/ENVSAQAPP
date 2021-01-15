@@ -256,7 +256,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         i.putExtra("darkmode", darkmode);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+
     }
 
     public void UdsigtO3(View view) {
@@ -268,7 +268,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         i.putExtra("darkmode", darkmode);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+
     }
 
     public void Udsigtpm25(View view) {
@@ -280,7 +280,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         i.putExtra("darkmode", darkmode);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+
     }
 
     public void Udsigtpm10(View view) {
@@ -292,7 +292,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         i.putExtra("darkmode", darkmode);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+
     }
 
     //endregion
