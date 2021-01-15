@@ -542,5 +542,9 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         startActivity(intent);
     }
 
+    public void backButtonPressed(View view) {
+        finish();
+    }
+
     //endregion Methods
 }
