@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +25,11 @@ import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -81,6 +84,9 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private boolean darkmode;
     ViewFlipper viewFlipper;
     private LinearLayout backbuttonLinear;
+    private TextView textView, linktextview;
+    private Button backbutton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,8 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationViewListener();
         Intent intent = getIntent();
+        linktextview = findViewById(R.id.ForAniLink);
+        linktextview.setMovementMethod(LinkMovementMethod.getInstance());
         component = intent.getStringExtra("component");
         backbuttonLinear = findViewById(R.id.backbuttonLinear);
         userX = intent.getDoubleExtra("userX", userX);
@@ -104,10 +112,13 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         Log.d("DARKMODETEST",darkmode + "");
         viewFlipper = findViewById(R.id.forAniViewFlipper);
         viewPager = findViewById(R.id.vp_photogalleryDark);
-
+        textView = findViewById(R.id.ForAniTextView);
+        backbutton = findViewById(R.id.backbutton);
         if (darkmode == true){
+            backbutton.setBackgroundResource(R.drawable.ic_arrow_back_white_18dp);
             backbuttonLinear.setBackgroundColor(getResources().getColor(R.color.Gray));
             viewPager = findViewById(R.id.vp_photogalleryDark);
+            textView.setTextColor(getResources().getColor(R.color.White));
             viewFlipper.showNext();
         }
         else {
@@ -129,6 +140,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animationNo2() {
+        textView.setText("Oversigt over mængden af Kvælstofdioxid (No2) i luften");
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/noxbum_"+ i + ".png");
             i++;
@@ -170,6 +182,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animation03() {
+        textView.setText("Oversigt over mængden af Ozon (O3) i luften");
         while (i<75){
             photoUrls.add("https://www2.dmu.dk/thorben_new/Danmark/o3bum_"+ i +".png");
             i++;
@@ -211,6 +224,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animationPM2_5() {
+        textView.setText("Oversigt over mængden af PM2,5 partikler i luften");
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm25bum_"+ i +".png");
             i++;
@@ -252,7 +266,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animationPM10() {
-
+        textView.setText("Oversigt over mængden af PM10 partikler i luften");
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm10bum_"+ i +".png");
             i++;

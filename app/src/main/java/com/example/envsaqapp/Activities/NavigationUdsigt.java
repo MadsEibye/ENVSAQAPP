@@ -37,7 +37,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
     private int UTM_Zone, regionnumber;
     private char UTM_Letter;
     private Switch modeswitch;
-    private boolean darkmode = false;
+    private boolean darkmode;
     private ViewFlipper viewFlipper;
     private String No2 = "No2", O3 = "O3", PM25 = "PM2_5", PM10 = "PM10";
     //endregion

@@ -10,26 +10,43 @@
     tools:context=".Activities.ForureningsAnimation">
 
     <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/backbuttonLinear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/backbutton"
             android:layout_marginTop="5dp"
             android:onClick="backButtonPressed"
             android:background="@drawable/ic_arrow_back_24px"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
 
+        <TextView
+            android:gravity="center"
+            android:fontFamily="sans-serif-black"
+            android:textSize="15sp"
+            android:text=""
+            android:id="@+id/ForAniTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
-    <ViewFlipper
-        android:layout_marginTop="30dp"
-        android:id="@+id/forAniViewFlipper"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="500dp"
         android:layout_height="match_parent">
 
+    <ViewFlipper
+        android:layout_marginTop="50dp"
+        android:id="@+id/forAniViewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="500dp">
+
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -38,9 +55,11 @@
                 android:id="@+id/vp_photogallery"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/Gray">
@@ -50,12 +69,28 @@
                 android:id="@+id/vp_photogalleryDark"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
+
         </LinearLayout>
 
     </ViewFlipper>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <TextView
+            android:gravity="center"
+            android:textSize="17sp"
+            android:id="@+id/ForAniLink"
+            android:linksClickable="true"
+            android:text="@string/LinkToThorUdsigt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
+    </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/ForAniNav_view"
         android:layout_width="230dp"
