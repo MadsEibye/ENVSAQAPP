@@ -92,41 +92,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapController mapController;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
-    public float Latitude;
-    public float Longitude;
+    public float Latitude, Longitude, pointX, pointY;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    //private Point point;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    public float pointX;
-    public float pointY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
     private SearchView searchView;
     private HttpUrl url;
-    //private SimpleMarkerSymbol symbol;
     private String MarkerTitle;
-    private Button mainNo2Switch;
-    private Button mainPm10Switch;
-    private Button mainPm25Switch;
+    private Button mainNo2Switch, mainPm10Switch, mainPm25Switch;
     private GeoPoint UsergeoPoint;
-    ArrayList<Data> arraylist = new ArrayList<Data>();
+    private ArrayList<Data> arraylist = new ArrayList<Data>();
     private ListView list;
     private ListViewAdapter adapter;
     private String[] DataList;
-    public static ArrayList<Data> addressArrayList;
-    public static ArrayList<Data> array_sort;
-    int textlength = 0;
+    public static ArrayList<Data> addressArrayList, array_sort;
+    private int textlength = 0;
     private androidx.cursoradapter.widget.CursorAdapter mAdapter;
-    ArrayList<String> addressSuggestions = new ArrayList<>();
+    private ArrayList<String> addressSuggestions = new ArrayList<>();
     //endregion Instance Fields
 
     //region Methods
@@ -237,13 +222,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Log.d("Rhino", "onCreate: " + runScript(this));
     }//End of OnCreate
-
-
-
     /*
-        This method sets the closing icon for the searchView to ic_clear_icon_white
-        and if it doesn't exist or it can't get access then it throws an appropriate exception.
-         */
+    This method sets the closing icon for the searchView to ic_clear_icon_white
+    and if it doesn't exist or it can't get access then it throws an appropriate exception.
+    */
     private void setCloseSearchIcon(SearchView searchView) {
         try {
             Field searchField = SearchView.class.getDeclaredField("mCloseButton");
@@ -259,11 +241,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Start of Comments PlotNewDot()
-        /*
-        This method plots a marker for the address typed in the seachbar on the map.
-        The marker in this method is set to a different color than then user location, so you can see the difference between the user location, and the searched location.
-        When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
-        */
+    /*
+    This method plots a marker for the address typed in the seachbar on the map.
+    The marker in this method is set to a different color than then user location, so you can see the difference between the user location, and the searched location.
+    When the searched location is found by latitude and longitude, it then reloads the map by usage of the LoadMap() method.
+    */
     private void PlotNewDot(GeoPoint geoPoint) {
         //Overlay graphicsOverlay = new Overlay();
         //mapView.getGraphicsOverlays().add(graphicsOverlay);
@@ -288,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             updateGPS();
             //mapController.setCenter(geoPoint);
             mapController.animateTo(geoPoint);
-            Toast.makeText(MainActivity.this,"Graphics added and deleted",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Graphics added and deleted", Toast.LENGTH_LONG).show();
         } else {
             Marker startMarker = new Marker(mapView);
             startMarker.setPosition(geoPoint);
@@ -299,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapView.getOverlays().add(startMarker);
             //mapController.setCenter(geoPoint);
             mapController.animateTo(geoPoint);
-            Toast.makeText(MainActivity.this,"Graphics added",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Graphics added", Toast.LENGTH_LONG).show();
         }
         LoadMap(geoPoint);
     }
@@ -448,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Log.d("USERLOCATION", "" + Latitude);
             Log.d("USERLOCATION", "" + Longitude);
-            Log.d("USERLOCATION", "TESTING" );
+            Log.d("USERLOCATION", "TESTING");
             updateGPS();
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -808,6 +790,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapController.animateTo(UsergeoPoint);
 
     }
+
     public void mainTestSwtich(View view) {
 
         mapView.getOverlays().clear();
@@ -830,6 +813,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     InputStream is = null;
     WMSEndpoint wmsEndpoint = null;
     WMSEndpoint cap;
+
 
     private void populateAdapter(String query) {
         final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});

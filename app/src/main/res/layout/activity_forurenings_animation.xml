@@ -10,11 +10,37 @@
     tools:context=".Activities.ForureningsAnimation">
 
 
-    <androidx.viewpager.widget.ViewPager
-        android:padding="5dp"
-        android:id="@+id/vp_photogallery"
+    <ViewFlipper
+
+        android:id="@+id/forAniViewFlipper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.viewpager.widget.ViewPager
+                android:padding="5dp"
+                android:id="@+id/vp_photogallery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Gray">
+
+            <androidx.viewpager.widget.ViewPager
+                android:padding="5dp"
+                android:id="@+id/vp_photogalleryDark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </ViewFlipper>
+
 
 
     <com.google.android.material.navigation.NavigationView

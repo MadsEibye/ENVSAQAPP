@@ -25,7 +25,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.android.internal.http.multipart.Part;
 import com.example.envsaqapp.JavaClasses.CustomPagerAdapter;
@@ -66,25 +69,17 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private static double userX;
-    private static double userY;
+    private static double userX, userY;
     private String component;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
-    int i = 1;
-    int currentPage = 0;
+    private Integer item1ID,item2ID,item3ID,item4ID,item5ID,item6ID,item7ID,item8ID;
+    int i = 1, currentPage = 0;
     Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 1000; // time in milliseconds between successive task executions.
     ArrayList<String> photoUrls = new ArrayList<>();
-
-
+    ViewPager viewPager, viewPager2;
+    private boolean darkmode;
+    ViewFlipper viewFlipper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,15 +93,25 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationViewListener();
-
-
         Intent intent = getIntent();
         component = intent.getStringExtra("component");
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
+        darkmode = intent.getBooleanExtra("darkmode",darkmode);
+        Log.d("DARKMODETEST",darkmode + "");
+        viewFlipper = findViewById(R.id.forAniViewFlipper);
+        viewPager = findViewById(R.id.vp_photogalleryDark);
+
+        if (darkmode == true){
+            viewPager = findViewById(R.id.vp_photogalleryDark);
+            viewFlipper.showNext();
+        }
+        else {
+            viewPager = findViewById(R.id.vp_photogallery);
+        }
+
         Log.d("TESTINGINTENT","UserX: " + userX + "UserY: "+ userY);
         ShowAnimation();
-
     }
 
     private void ShowAnimation (){
@@ -120,7 +125,6 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animationNo2() {
-        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/noxbum_"+ i + ".png");
             i++;
@@ -140,6 +144,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         if (viewPager != null) {
             viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
         }
+
 
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
@@ -161,7 +166,6 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animation03() {
-        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
         while (i<75){
             photoUrls.add("https://www2.dmu.dk/thorben_new/Danmark/o3bum_"+ i +".png");
             i++;
@@ -181,6 +185,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         if (viewPager != null) {
             viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
         }
+
 
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
@@ -202,7 +207,6 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animationPM2_5() {
-        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm25bum_"+ i +".png");
             i++;
@@ -222,6 +226,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         if (viewPager != null) {
             viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
         }
+
 
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
@@ -243,7 +248,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     }
 
     private void animationPM10() {
-        final ViewPager viewPager = findViewById(R.id.vp_photogallery);
+
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm10bum_"+ i +".png");
             i++;
@@ -263,6 +268,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         if (viewPager != null) {
             viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
         }
+
 
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {

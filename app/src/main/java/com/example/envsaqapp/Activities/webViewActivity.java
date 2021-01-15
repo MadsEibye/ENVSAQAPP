@@ -41,20 +41,10 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
-    public float pointX;
-    public float pointY;
-    private static double userX;
-    private static double userY;
-    public double Latitude;
-    public double Longitude;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
+    public float pointX, pointY;
+    private static double userX, userY;
+    public double Latitude, Longitude;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private GeoPoint UsergeoPoint;
@@ -62,8 +52,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     protected LocationListener locationListener;
     private WebView webView;
     private UTMConverter utmConverter;
-    private double userX_UTM;
-    private double userY_UTM;
+    private double userX_UTM, userY_UTM;
     private int UserZone_UTM;
     private char UserLetter_UTM;
     //endregion Instance Fields
@@ -127,8 +116,8 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     If an item has been pressed, it sets the value to 'true', so the method onNavigationItemSelected() knows it should execute.
     */
     private void setNavigationViewListener() {
-            navigationView = findViewById(R.id.webNavView);
-            navigationView.setNavigationItemSelectedListener(this);
+        navigationView = findViewById(R.id.webNavView);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     //Start of Comments ChangeActivity()
@@ -140,7 +129,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     activity that was pressed in the navigationbar.
     overridePendingTransition is just the animation that is run when you change the activity, and in this case its a fade_in fade_out. And the finish() method is just closing down the last activity
     */
-    public void ChangeActivity (Integer ID){
+    public void ChangeActivity(Integer ID) {
         if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -173,10 +162,10 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                     Intent i = new Intent(webViewActivity.this, NavigationUdsigt.class);
                     i.putExtra("userX", Latitude);
                     i.putExtra("userY", Longitude);
-                    i.putExtra("X_UTM",userX_UTM);
-                    i.putExtra("Y_UTM",userY_UTM);
-                    i.putExtra("UTM_Zone",UserZone_UTM);
-                    i.putExtra("UTM_Letter",UserLetter_UTM);
+                    i.putExtra("X_UTM", userX_UTM);
+                    i.putExtra("Y_UTM", userY_UTM);
+                    i.putExtra("UTM_Zone", UserZone_UTM);
+                    i.putExtra("UTM_Letter", UserLetter_UTM);
                     startActivity(i);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
@@ -251,11 +240,9 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
     */
     @Override
-    public boolean onOptionsItemSelected (@NonNull MenuItem item){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -264,7 +251,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     This method checks if it has permission to use the device location and if it has permission, then it executes onSuccess which set latitude and longitude.
     It then calls the method LoadMap().
     */
-    public void updateGPS () {
+    public void updateGPS() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
@@ -282,7 +269,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                     Log.d("USERLOCATION", " Longitude " + Longitude);
                     Log.d("USERLOCATION", "UPDATEGPS");
                     UsergeoPoint = new GeoPoint(Latitude, Longitude);
-                    utmConverter = new UTMConverter(Latitude,Longitude);
+                    utmConverter = new UTMConverter(Latitude, Longitude);
                     userX_UTM = utmConverter.getEasting();
                     userY_UTM = utmConverter.getNorthing();
                     UserZone_UTM = utmConverter.getZone();
@@ -291,7 +278,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
                 }
             });
         } else {
-            Toast.makeText(webViewActivity.this,"AirLITE skal bruge adgang til din lokation for at fungere.", Toast.LENGTH_LONG).show();
+            Toast.makeText(webViewActivity.this, "AirLITE skal bruge adgang til din lokation for at fungere.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -300,7 +287,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     What this method does, is simply just load a url into the webview, and then add JavaScript to the webview, so that if the webpage uses JavaScript
     the app will be able to show that.
      */
-    private void LoadMapWebView(){
+    private void LoadMapWebView() {
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("http://gere8016.uni.au.dk:8080/web_app3_leaflet.html");
         //http://lpdv.spatialsuite.dk/spatialmap
@@ -362,7 +349,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     This method checks if it has permission to use the device location and if it has permission it calls the method updateGPS()
     if the permission is denied then it makes a toast
     */
-    public void findLocation () {
+    public void findLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -383,7 +370,7 @@ public class webViewActivity extends AppCompatActivity implements NavigationView
     This method calls the method updateGPS() if it has a request code that matches with the specific permission needed
     */
     @Override
-    public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 findLocation();
