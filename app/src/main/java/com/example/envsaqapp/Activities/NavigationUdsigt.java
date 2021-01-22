@@ -59,7 +59,7 @@ public class NavigationUdsigt extends AppCompatActivity implements NavigationVie
         modeswitch = findViewById(R.id.modeSwtich);
         modeswitch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {   
                 if (!darkmode) {
                     modeswitch.setThumbResource(R.drawable.ic_sunny);
                     viewFlipper.showNext();

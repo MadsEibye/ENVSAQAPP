@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
@@ -142,6 +143,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
 
     private void animationNo2() {
         textView.setText("Oversigt over mængden af Kvælstofdioxid (No2) i luften");
+        photoUrls.clear();
         while (i<75){
             photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/noxbum_"+ i + ".png");
             i++;
@@ -185,7 +187,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
     private void animation03() {
         textView.setText("Oversigt over mængden af Ozon (O3) i luften");
         while (i<75){
-            photoUrls.add("https://www2.dmu.dk/thorben_new/Danmark/o3bum_"+ i +".png");
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/o3bum_"+ i +".png");
             i++;
         }
 

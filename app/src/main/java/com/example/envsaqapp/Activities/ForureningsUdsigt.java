@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -28,8 +29,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import Models.Data;
@@ -61,6 +64,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     private List dag2 = new ArrayList<ForureningsDataModel>();
     private List dag3 = new ArrayList<ForureningsDataModel>();
     private ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
+    private Calendar dato;
     //endregion Instance Fields
 
     //region Methods
@@ -440,9 +444,19 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         dag3 = dataList.subList(48, 72);
         dag3data = new ArrayList<ForureningsDataModel>(dag3);
 
-        CustomizeLinechart(linechart1, component, "16/11/2020", dag1data);
-        CustomizeLinechart(linechart2, component, "17/11/2020", dag2data);
-        CustomizeLinechart(linechart3, component, "18/11/2020", dag3data);
+        dato = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String date = sdf.format(dato.getTime());
+        CustomizeLinechart(linechart1, component, date, dag1data);
+
+
+        dato.add(Calendar.DAY_OF_MONTH, 1);
+        String newdate = sdf.format(dato.getTime());
+        CustomizeLinechart(linechart2, component, newdate, dag2data);
+
+        dato.add(Calendar.DAY_OF_MONTH, 1);
+        String newdate1 = sdf.format(dato.getTime());
+        CustomizeLinechart(linechart3, component, newdate1, dag3data);
     }
 
     private void CustomizeLinechart(LineChart linechart, String component, String Date, ArrayList linedata) {
