@@ -34,26 +34,13 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class ForureningHer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    private static float userX;
-    private static float userY;
-    private TextView forureningHerTextViewAddress;
-    private TextView forureningHerTextViewNo2;
-    private TextView forureningHerTextViewPM10;
-    private TextView forureningHerTextViewPM25;
+    private static float userX, userY;
+    private TextView forureningHerTextViewAddress, forureningHerTextViewNo2, forureningHerTextViewPM10, forureningHerTextViewPM25;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
     private String address;
-    public double no2;
-    public double pm2_5;
-    public double pm10;
+    public double no2, pm2_5, pm10;
     //endregion Instance Fields
 
     //region Methods
@@ -85,8 +72,6 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         searchForLocation();
-
-
     }
 
     //Start of Comments ChangeActivity()
@@ -278,7 +263,6 @@ public class ForureningHer extends AppCompatActivity implements NavigationView.O
     This is the method that gets the nearest location, and then shows the address and house number.It then gets the values of NO2, PM10 and PM2.5 and displays it.
     It searches for the nearest address next to the already given location, and then gives the user that location.
     The error handling in this method checks if the request is valid, and if it is not, it gives an error message "REQUEST NOT SUCCESFUL".
-
     */
 
     public void searchForLocation() {

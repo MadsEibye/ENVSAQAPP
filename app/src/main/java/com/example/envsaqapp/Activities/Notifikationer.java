@@ -24,19 +24,11 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class Notifikationer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    private static double userX;
-    private static double userY;
+    private static double userX, userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Button button;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
     //endregion Instance Fields
 
     //region Methods
@@ -59,14 +51,12 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
         Intent intent = getIntent();
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-
         mDrawerLayout = findViewById(R.id.NotiDrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         setNavigationViewListener();
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,9 +64,8 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
                 SendNotifikation();
             }
         });
-
-
     } //end of onCreate()
+
     //Start of Comments SendNotifikation()
     /*
     Basically all this method does is send a notification. It makes an intent to go to the PaamindelseNoti to get the information it needs.
@@ -91,6 +80,7 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
         long timeout = 1000 * 0;
         alarmManager.set(AlarmManager.RTC_WAKEUP, currenttime + timeout, pendingintent);
     }
+
     //Start of Comments ChangeActivity()
     /*
     ChangeActivity() is the handler for the navigationbar. So when you press an item in the navigationbar, ChangeActivity is run, with the ID you
@@ -201,6 +191,7 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
             }, TIME_OUT);
         }
     }
+
     //Start of Comments onOptionsItemSelected
     /*
     This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
@@ -208,11 +199,10 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
-
         }
-
         return super.onOptionsItemSelected(item);
     }
+
     //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
@@ -264,6 +254,7 @@ public class Notifikationer extends AppCompatActivity implements NavigationView.
         }
 
     }
+
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.

@@ -22,21 +22,12 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class Info extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //region Instance Fields
-    private static double userX;
-    private static double userY;
-    private TextView textViewLink1;
-    private TextView textViewLink2;
-    private TextView textViewLink3;
+    private static double userX, userY;
+    private TextView textViewLink1, textViewLink2, textViewLink3;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
+
     //endregion Instance Fields
 
     //region Methods
@@ -194,9 +185,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)){
-
         }
-
         return super.onOptionsItemSelected(item);
     }
     //Start of Comments onNavigationItemSelected

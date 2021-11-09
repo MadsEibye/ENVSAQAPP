@@ -18,18 +18,10 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class GroenRute extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     //region Instance Fields
-    private static double userX;
-    private static double userY;
+    private static double userX, userY;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
     //endregion Instance Fields
 
     //region Methods

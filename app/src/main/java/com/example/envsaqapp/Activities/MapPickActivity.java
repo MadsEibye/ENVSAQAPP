@@ -40,21 +40,16 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class MapPickActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    MapView mapView;
+    private MapView mapView;
     private MapController mapController;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
-    private static double userX;
-    private static double userY;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
+    private static double userX, userY;
     private static String component;
+    private double geoX, geoY;
+    private String geoString;
+    private ArrayList<GeoPointXY> geoPoints = new ArrayList<GeoPointXY>(){};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +69,11 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
         Log.d("USERLOCATION","LP:" + userX + ", " + userY);
         GeoPoint geoPoint = new GeoPoint(userX,userY);
         PlotDots();
-        LoadMap(geoPoint);
+        LoadMap();
 
     }
 
-    private void LoadMap(GeoPoint gPt) {
-        //ParseAndShowLayerWMS();
-        //ShowSelectedLayer();
+    private void LoadMap() {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         //final ITileSource tileSource = TileSourceFactory.MAPNIK;
@@ -88,29 +81,21 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
                 new String[]{
                         "http://tile.openstreetmap.org/",
                 });
-
         mapView.setTileSource(tileSource);
         MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
         TilesOverlay tilesOverlay = new TilesOverlay(provider, this.getBaseContext());
         tilesOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-        //mapView.getOverlays().add(tilesOverlay);
-        //mapView.getOverlays().add(dotsOverlay);
         mapController = (MapController) mapView.getController();
         mapView.setMinZoomLevel(8.0);
         mapView.setMultiTouchControls(true);
         mapController.setZoom(11);
-        //mapController.setZoom(4);
         GeoPoint geopointcenter = new GeoPoint(userX, userY);
         mapController.setCenter(geopointcenter);
-        //addMarkerUserLocation(gPt);
     }
     private void setNavigationViewListener() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.PickNav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-    ArrayList<GeoPointXY> geoPoints = new ArrayList<GeoPointXY>(){};
-
 
     public void PlotDots(){
 
@@ -278,10 +263,6 @@ public class MapPickActivity extends AppCompatActivity implements NavigationView
         }
 
     }
-
-    private double geoX;
-    private double geoY;
-    private String geoString;
 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

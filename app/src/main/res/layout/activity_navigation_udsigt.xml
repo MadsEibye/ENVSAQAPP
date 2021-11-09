@@ -9,48 +9,120 @@
     tools:context=".Activities.NavigationUdsigt">
 
     <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
+        android:id="@+id/firstlayout"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <Switch
+
+            android:id="@+id/modeSwtich"
+            android:thumb="@drawable/ic_moon"
+            android:layout_gravity="end"
+            android:layout_width="50dp"
+            android:layout_height="30dp"/>
+    </LinearLayout>
+
+    <ViewFlipper
+        android:layout_marginTop="30dp"
+        android:id="@+id/viewflipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:text="Kvælstofdioxid (NO2)"
-            android:textColor="@color/White"
-            android:background="@drawable/button_background_blue"
-            android:onClick="UdsigtNo2"
-            android:layout_gravity="center"
-            android:layout_width="250dp"
-            android:layout_height="75dp"/>
-        <Button
-            android:text="Ozon (O3)"
-            android:textColor="@color/White"
-            android:background="@drawable/button_background_blue"
-            android:onClick="UdsigtO3"
-            android:layout_marginTop="40dp"
-            android:layout_gravity="center"
-            android:layout_width="250dp"
-            android:layout_height="75dp"/>
-        <Button
-            android:text="Partikeldiameter 2,5"
-            android:textColor="@color/White"
-            android:background="@drawable/button_background_blue"
-            android:onClick="Udsigtpm25"
-            android:layout_marginTop="40dp"
-            android:layout_gravity="center"
-            android:layout_width="250dp"
-            android:layout_height="75dp"/>
-        <Button
-            android:text="Partikeldiameter 10"
-            android:textColor="@color/White"
-            android:background="@drawable/button_background_blue"
-            android:onClick="Udsigtpm10"
-            android:layout_marginTop="40dp"
-            android:layout_gravity="center"
-            android:layout_width="250dp"
-            android:layout_height="75dp"/>
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Lightblue">
 
-    </LinearLayout>
+            <Button
+                android:text="Kvælstofdioxid (NO2)"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_blue"
+                android:onClick="UdsigtNo2"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+            <Button
+                android:text="Ozon (O3)"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_blue"
+                android:onClick="UdsigtO3"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+            <Button
+                android:text="Partikeldiameter 2,5"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_blue"
+                android:onClick="Udsigtpm25"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+            <Button
+                android:text="Partikeldiameter 10"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_blue"
+                android:onClick="Udsigtpm10"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Gray">
+
+
+            <Button
+                android:text="Kvælstofdioxid (NO2)"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_darkmode"
+                android:onClick="UdsigtNo2"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+            <Button
+                android:text="Ozon (O3)"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_darkmode"
+                android:onClick="UdsigtO3"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+            <Button
+                android:text="Partikeldiameter 2,5"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_darkmode"
+                android:onClick="Udsigtpm25"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+            <Button
+                android:text="Partikeldiameter 10"
+                android:textColor="@color/White"
+                android:background="@drawable/button_background_darkmode"
+                android:onClick="Udsigtpm10"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="75dp"/>
+
+        </LinearLayout>
+
+    </ViewFlipper>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/NavNav_view"

@@ -5,97 +5,319 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
+import com.android.internal.http.multipart.Part;
+import com.example.envsaqapp.JavaClasses.CustomPagerAdapter;
+import com.example.envsaqapp.JavaClasses.CustomScroller;
 import com.example.envsaqapp.R;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Request;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import okhttp3.OkHttpClient;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class ForureningsAnimation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    //region Instance fields
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private static double userX;
-    private static double userY;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
-    private WebView webview;
-    private ImageView imageView;
-
+    private static double userX, userY;
+    private String component;
+    private Integer item1ID,item2ID,item3ID,item4ID,item5ID,item6ID,item7ID,item8ID;
+    int i = 1, currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
+    final long PERIOD_MS = 1000; // time in milliseconds between successive task executions.
+    ArrayList<String> photoUrls = new ArrayList<>();
+    ViewPager viewPager, viewPager2;
+    private boolean darkmode;
+    ViewFlipper viewFlipper;
+    private LinearLayout backbuttonLinear;
+    private TextView textView, linktextview;
+    private Button backbutton;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(ForureningsAnimation.this);
         setContentView(R.layout.activity_forurenings_animation);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //webview = findViewById(R.id.ForAniWebView);
-        imageView = findViewById(R.id.ForAniImageView);
-        imageView.bringToFront();
         mDrawerLayout = findViewById(R.id.ForAniDrawerLayout);
+        mDrawerLayout.bringToFront();
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationViewListener();
-
         Intent intent = getIntent();
+        linktextview = findViewById(R.id.ForAniLink);
+        linktextview.setMovementMethod(LinkMovementMethod.getInstance());
+        component = intent.getStringExtra("component");
+        backbuttonLinear = findViewById(R.id.backbuttonLinear);
         userX = intent.getDoubleExtra("userX", userX);
         userY = intent.getDoubleExtra("userY", userY);
-/*
-        String url = "https://envs.au.dk/faglige-omraader/luftforurening-udledninger-og-effekter/data-om-luftkvalitet/luftudsigten/";
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setColorScheme(CustomTabsIntent.COLOR_SCHEME_LIGHT);
-        CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(this, Uri.parse(url));
-        */
-        //LoadWebView();
-        LoadImage loadImage = new LoadImage(imageView);
-        loadImage.execute(uri);
+        darkmode = intent.getBooleanExtra("darkmode",darkmode);
+        Log.d("DARKMODETEST",darkmode + "");
+        viewFlipper = findViewById(R.id.forAniViewFlipper);
+        viewPager = findViewById(R.id.vp_photogalleryDark);
+        textView = findViewById(R.id.ForAniTextView);
+        backbutton = findViewById(R.id.backbutton);
+        if (darkmode == true){
+            backbutton.setBackgroundResource(R.drawable.ic_arrow_back_white_18dp);
+            backbuttonLinear.setBackgroundColor(getResources().getColor(R.color.Gray));
+            viewPager = findViewById(R.id.vp_photogalleryDark);
+            textView.setTextColor(getResources().getColor(R.color.White));
+            viewFlipper.showNext();
+        }
+        else {
+            viewPager = findViewById(R.id.vp_photogallery);
+        }
+
+        Log.d("TESTINGINTENT","UserX: " + userX + "UserY: "+ userY);
+        ShowAnimation();
     }
 
-    private void LoadWebView(){
-        webview.setWebViewClient(new WebViewClient());
-        webview.loadUrl("http://envs.au.dk/videnudveksling/luft/luftudsigten/oversigtskort");
-        //http://lpdv.spatialsuite.dk/spatialmap
-        WebSettings webSettings = webview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-
+    private void ShowAnimation (){
+        if (component.equals("No2")){ animationNo2();
+        }
+        else if (component.equals("O3")){ animation03();
+        }
+        else if (component.equals("PM2_5")){ animationPM2_5();
+        }
+        else { animationPM10(); }
     }
-    String uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_1.png";
-    ArrayList<Image> images = new ArrayList<>();
-    Bitmap bitmap;
+
+    private void animationNo2() {
+        textView.setText("Oversigt over mængden af Kvælstofdioxid (No2) i luften");
+        photoUrls.clear();
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/noxbum_"+ i + ".png");
+            i++;
+        }
+
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
 
 
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
 
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    private void animation03() {
+        textView.setText("Oversigt over mængden af Ozon (O3) i luften");
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/o3bum_"+ i +".png");
+            i++;
+        }
+
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
+
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    private void animationPM2_5() {
+        textView.setText("Oversigt over mængden af PM2,5 partikler i luften");
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm25bum_"+ i +".png");
+            i++;
+        }
+
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
+
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    private void animationPM10() {
+        textView.setText("Oversigt over mængden af PM10 partikler i luften");
+        while (i<75){
+            photoUrls.add("http://www2.dmu.dk/thorben_new/Danmark/pm10bum_"+ i +".png");
+            i++;
+        }
+
+        AccelerateInterpolator adi = new AccelerateInterpolator();
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(viewPager, new CustomScroller(getApplicationContext(),adi,1));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (viewPager != null) {
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext(), photoUrls));
+        }
+
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == photoUrls.size()-1) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer.schedule(new TimerTask() { // task to be scheduled
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -143,8 +365,8 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
 
     }
 
-    public void ChangeActivity(Integer ID){
-        if (ID == item1ID){
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -152,13 +374,12 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item2ID){
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -166,12 +387,11 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item3ID){
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -179,12 +399,11 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item4ID) {
+        } else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -193,13 +412,12 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     i.putExtra("userY", userY);
                     //startActivity(i);
                     Toast.makeText(ForureningsAnimation.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     //finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item5ID) {
+        } else if (ID == item5ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -207,13 +425,12 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item6ID) {
+        } else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -221,7 +438,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -238,7 +455,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
                     finish();
                 }
             }, TIME_OUT);
-        }else if (ID == item8ID) {
+        } else if (ID == item8ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -258,36 +475,7 @@ public class ForureningsAnimation extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private class LoadImage extends AsyncTask<String,Void,Bitmap> {
-        ImageView imageView;
-        public LoadImage(ImageView ivResult){
-            this.imageView = ivResult;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Integer i = 1;
-            //while (i < 74) {
-                //uri = "http://www2.dmu.dk/thorben_new/Danmark/noxbum_" + i +".png";
-                i++;
-                Log.d("DOINBACKGROUND1",uri);
-                try {
-                    InputStream is = new java.net.URL(uri).openStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            return bitmap;
-            }
-            //Toast.makeText(ForureningsAnimation.this,"DO IT AGAIN",Toast.LENGTH_LONG);
-
-        //}
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-                imageView.postInvalidateDelayed(2000);
-                imageView.setImageBitmap(bitmap);
-            Log.d("DOINBACKGROUND1","ONPOSTEXECUTE");
-        }
+    public void backButtonPressed(View view) {
+        finish();
     }
 }

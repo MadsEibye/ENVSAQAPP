@@ -16,12 +16,21 @@ tools:context=".Activities.ForureningsUdsigt">
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <Button
+            android:background="@drawable/ic_arrow_back_24px"
+            android:gravity="center"
+            android:id="@+id/backbutton"
+            android:onClick="backButtonPressed"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
         <TextView
             android:layout_weight="4"
             android:layout_marginStart="10dp"
             android:id="@+id/LocationHeader"
             android:text="Hovedbanegården københavn 2000"
-            android:textColor="@color/Black"
+            android:textColor="@color/Gray"
             android:textAlignment="textStart"
             android:layout_width="wrap_content"
             android:fontFamily="sans-serif-black"

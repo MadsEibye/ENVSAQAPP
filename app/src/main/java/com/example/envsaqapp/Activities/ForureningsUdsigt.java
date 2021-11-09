@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -28,8 +29,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import Models.Data;
@@ -46,28 +49,22 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class ForureningsUdsigt extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //region Instance Fields
-    private double userX;
-    private double userY;
     private int regionNumber;
+    private boolean darkmode;
+    private double geoX, geoY, userX, userY, No2, O3, PM2_5, PM10;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Integer item1ID;
-    private Integer item2ID;
-    private Integer item3ID;
-    private Integer item4ID;
-    private Integer item5ID;
-    private Integer item6ID;
-    private Integer item7ID;
-    private Integer item8ID;
-    LineChart linechart1;
-    LineChart linechart2;
-    LineChart linechart3;
-    LineDataSet set1,set2;
-    private String component;
-    private double geoX;
-    private double geoY;
-    private String geoString;
-    TextView locationHeader;
+    private Integer item1ID, item2ID, item3ID, item4ID, item5ID, item6ID, item7ID, item8ID;
+    private String geoString, DbName, component;
+    private LineChart linechart1, linechart2, linechart3;
+    private LineDataSet set1, set2;
+    private TextView locationHeader;
+    private ArrayList dag1data, dag2data, dag3data;
+    private List dag1 = new ArrayList<ForureningsDataModel>();
+    private List dag2 = new ArrayList<ForureningsDataModel>();
+    private List dag3 = new ArrayList<ForureningsDataModel>();
+    private ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
+    private Calendar dato;
     //endregion Instance Fields
 
     //region Methods
@@ -104,14 +101,16 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        userX = intent.getDoubleExtra("userX",userX);
-        userY = intent.getDoubleExtra("userY",userY);
-        Log.d("USERLOCATION","FU: " + userX + ", " + userY);
-        regionNumber = intent.getIntExtra("region",regionNumber);
+        userX = intent.getDoubleExtra("userX", userX);
+        userY = intent.getDoubleExtra("userY", userY);
+        darkmode = intent.getBooleanExtra("darkmode", darkmode);
+        Log.d("USERLOCATION", "FU: " + userX + ", " + userY);
+        regionNumber = intent.getIntExtra("region", regionNumber);
         component = intent.getStringExtra("componentExtra");
-        Toast.makeText(ForureningsUdsigt.this,component,Toast.LENGTH_LONG).show();
+        Toast.makeText(ForureningsUdsigt.this, component, Toast.LENGTH_LONG).show();
         geoString = "Your location";
-        GetData(component,"",userX,userY,geoString);
+        Log.d("TESTINGINTENT", "" + userX + userY);
+        GetData(component, "", userX, userY, geoString);
         //GetDataForCharts(component);
     }
 
@@ -124,8 +123,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     activity that was pressed in the navigationbar.
     overridePendingTransition is just the animation that is run when you change the activity, and in this case its a fade_in fade_out. And the finish() method is just closing down the last activity
     */
-    public void ChangeActivity(Integer ID){
-        if (ID == item1ID){
+    public void ChangeActivity(Integer ID) {
+        if (ID == item1ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -133,13 +132,12 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
 
-        }
-        else if (ID == item2ID){
+        } else if (ID == item2ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -147,12 +145,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item3ID){
+        } else if (ID == item3ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -160,12 +157,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item4ID) {
+        } else if (ID == item4ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -174,12 +170,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     i.putExtra("userY", userY);
                     //startActivity(i);
                     Toast.makeText(ForureningsUdsigt.this, "Ikke implementeret endnu ( ͡° ͜ʖ ͡°)", Toast.LENGTH_LONG).show();
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     //finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item5ID) {
+        } else if (ID == item5ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -187,12 +182,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
-        }
-        else if (ID == item6ID) {
+        } else if (ID == item6ID) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -200,7 +194,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                     i.putExtra("userX", userX);
                     i.putExtra("userY", userY);
                     startActivity(i);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, TIME_OUT);
@@ -230,18 +224,18 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             }, TIME_OUT);
         }
     }
+
     //Start of Comments onOptionsItemSelected
     /*
     This method is connected to the DrawerLayout. It checks when you use the menu, which item is selected and then returns the item within the OnNavigationItemSelected() method.
     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)){
-
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
         }
-
         return super.onOptionsItemSelected(item);
-        }
+    }
+
     //Start of Comments onNavigationItemSelected
     /*
     This method contains a switch case that holds different ID's, one for each item in the menu. It has an item as parameter in the method, and then is uses the ID, to check which
@@ -292,6 +286,7 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         }
 
     }
+
     //Start of Comments setNavigationViewListener
     /*
     This method finds the NavigationView with the findViewById() method, and then adds a listener to the navigationView that checks if an item in the list has been pressed or not.
@@ -302,92 +297,88 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private String DbName;
-    private void GetDataForCharts(String component){
-        if (component == "No2"){
-            if (regionNumber == 1){
+    private void GetDataForCharts(String component) {
+        if (component == "No2") {
+            if (regionNumber == 1) {
                 DbName = "Sjaelland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 2){
+            if (regionNumber == 2) {
                 DbName = "Fyn_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 3){
+            if (regionNumber == 3) {
                 DbName = "Sonderjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 4){
+            if (regionNumber == 4) {
                 DbName = "Midtjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 5){
+            if (regionNumber == 5) {
                 DbName = "Nordjylland_udsigt";
                 //GetData(component,DbName);
             }
-        }
-        else if (component == "O3"){
-            if (regionNumber == 1){
+        } else if (component == "O3") {
+            if (regionNumber == 1) {
                 DbName = "Sjaelland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 2){
+            if (regionNumber == 2) {
                 DbName = "Fyn_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 3){
+            if (regionNumber == 3) {
                 DbName = "Sonderjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 4){
+            if (regionNumber == 4) {
                 DbName = "Midtjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 5){
+            if (regionNumber == 5) {
                 DbName = "Nordjylland_udsigt";
                 //GetData(component,DbName);
             }
-        }
-        else if (component == "PM25"){
-            if (regionNumber == 1){
+        } else if (component == "PM25") {
+            if (regionNumber == 1) {
                 DbName = "Sjaelland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 2){
+            if (regionNumber == 2) {
                 DbName = "Fyn_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 3){
+            if (regionNumber == 3) {
                 DbName = "Sonderjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 4){
+            if (regionNumber == 4) {
                 DbName = "Midtjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 5){
+            if (regionNumber == 5) {
                 DbName = "Nordjylland_udsigt";
                 //GetData(component,DbName);
             }
-        }
-        else if (component == "PM10"){
-            if (regionNumber == 1){
+        } else if (component == "PM10") {
+            if (regionNumber == 1) {
                 DbName = "Sjaelland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 2){
+            if (regionNumber == 2) {
                 DbName = "Fyn_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 3){
+            if (regionNumber == 3) {
                 DbName = "Sonderjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 4){
+            if (regionNumber == 4) {
                 DbName = "Midtjylland_udsigt";
                 //GetData(component,DbName);
             }
-            if (regionNumber == 5){
+            if (regionNumber == 5) {
                 DbName = "Nordjylland_udsigt";
                 //GetData(component,DbName);
             }
@@ -395,21 +386,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
 
     }
 
-    private Integer i;
-    private Integer j;
-    private Integer x_utm;
-    private Integer y_utm;
-    private double No2;
-    private double O3;
-    private double PM2_5;
-    private double PM10;
-    private Integer Hour;
-    private Integer Day;
-    //private ArrayList<ForureningsDataModel> dataList;
-
-
-    public ArrayList<ForureningsDataModel> GetData(String component, String DbName, double userX, double userY, String name){
-        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid?x_long=" + userY + "&y_lat=" + userX);
+    public ArrayList<ForureningsDataModel> GetData(String component, String DbName, double userX, double userY, String name) {
+        HttpUrl url = HttpUrl.parse("http://10.28.0.241:3000/rpc/get_nearest_grid2?x_long=" + userY + "&y_lat=" + userX);
         DataService dataService = ApiUtils.getDataService();
         Call<ArrayList<ForureningsDataModel>> searchForData = dataService.GetForureningsData(url.toString());
         searchForData.enqueue(new Callback<ArrayList<ForureningsDataModel>>() {
@@ -422,9 +400,8 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                         No2 = responseObject1.getNo2(); O3 = responseObject1.getO3(); PM2_5 = responseObject1.getPM2_5(); PM10 = responseObject1.getPM10();
                         locationHeader.setText(name);
                         PopulateCharts();
-                    }
-                    else {
-                        Toast.makeText(ForureningsUdsigt.this,"Fandt ikke noget data",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(ForureningsUdsigt.this, "Fandt ikke noget data", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
@@ -439,43 +416,38 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         return dataList;
     }
 
-    ArrayList<ForureningsDataModel> dataList = new ArrayList<ForureningsDataModel>();
-
-
-
-    ArrayList dag1data;
-    ArrayList dag2data;
-    ArrayList dag3data;
-    List dag1 = new ArrayList<ForureningsDataModel>();
-    List dag2 = new ArrayList<ForureningsDataModel>();
-    List dag3 = new ArrayList<ForureningsDataModel>();
-
     private void PopulateCharts() {
-
-
         Integer i = 1;
-        for (ForureningsDataModel o:dataList
-             ) {
+        for (ForureningsDataModel o : dataList
+        ) {
             o.setHour(i);
             i++;
         }
 
-        dag1 = dataList.subList(0,24);
+        dag1 = dataList.subList(0, 24);
         dag1data = new ArrayList<ForureningsDataModel>(dag1);
-        dag2 = dataList.subList(24,48);
+        dag2 = dataList.subList(24, 48);
         dag2data = new ArrayList<ForureningsDataModel>(dag2);
-        dag3 = dataList.subList(48,72);
+        dag3 = dataList.subList(48, 72);
         dag3data = new ArrayList<ForureningsDataModel>(dag3);
 
-        CustomizeLinechart(linechart1,component,"16/11/2020",dag1data);
-        CustomizeLinechart(linechart2,component,"17/11/2020",dag2data);
-        CustomizeLinechart(linechart3,component,"18/11/2020",dag3data);
+        dato = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String date = sdf.format(dato.getTime());
+        CustomizeLinechart(linechart1, component, date, dag1data);
+
+
+        dato.add(Calendar.DAY_OF_MONTH, 1);
+        String newdate = sdf.format(dato.getTime());
+        CustomizeLinechart(linechart2, component, newdate, dag2data);
+
+        dato.add(Calendar.DAY_OF_MONTH, 1);
+        String newdate1 = sdf.format(dato.getTime());
+        CustomizeLinechart(linechart3, component, newdate1, dag3data);
     }
 
-
-
-    private void CustomizeLinechart(LineChart linechart,String component,String Date,ArrayList linedata){
-        LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(linedata),component);
+    private void CustomizeLinechart(LineChart linechart, String component, String Date, ArrayList linedata) {
+        LineDataSet lineDataSet = new LineDataSet(lineChartDataSet(linedata), component);
         ArrayList<ILineDataSet> iLineDataSets = new ArrayList<>();
         iLineDataSets.add(lineDataSet);
         linechart.getDescription().setText(Date);
@@ -502,27 +474,24 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
         lineDataSet.setCircleColor(Color.GRAY);
         linechart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         linechart.getAxisRight().setEnabled(false);
-        linechart.getXAxis().setLabelCount(10,true);
+        linechart.getXAxis().setLabelCount(10, true);
         linechart.setDoubleTapToZoomEnabled(false);
         linechart.setScaleEnabled(false);
         linechart.getAxisLeft().setLabelCount(8);
         linechart.getAxisLeft().setXOffset(10);
     }
 
-    private ArrayList<Entry> lineChartDataSet(ArrayList<ForureningsDataModel> dataList){
+    private ArrayList<Entry> lineChartDataSet(ArrayList<ForureningsDataModel> dataList) {
         ArrayList<Entry> dataSet = new ArrayList<Entry>();
-        for (ForureningsDataModel o:dataList
-             ) {
+        for (ForureningsDataModel o : dataList
+        ) {
             if (component.equals("No2")) {
                 dataSet.add(new Entry(o.getHour(), (float) o.getNo2()));
-            }
-            else if (component.equals("O3")){
+            } else if (component.equals("O3")) {
                 dataSet.add(new Entry(o.getHour(), (float) o.getO3()));
-            }
-            else if (component.equals("PM2_5")){
+            } else if (component.equals("PM2_5")) {
                 dataSet.add(new Entry(o.getHour(), (float) o.getPM2_5()));
-            }
-            else {
+            } else {
                 dataSet.add(new Entry(o.getHour(), (float) o.getPM10()));
             }
         }
@@ -530,44 +499,52 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
     }
 
     public void Toast(View view) {
-        Toast.makeText(ForureningsUdsigt.this,"REEEEEEEEEEEEEEE",Toast.LENGTH_LONG).show();
+        Toast.makeText(ForureningsUdsigt.this, "REEEEEEEEEEEEEEE", Toast.LENGTH_LONG).show();
     }
 
-    public void LocationPick(View view){
+    public void LocationPick(View view) {
         Intent i = new Intent(ForureningsUdsigt.this, MapPickActivity.class);
-        i.putExtra("userX",userX);
-        i.putExtra("userY",userY);
-        i.putExtra("component",component);
-        startActivityForResult(i,2);
+        i.putExtra("userX", userX);
+        i.putExtra("userY", userY);
+        i.putExtra("component", component);
+        startActivityForResult(i, 2);
     }
+
     private boolean isLocationPicked = false;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 2){
+        if (resultCode == 2) {
             Log.d("GetData", "Den kom ind");
-            geoX = data.getDoubleExtra("geoX",geoX);
-            geoY = data.getDoubleExtra("geoY",geoY);
+            geoX = data.getDoubleExtra("geoX", geoX);
+            geoY = data.getDoubleExtra("geoY", geoY);
             geoString = data.getStringExtra("geoString");
             component = data.getStringExtra("component");
             isLocationPicked = true;
-            GetData(component,"",geoY,geoX,geoString);
+            GetData(component, "", geoY, geoX, geoString);
         }
     }
 
-    public void refreshData(View view){
+    public void refreshData(View view) {
         if (isLocationPicked == false) {
             GetData(component, "", userX, userY, geoString);
-        }
-        else{
-            GetData(component,"",geoY,geoX,geoString);
+        } else {
+            GetData(component, "", geoY, geoX, geoString);
         }
     }
 
-    public void animationButtonClicked(View view){
+    public void animationButtonClicked(View view) {
         Intent intent = new Intent(ForureningsUdsigt.this, ForureningsAnimation.class);
-        intent.putExtra("component",component);
+        intent.putExtra("userX", userX);
+        intent.putExtra("userY", userY);
+        intent.putExtra("component", component);
+        intent.putExtra("darkmode", darkmode);
         startActivity(intent);
+    }
+
+    public void backButtonPressed(View view) {
+        finish();
     }
 
     //endregion Methods

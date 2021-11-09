@@ -9,6 +9,9 @@
     <string name="LinkToAu">
         <a href="https://envs.au.dk/">Aarhus Universitet - Environmental Science</a>
     </string>
+    <string name="LinkToThorUdsigt">
+        <a href="https://envs.au.dk/faglige-omraader/luftforurening-udledninger-og-effekter/data-om-luftkvalitet/luftudsigten/">Website for Luftudsigten </a>
+    </string>
 
     <string name="Open">Open</string>
     <string name="Close">Close</string>
