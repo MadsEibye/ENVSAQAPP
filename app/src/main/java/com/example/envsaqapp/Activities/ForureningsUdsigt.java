@@ -417,19 +417,10 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
             public void onResponse(Call<ArrayList<ForureningsDataModel>> call, Response<ArrayList<ForureningsDataModel>> response) {
                 if (response.isSuccessful()) {
                     if (response.body().size() >= 1) {
-                        Log.d("QUERY", " " + response.code());
-                        Log.d("QUERY", response.body().toString());
-                        Log.d("QUERY", url.toString());
                         ForureningsDataModel responseObject1 = response.body().get(0);
                         dataList = response.body();
-                        No2 = responseObject1.getNo2();
-                        O3 = responseObject1.getO3();
-                        PM2_5 = responseObject1.getPM2_5();
-                        PM10 = responseObject1.getPM10();
+                        No2 = responseObject1.getNo2(); O3 = responseObject1.getO3(); PM2_5 = responseObject1.getPM2_5(); PM10 = responseObject1.getPM10();
                         locationHeader.setText(name);
-                        Log.d("RESPONSEOBJECTS", responseObject1.toString());
-                        //Toast.makeText(ForureningHer.this, "REQUEST SUCCESSFULL" + response.body().toString(), Toast.LENGTH_LONG).show();
-                        //Log.d("TESTING", SongsInQueue.toString());
                         PopulateCharts();
                     }
                     else {
@@ -438,15 +429,11 @@ public class ForureningsUdsigt extends AppCompatActivity implements NavigationVi
                 } else {
                     String message = "Problem " + response.code() + " " + response.message() + " " + response.raw();
                     Toast.makeText(ForureningsUdsigt.this, "REQUEST NOT SUCCESSFULL", Toast.LENGTH_LONG).show();
-                    Log.d("Queue", message);
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<ForureningsDataModel>> call, Throwable t) {
                 Toast.makeText(ForureningsUdsigt.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
-                Log.d("Queue", t.toString());
             }
         });
         return dataList;
